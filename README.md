@@ -1,10 +1,10 @@
 # Response Preferences
 
-A personal Codex skill for **how replies are written**. Fixed emoji meanings, coloured key text, original-message context, and a local Markdown/code editor.
+A personal Codex skill for **how replies are written**. Fixed emoji meanings, coloured highlights, underlined scanning cues, original-message context, and a local Markdown/code editor.
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
-Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 16 markers, colours, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
+Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 16 markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
 ## What it does
 
@@ -12,6 +12,7 @@ Created from Ethan's preferences, shared so you can use or adapt them. The websi
 | --- | --- |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. No arbitrary emoji additions. |
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
+| Sentence scanning | Underlines the most useful words in every assistant prose sentence, including ordinary and coloured text. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
 | Context above answers | Uses only the question or excerpt being answered, in your own grammatical perspective, in a blockquote above the direct-answer arrow. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
@@ -63,6 +64,12 @@ Markers stay inline for a single line or short statement. For sections spanning 
 Read each highlighted clause or sentence on its own: it should make sense without the uncoloured words before or after it. This applies to all four highlight colours; magenta skill names keep their separate name-only styling.
 
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
+
+## Underlines for scanning
+
+Every assistant prose sentence gets short underlined cues: the subject, action, result or qualification that gives away its meaning at a glance. Read the underlined words in order and keep crucial negatives or limits, such as **not uploaded** or **after restarting**. Avoid underlining filler or whole sentences by default. Exact quotations, code, paths and link labels stay intact; headings and compact labels do not need forced underlines.
+
+Use `The backup was \(\underline{\textsf{not uploaded}}\) because the provider was unavailable.` For colour and underlines together: `\(\color{#67e8f9}{\textsf{The viewer is a \underline{snapshot} of the file.}}\)`. The whole coloured clause still makes sense independently, while its underlined words provide scanning clues. Underlining is not another importance level and does not make text clickable. The website demonstrates it with styled `<u>` spans; ordinary documentation is not formatted as an assistant reply.
 
 ## Generate a viewer
 
