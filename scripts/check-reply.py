@@ -13,7 +13,7 @@ PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 
 
-def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False):
+def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=()):
     errors = []
     previous = ''
     has_pointer = False
@@ -92,7 +92,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             if path.startswith('/'):
                 if path.lower().endswith('.md'):
                     fail('Generate an HTML viewer for a Markdown reference.')
-                if check_paths and not Path(path).exists():
+                if check_paths and not (label == '↗' and target in hover_contexts) and not Path(path).exists():
                     fail('The local link destination does not exist: ' + path)
         if line.strip():
             previous = line
@@ -107,7 +107,8 @@ if __name__ == '__main__':
     parser.add_argument('--commentary', action='store_true', help='Check a work update: attention fingers are forbidden.')
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
+    parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
     args = parser.parse_args()
-    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary)
+    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary, hover_contexts=args.hover_context)
     print('\n'.join(errors) if errors else 'Reply structure passed. Meaning, coverage and visual appearance still need review.')
     raise SystemExit(bool(errors))
