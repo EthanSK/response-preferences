@@ -11,12 +11,13 @@ Created from Ethan's preferences, shared so you can use or adapt them. The websi
 | Feature | Behaviour |
 | --- | --- |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. No arbitrary emoji additions. |
-| Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Only key phrases are coloured. |
-| Context above answers | Summarises your message in your own grammatical perspective, immediately above the direct-answer arrow. |
+| Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Only selected key phrases are coloured; cyan does not colour a whole information section. |
+| Context above answers | Uses only the question or excerpt being answered, in your own grammatical perspective, as plain text above the direct-answer arrow. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
 | Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
 | Code editor | CodeMirror provides syntax highlighting, line numbers, search/replace, undo/redo and bracket matching. Preview, edit and split views. |
+| Table grouping | Uses approved markers beside category/status labels when helpful, keeping related rows together. |
 | Annotation context | Preserves the selected earlier response and your annotation, grouping related answers. |
 | Notification wording | Defines short, complete notification summaries. Native notification delivery is an optional **separate** integration. |
 
@@ -40,6 +41,8 @@ Use $response-preferences for all replies.
 
 You can also invoke `$response-preferences` explicitly. Start a fresh task if an already-running task retains earlier instructions. The formatting defaults follow Ethan's choices; edit `SKILL.md` to change them for yourself. LaTeX appearance and file links depend on the chat client's renderer.
 
+When maintaining Ethan’s skill, check the website and README after every response-style change, update affected examples, validate, commit and push to the public repository. Other users should use their own authorised fork.
+
 For updates, use `git pull --ff-only` only after reviewing your local edits. Keep personal overrides on your own branch or fork. Do not discard customised preferences to update.
 
 ## Marker vocabulary
@@ -55,7 +58,7 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | ⚖️ | Trade-offs | ⛔ | External blocker |
 | 🎯 | Skill use | ➕➕ | Added beyond your request |
 
-Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit alone above the content and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker.
+Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit alone above the content and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker. Reminders have no blockquote styling. Answers name the actual subjects and make sense even when the reminder is skipped.
 
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
