@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-__NONCE__'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>__TITLE__ · Response Preferences</title>
+  <style>__STYLE__</style>
+</head>
+<body>
+  <header>
+    <div class="file-heading"><span class="brand-mark" aria-hidden="true">⮑</span><div><h1 id="filename">Document</h1><p id="file-note">Local document viewer</p></div><span id="dirty" role="status">Snapshot</span></div>
+    <div class="toolbar">
+      <div class="modes" role="group" aria-label="Document view"><button type="button" data-mode="preview" aria-pressed="true">Preview</button><button type="button" data-mode="edit" aria-pressed="false">Edit</button><button type="button" data-mode="split" aria-pressed="false">Split</button></div>
+      <form id="jump-form"><label for="line">Line</label><input id="line" type="number" min="1" value="1" required aria-label="Jump to line"><button type="submit">Show passage</button></form>
+      <div class="file-actions"><button type="button" id="search">Search</button><button type="button" id="open">Open file</button><button type="button" id="save" disabled title="Open a file with browser saving support first">Save</button><button type="button" id="download">Download copy</button><button type="button" id="theme" aria-label="Switch colour theme">Light / dark</button></div>
+    </div>
+    <div id="status" role="status" aria-live="polite">Files stay in your browser. Nothing is uploaded.</div>
+  </header>
+  <main id="workspace" data-mode="preview"><section id="editor-pane" aria-label="Source editor"><div id="editor"></div></section><article id="preview" aria-label="Formatted document"></article></main>
+  <footer>Response Preferences · <span id="snapshot-note">Edits here do not change the file this page was generated from.</span></footer>
+  <input id="file-input" type="file" hidden accept=".md,.markdown,.txt,.js,.mjs,.cjs,.jsx,.ts,.tsx,.json,.py,.css,.html,.htm,.xml,.yaml,.yml,.sh,.zsh,.bash,.sql,.rs,.go,.java,.c,.h,.cpp,.toml,.csv">
+  <noscript>This viewer needs JavaScript. Open the original file to read it without this viewer.</noscript>
+  <script id="document-data" type="application/json">__DOCUMENT__</script>
+  <script nonce="__NONCE__">__SCRIPT__</script>
+</body>
+</html>

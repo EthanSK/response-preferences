@@ -1,0 +1,4 @@
+interface:
+  display_name: "Response Preferences"
+  short_description: "Consistent replies and a local Markdown editor"
+  default_prompt: "Use $response-preferences for consistent replies and clickable document context."
