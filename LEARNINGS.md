@@ -23,3 +23,7 @@ The generated HTML includes source text and embedded images. Keep real message c
 User-clicked local HTML and automated local-file access can have different permissions. A tool restriction does not prove the user's link fails. Test public demos through the permitted browser surface; never work around a denied local URL. DOM tests verify behavior but do not establish visual correctness. Inspect actual screenshots for layout and highlight placement.
 
 Use versioned public asset/demo links after updates, then compare live bytes against the commit. Browser extensions can emit errors on sandboxed iframe pages; attribute errors by their source URL before treating them as project failures.
+
+## Search controls
+
+CodeMirror search commits its query on keyup/change; a browser automation fill that only emits input does not exercise normal typing. Verify with real keyboard events. Its stock light button background needs an explicit dark-theme override so labels remain readable. Live keyboard testing confirmed five matches for the sample query.
