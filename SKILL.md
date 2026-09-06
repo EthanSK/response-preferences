@@ -13,15 +13,17 @@ This is Ethan's shared preference set. When another person installs it, apply th
 
 Improve this skill as part of using it. Whenever usage, debugging, investigation, or user feedback produces a durable verified finding that would help future executions, update this skill during the same task without waiting for a separate request. Update its instructions, scripts, tests, or references as appropriate, retest affected behavior, and validate the skill before finishing. After every modification, review whether `SKILL.md` remains a concise operating contract and router; move conditional detail into directly linked references when that reduces irrelevant context without hiding universal safeguards or fragmenting the skill unnecessarily. Preserve reusable knowledge; do not record guesses, duplicate guidance, secrets, credentials, or transient runtime state. Improving this skill never authorizes an unapproved emoji mapping. Mark agent-initiated, durable verified improvements beside the affected guidance with `Self-improved — YYYY-MM-DD`, a brief reason, and an evidence reference; distinguish them from user-requested changes and preserve existing audit notes and manual edits.
 
+## Skill usage announcement
+
+Apply this skill silently. Ethan explicitly exempted routine response-preference guidance from skill-use announcements: do not announce loading, invoking, or following it. Discuss the skill only when Ethan asks about it or requests a change; do not reintroduce routine announcements during later maintenance or because this skill was renamed.
+
 ## Public repository sync
+
+Whenever response styling changes, check both the website (`docs/index.html`, `docs/styles.css`, `docs/site.js` and public examples) and `README.md` against the new rules during the same task. Update every affected explanation and example; if neither needs changing, verify and say so. Regenerating the full-skill HTML alone is not a website-content check. Preserve valid information and keep examples consistent with the current skill.
 
 Whenever this skill changes, sync it to its public repository during the same task: validate the changes, regenerate affected public examples, commit the intended skill files, and run `git push`. Ethan has authorised these pushes; do not leave completed changes only on disk or ask again for routine push approval. The public repository is `https://github.com/EthanSK/response-preferences`.
 
 Preserve concurrent edits and reconcile installed/source checkouts before committing. Never force-push or include private message context, credentials, generated private viewers, or unrelated files. Verify that the pushed commit reached the remote; if pushing fails, report the concrete blocker and keep the changes intact. For other users installing this shared skill, use their own authorised fork/remote; this instruction does not grant access to Ethan’s repository.
-
-## Skill usage announcement
-
-Apply this skill silently. Ethan explicitly exempted routine response-preference guidance from skill-use announcements: do not announce loading, invoking, or following it. Discuss the skill only when Ethan asks about it or requests a change; do not reintroduce routine announcements during later maintenance or because this skill was renamed.
 
 ## Approved mappings and placement
 
@@ -71,7 +73,7 @@ Apply this skill silently. Ethan explicitly exempted routine response-preference
 - Put critical parts of a message in red with LaTeX so Ethan is drawn to reading that part. Red means "you must read this"; reserve it for critical information, not ordinary emphasis.
 - For success messages, put the success part or the main bit Ethan only needs to read when glancing at the message in green. Do not colour unfinished work or general information green.
 - Use orange for warnings or "kind of important" details. Use red instead when the detail is critical and must be read.
-- Use cyan `#67e8f9`, without underlining, for important informational text: highlight the key fact with the existing ⓘ marker, keeping supporting prose ordinary. This means information worth noticing, not success, a warning, or a critical must-read. Example: `\(\huge\text{ⓘ}\) \(\color{#67e8f9}{\textsf{This viewer is a snapshot of the file.}}\)`
+- Use cyan `#67e8f9`, without underlining, only for the selected informational words or short phrases worth highlighting, just like the other colour rules. Do not colour all important information or whole information sections. Use the existing ⓘ marker and keep the rest of the prose ordinary. This means information worth noticing, not success, a warning, or a critical must-read. Example: `\(\huge\text{ⓘ}\) \(\color{#67e8f9}{\textsf{This viewer is a snapshot of the file.}}\)`
 - Use sans-serif text for these coloured parts with `\textsf{...}` at normal text size. Keep the highlight short: colour the key phrase or sentence, with the supporting explanation in ordinary Markdown. Do not put whole paragraphs, links, paths, or code blocks inside LaTeX; retain usable Markdown links and code formatting.
 - Use these consistent colour values: red `#ef4444`, green `#22c55e`, orange `#fb923c`, cyan `#67e8f9`. Syntax: `\(\color{#ef4444}{\textsf{Critical text here}}\)`, replacing the colour and text as needed. Escape LaTeX-special characters in the text. These are the approved emphasis meanings; do not invent additional colour meanings.
 - Apply the same space-efficient placement to coloured highlights: a short result can use `\(\huge\text{✅}\) \(\color{#22c55e}{\textsf{All checks passed.}}\)` on one line. Use a standalone marker for a section spanning multiple paragraphs or blocks. Start a new ⓘ section when the content changes to supporting information.
