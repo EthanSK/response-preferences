@@ -142,3 +142,7 @@ The simple public site is in `docs/`, served by GitHub Pages from `main:/docs`. 
 ## Licence and dependencies
 
 MIT. CodeMirror, markdown-it, Highlight.js and their dependencies retain their own MIT licences. The included bundle contains third-party code; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). This project is independent of OpenAI and is not an official Codex feature.
+
+## Weekly update checks
+
+The agent checks the configured public source on first skill use when a week has passed, using a shared local lease to avoid duplicate checks. It can install reviewed, compatible updates and tells you what changed; it preserves local edits and respects opt-outs. No background process is installed. Python 3 is needed for the date/lease helper; the skill can still be used without it. Copied installations need a trustworthy installation baseline; plugin installations use their host updater. See [the update procedure](references/public-updates.md).
