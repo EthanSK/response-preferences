@@ -11,7 +11,7 @@ Created from Ethan's preferences, shared so you can use or adapt them. The websi
 | Feature | Behaviour |
 | --- | --- |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. No arbitrary emoji additions. |
-| Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Only selected key phrases are coloured; cyan does not colour a whole information section. |
+| Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
 | Context above answers | Uses only the question or excerpt being answered, in your own grammatical perspective, in a blockquote above the direct-answer arrow. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
@@ -59,6 +59,8 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | 🎯 | Skill use | ➕➕ | Added beyond your request |
 
 Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit above the content with a small ▾ caret beside them and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. The caret points toward the section below; it is a visual cue, not a dropdown control or a new emoji meaning. Write `\(\huge\text{ⓘ}\) ▾`, keeping the caret at normal text size. Inline and table-cell markers have no caret. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker. Reminders use a blockquote with a vertical line on the left; answers stay outside it. Answers name the actual subjects and make sense even when the reminder is skipped.
+
+Read each highlighted clause or sentence on its own: it should make sense without the uncoloured words before or after it. This applies to all four highlight colours; magenta skill names keep their separate name-only styling.
 
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
