@@ -86,3 +86,15 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
  assert.equal(u.closest('a'),null,'Underlines do not invent links');
  dom.window.close();
 });
+
+test('full annotation context keeps a separate short question before the answer',()=>{
+ const dom=demo(),d=dom.window.document;
+ const full=d.querySelector('.annotation-context');
+ assert(full.textContent.includes('Earlier response:'));
+ assert(full.textContent.includes('Your annotation:'));
+ const reminder=full.nextElementSibling;
+ assert(reminder.matches('blockquote.quote'));
+ assert.equal(reminder.querySelector('a').getAttribute('href'),'#format-u3');
+ assert(reminder.nextElementSibling.matches('p[data-kind="answer"]'));
+ dom.window.close();
+});
