@@ -41,7 +41,15 @@ const colours = HighlightStyle.define([
 ]);
 function modeFor(name) {
   const ext = name.split('.').pop().toLowerCase();
-  const modes = {md: () => markdown(), markdown: () => markdown(), js: () => javascript(), mjs: () => javascript(), cjs: () => javascript(), jsx: () => javascript({jsx:true}), ts: () => javascript({typescript:true}), tsx: () => javascript({typescript:true,jsx:true}), py: python, json, html, htm:html, css, sql, yaml: () => StreamLanguage.define(yaml), yml: () => StreamLanguage.define(yaml), sh: () => StreamLanguage.define(shell), zsh: () => StreamLanguage.define(shell), bash: () => StreamLanguage.define(shell), rs: () => StreamLanguage.define(rust), go: () => StreamLanguage.define(go)};
+  const md = () => markdown({codeLanguages(info) {
+    const label=info.trim().split(/\s+/)[0].toLowerCase();
+    const aliases={javascript:'js',typescript:'ts',python:'py',shell:'sh',rust:'rs'};
+    const suffix=aliases[label] || label;
+    if(['md','markdown'].includes(suffix))return null;
+    const support=modeFor('code.'+suffix);
+    return Array.isArray(support)?null:support.language || support;
+  }});
+  const modes = {md, markdown:md, js: () => javascript(), mjs: () => javascript(), cjs: () => javascript(), jsx: () => javascript({jsx:true}), ts: () => javascript({typescript:true}), tsx: () => javascript({typescript:true,jsx:true}), py: python, json, html, htm:html, css, sql, yaml: () => StreamLanguage.define(yaml), yml: () => StreamLanguage.define(yaml), sh: () => StreamLanguage.define(shell), zsh: () => StreamLanguage.define(shell), bash: () => StreamLanguage.define(shell), rs: () => StreamLanguage.define(rust), go: () => StreamLanguage.define(go)};
   return modes[ext]?.() || [];
 }
 let name = data.name || 'document.md', baseline = data.source, rawBaseline = data.source, fileHandle = null, busy = false;
