@@ -6,6 +6,7 @@ function demo(mobile=false){
  const dom=new JSDOM(readFileSync('docs/index.html','utf8'),{url:'https://example.test/',runScripts:'outside-only'});
  dom.window.matchMedia=q=>({matches:q.includes('900px')&&mobile,addEventListener(){}});
  dom.window.HTMLElement.prototype.scrollIntoView=function(){};
+ const style=dom.window.document.createElement('style');style.textContent=readFileSync('docs/styles.css','utf8');dom.window.document.head.append(style);
  dom.window.eval(readFileSync('docs/site.js','utf8'));
  return dom;
 }
@@ -36,5 +37,32 @@ test('switching a viewed document requires confirmation; reopening it keeps edit
  dom.window.confirm=()=>{throw Error('Same document must not prompt');};a.click();assert.equal(frame.getAttribute('src'),src);
  dom.window.confirm=()=>false;
  d.querySelector('.ctx[data-file]').click();assert.equal(frame.getAttribute('src'),src);
+ dom.window.close();
+});
+test('the demo preserves the approved marker vocabulary and efficient section placement',()=>{
+ const dom=demo(),d=dom.window.document;
+ const expected=['⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔','🎯','➕➕'];
+ assert.deepEqual(new Set([...d.querySelectorAll('.conversation .mk')].map(x=>x.textContent)),new Set(expected));
+ for(const b of d.querySelectorAll('.conversation .mk')){
+   assert.equal(b.parentElement.firstElementChild,b,'Marker precedes the section text');
+   assert(!b.closest('blockquote'),'The answer marker must be outside the question quote');
+   if(b.parentElement.classList.contains('sec'))assert(b.parentElement.children.length>2,'A single statement keeps its marker inline');
+ }
+ for(const p of d.querySelectorAll('[data-kind="answer"]'))assert(p.previousElementSibling.matches('blockquote.quote'));
+ dom.window.close();
+});
+test('skill names remain magenta serif with a separate working HTML link',()=>{
+ const dom=demo(),d=dom.window.document;
+ for(const name of d.querySelectorAll('.conversation .skill')){
+   const style=dom.window.getComputedStyle(name);assert.equal(style.color,'var(--magenta)');assert.equal(dom.window.getComputedStyle(d.documentElement).getPropertyValue('--magenta'),'#ff00ff');assert.match(style.fontFamily,/Georgia/);
+   const link=name.nextElementSibling;assert.equal(link.textContent,'↗');assert.equal(link.tagName,'A');assert.match(link.getAttribute('href'),/^\.\/skill\.html\?v=/);
+   assert(readFileSync('docs/skill.html','utf8').includes('Response Preferences'));
+ }
+ const colours={red:'#ef4444',green:'#22c55e',orange:'#fb923c',cyan:'#67e8f9'};
+ // JSDOM exposes CSS variables rather than resolving them into RGB. Verify both layers.
+ for(const [name,colour] of Object.entries(colours)){
+   assert.equal(dom.window.getComputedStyle(d.querySelector('.c-'+name)).color,'var(--'+name+')');
+   assert.equal(dom.window.getComputedStyle(d.documentElement).getPropertyValue('--'+name),colour);
+ }
  dom.window.close();
 });

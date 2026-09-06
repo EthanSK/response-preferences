@@ -25,6 +25,12 @@ Whenever this skill changes, sync it to its public repository during the same ta
 
 Preserve concurrent edits and reconcile installed/source checkouts before committing. Never force-push or include private message context, credentials, generated private viewers, or unrelated files. Verify that the pushed commit reached the remote; if pushing fails, report the concrete blocker and keep the changes intact. For other users installing this shared skill, use their own authorised fork/remote; this instruction does not grant access to Ethan’s repository.
 
+## Check before sending
+
+Before every commentary or final reply, check the draft against these rules, especially skill announcements: 🎯 first, each skill name in magenta upright serif, and its own real ↗ link immediately after it. Do not copy an earlier assistant reply as the authority for current preferences. Apply the latest explicit user correction; a trial is not an adopted rule.
+
+For final replies, save the exact draft and run `python3 /absolute/path/to/response-preferences/scripts/check-reply.py /absolute/reply.md` before notification preparation. Fix reported issues before sending. This checks structure and existing local destinations, not meaning or model obedience; still check that the excerpt answers the right part of the message, the answer stands alone, markers match outcomes, and only key phrases are coloured. If the checker cannot run, perform the same check manually and state the limitation briefly. Read [references/verification.md](references/verification.md) when maintaining, auditing or testing these preferences.
+
 ## Approved mappings and placement
 
 - Use 🎯 (target) for skill-use announcements, followed by **Skill use:**, the invoked skill name(s), and a brief reason. Colour only the skill names magenta, using normal-size serif LaTeX text: `\(\color{magenta}{\textrm{skill-creator}}\)`. Keep the label, conjunctions, and reason in ordinary Markdown. Put the generated viewer’s `[↗](absolute-viewer.html)` link immediately after each coloured skill name. This is an explicit exception to the sans-serif colour-highlight rule below; use upright serif text, not math italics. Preserve explicit silent-use exceptions.

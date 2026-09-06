@@ -35,3 +35,7 @@ Closing a details pane must restore focus to its opener. On small screens the pa
 ## Notification wording and fit
 
 Notification titles describe the user's request in their perspective; a task label or result heading is not interchangeable with that question. Put the status icon with the answer below. Visible macOS text capacity depends on glyph width and available layout, not just character count. Keep the native integration's measured limits separate from public skill wording and push-payload byte limits. The native sender is a separate installation; this repository documents its behavior without bundling it.
+
+## Reply-format regression checks
+
+A saved formatting rule can remain intact while an assistant reply omits it. Validate the actual draft as well as the instructions. The reply-checker tests include the observed plain skill announcement and require magenta serif plus an adjacent existing link. Website tests check CSS variables as well as computed declarations because JSDOM leaves `var(...)` unresolved. Public-demo tests compare embedded source text with current Markdown so updating SKILL.md without regenerating its viewer fails CI. Semantic choice and actual Codex rendering remain separate manual checks.
