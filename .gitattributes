@@ -1,0 +1,5 @@
+# Generated bundles contain intentional whitespace inside third-party string literals.
+assets/viewer.html whitespace=-blank-at-eol
+docs/viewer.html whitespace=-blank-at-eol
+docs/message.html whitespace=-blank-at-eol
+docs/skill.html whitespace=-blank-at-eol
