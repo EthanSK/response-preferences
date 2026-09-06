@@ -42,6 +42,12 @@ Apply this skill silently. Ethan explicitly exempted routine response-preference
 - Ethan's examples and corrections can refer to other chats. Apply the resulting emoji preference without assuming the quoted situation occurred in the current task.
 - Treat font-drawn symbols such as ⮑ separately from coloured emojis when checking appearance. Codex's inline LaTeX uses the KaTeX font stack, so the same Unicode symbol can look different from ordinary chat text; enlarging it does not guarantee preservation of its original glyph shape. A successful coloured-emoji trial does not verify a symbol's appearance. Preserve the approved symbol and size until Ethan chooses a different rendering or an exception.
 
+## Tables
+
+- When giving tables, use emojis to help categorise items together when it makes sense. Put the approved marker before a category/status label in a consistent column, and use the same marker for items in the same category. Keep related rows together when doing so does not disrupt a meaningful ranking or sequence.
+- Use the existing approved meanings: for example, ✅ for confirmed success/completion, ❌ for actual failure, 🐌 for active work, 🐞 for actual bugs, and 🫵 for Ethan's actions or decisions. Do not invent category emojis or use ticks/crosses as arbitrary labels. If no approved meaning fits, use a plain-text category.
+- Keep the category/status wording alongside its emoji so the table remains understandable without recognising the symbol. Use markers where they help scanning, not in every cell or as decoration. These are table-cell labels, not section headings; keep them at normal table-text size.
+
 ## Context above direct replies
 
 - Immediately above each direct-answer ⮑ line, put a simple reminder summarising what Ethan asked, followed by `[↗](absolute-context-viewer.html)`. Use a Markdown hard line break so the arrow starts on the next line and looks like it comes out of that reminder. Keep the reminder unmarked; the answer's approved arrow remains first on its own line.
