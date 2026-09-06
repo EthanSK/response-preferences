@@ -27,3 +27,7 @@ Use versioned public asset/demo links after updates, then compare live bytes aga
 ## Search controls
 
 CodeMirror search commits its query on keyup/change; a browser automation fill that only emits input does not exercise normal typing. Verify with real keyboard events. Its stock light button background needs an explicit dark-theme override so labels remain readable. Live keyboard testing confirmed five matches for the sample query.
+
+## Notification wording and fit
+
+Notification titles describe the user's request in their perspective; a task label or result heading is not interchangeable with that question. Put the status icon with the answer below. Visible macOS text capacity depends on glyph width and available layout, not just character count. Keep the native integration's measured limits separate from public skill wording and push-payload byte limits. The native sender is a separate installation; this repository documents its behavior without bundling it.
