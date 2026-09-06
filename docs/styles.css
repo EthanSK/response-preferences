@@ -25,3 +25,5 @@ details{font-size:12.5px;color:var(--muted);margin:0 0 10px}summary{cursor:point
 @media(max-width:900px){.app,.js .app:not(.pane-open){display:block}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:10px 14px;gap:10px}.menu-toggle{display:inline-block}.js #side-nav,.js .side-foot{display:none}.js .sidebar.open #side-nav,.js .sidebar.open .side-foot{display:block}.chat-bar{padding:8px 14px}.focus{margin-left:0}.notice,.conversation,.composer-note{padding-left:14px;padding-right:14px}.msg.user{max-width:88%}.js .app.pane-open .pane{position:fixed;inset:0;height:100vh;height:100dvh;z-index:30;border-left:0}.frame iframe{height:60vh}}
 @media(max-width:480px){:root{font-size:14.5px}.mk{font-size:1.9em}.focus button{padding:3px 7px;font-size:12px}.glossary{grid-template-columns:1fr}.tbl{font-size:12.5px}.tbl th,.tbl td{padding:5px 6px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+.sec>.mk{display:inline-flex;align-items:center;gap:8px}.sec>.mk::after{content:"▾";font:14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--muted)}

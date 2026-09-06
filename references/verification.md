@@ -6,7 +6,7 @@ Read this when changing the skill, auditing prior requests, or testing the respo
 
 1. Read the current installed skill when beginning a task, and reread it after a response-style correction. Old replies, screenshots and earlier in-memory skill text can contain superseded rules.
 2. Check the actual draft. Skill announcements need 🎯, magenta upright-serif names and a separate working ↗ for each name. Apply the response-preferences silent-use exception.
-3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour only to selected phrases. Keep markers inline for short statements and above sections with multiple paragraphs/blocks. Tables use ordinary-sized markers and category text.
+3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour only to selected phrases. Keep markers inline for short statements and above sections with multiple paragraphs/blocks, followed by a normal-size ▾ caret. Tables use ordinary-sized markers and category text.
 4. Save final Markdown and run `scripts/check-reply.py /absolute/reply.md`. Fix failures, then prepare notification metadata separately using the installed native integration, if present. If the draft changes afterwards, check and prepare again.
 
 The checker is deliberately limited. It catches common structural regressions in conventional Markdown/LaTeX replies, including the missing-magenta announcement that prompted it. It does not parse every Markdown or LaTeX construct, decide what is important, prove a link supports a claim, detect every omitted marker, inspect the Codex renderer, or force another model to obey instructions. A passing result is not a guarantee of perfect formatting.
@@ -18,7 +18,7 @@ The checker is deliberately limited. It catches common structural regressions in
 | Vocabulary | Closed 16-marker list, no inventions; ↗ only opens references | Reply checker; website vocabulary test; meaning review |
 | Activity and outcome | 👀 starts inspection, 🐌 live work, ✅ confirmed success, ❌ failure, 🐞 actual bug; other information uses ⓘ | Manual semantic review with activity/outcome cases |
 | Other meanings | 🫵 user action, 🤨 unusual, ⚠️ caution, ❓ uncertainty, 💡 recommendation, ⚖️ trade-offs, ⛔ external blocker, 🎯 skill use, ➕➕ extra scope, ⮑ answer | Closed vocabulary and website meaning controls |
-| Marker placement | Left aligned, before content; inline for a short statement, standalone for multi-block sections | Reply checker; website structure test; desktop/mobile inspection |
+| Marker placement | Left aligned, before content; inline for a short statement, standalone with a small ▾ caret for multi-block sections | Reply checker; website structure test; desktop/mobile inspection |
 | Marker size | Lowercase `\huge`, only marker enlarged | Checker; website marker size and screenshots |
 | Highlighting | Selected red/green/orange/cyan phrases in normal-size sans serif; no new colour meanings | Checker; website computed styles; manual meaning/length review |
 | Skill references | 🎯 announcement, each skill name magenta upright serif with a real adjacent ↗; preference skill used silently | Historical failure fixture; local destination check; website computed styles and links |
