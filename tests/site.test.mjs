@@ -110,10 +110,10 @@ test('automated results stay uncoloured and manual success uses the computer mar
  dom.window.close();
 });
 
-test('every example assistant reply has an attention finger',()=>{
+test('only final example replies have attention fingers',()=>{
  const dom=demo();
  for(const msg of dom.window.document.querySelectorAll('.msg.assistant')){
-  assert([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵'].includes(m.textContent)));
+  assert.equal([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵'].includes(m.textContent)),msg.classList.contains('final'));
  }
  dom.window.close();
 });

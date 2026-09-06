@@ -60,7 +60,7 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([],check_fragment(skill+' [↗](/tmp/skill.html)',False))
 
     def test_old_tiny_section_caret_is_rejected(self):
-        for caret in ['▾', '∨', '⌄']:
+        for caret in ['▾', '∨', '⌄', r'\(\LARGE\text{⌄}\)', r'\(\Large\text{⌄}\)']:
             self.assertTrue(check_fragment(r'\(\huge\text{ⓘ}\) '+caret+'\n\nSection details.'))
         self.assertEqual([],check_fragment(r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nSection details.'))
 
@@ -78,3 +78,8 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([], reply.check(r'\(\huge\text{✅}\) \(\huge\text{👉}\) The change is saved.'))
         self.assertTrue(reply.check('> 🫵 Your earlier action.\n\n```text\n👉 example\n```\n\nSaved.'))
         self.assertTrue(reply.check(r'\(\huge\text{👉}\) '+reply.CARET+'\n\nThe result.'))
+
+    def test_commentary_reserves_fingers_for_final(self):
+        self.assertEqual([], reply.check(r'\(\huge\text{🐌}\) Checking the files.', require_pointer=False, commentary=True))
+        for finger in ['👉', '🫵']:
+            self.assertTrue(reply.check('\\(\\huge\\text{'+finger+'}\\) Read this.', require_pointer=False, commentary=True))
