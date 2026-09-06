@@ -4,7 +4,7 @@ A personal Codex skill for **how replies are written**. Fixed emoji meanings, co
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
-Created from Ethan's preferences, shared so you can use or adapt them. The website demonstrates the same dark response layout, markers, colours, context reminders and adjacent opening links. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
+Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 16 markers, colours, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
 ## What it does
 
@@ -12,7 +12,7 @@ Created from Ethan's preferences, shared so you can use or adapt them. The websi
 | --- | --- |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. No arbitrary emoji additions. |
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Only selected key phrases are coloured; cyan does not colour a whole information section. |
-| Context above answers | Uses only the question or excerpt being answered, in your own grammatical perspective, as plain text above the direct-answer arrow. |
+| Context above answers | Uses only the question or excerpt being answered, in your own grammatical perspective, in a blockquote above the direct-answer arrow. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
 | Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
@@ -58,7 +58,7 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | ⚖️ | Trade-offs | ⛔ | External blocker |
 | 🎯 | Skill use | ➕➕ | Added beyond your request |
 
-Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit alone above the content and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker. Reminders have no blockquote styling. Answers name the actual subjects and make sense even when the reminder is skipped.
+Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit alone above the content and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker. Reminders use a blockquote with a vertical line on the left; answers stay outside it. Answers name the actual subjects and make sense even when the reminder is skipped.
 
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 

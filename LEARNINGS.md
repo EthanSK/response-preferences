@@ -28,6 +28,10 @@ Use versioned public asset/demo links after updates, then compare live bytes aga
 
 CodeMirror search commits its query on keyup/change; a browser automation fill that only emits input does not exercise normal typing. Verify with real keyboard events. Its stock light button background needs an explicit dark-theme override so labels remain readable. Live keyboard testing confirmed five matches for the sample query.
 
+## Conversation demo panels
+
+Closing a details pane must restore focus to its opener. On small screens the pane covers the conversation, so make the background inert until dismissal. Reopening the same document must preserve its iframe; replacing it needs an explicit reminder to download edits first. These cases are covered by `tests/site.test.mjs`.
+
 ## Notification wording and fit
 
 Notification titles describe the user's request in their perspective; a task label or result heading is not interchangeable with that question. Put the status icon with the answer below. Visible macOS text capacity depends on glyph width and available layout, not just character count. Keep the native integration's measured limits separate from public skill wording and push-payload byte limits. The native sender is a separate installation; this repository documents its behavior without bundling it.
