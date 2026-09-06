@@ -52,7 +52,7 @@ The table below does not move the return arrow onto its own line:
 ```markdown
 > How about now?
 
-\(\huge\text{⮑}\) The sample copy \(\underline{\textsf{finished}}\); the upload is \(\underline{\textsf{still waiting}}\).
+\(\huge\text{⮑}\) The \(\underline{\textsf{sample copy}}\) \(\underline{\textsf{finished}}\); the upload is \(\underline{\textsf{still waiting}}\).
 
 | Item | Status |
 |---|---|
@@ -73,7 +73,7 @@ The full annotation context and short reminder are both required. Keep them as d
 
 > Can I still see my short question below the full annotation? [↗](absolute-context-viewer.html)
 
-\(\huge\text{⮑}\) The short question stays \(\underline{\textsf{below the full context}}\), directly above the answer.
+\(\huge\text{⮑}\) The \(\underline{\textsf{short question}}\) stays \(\underline{\textsf{below the full context}}\), directly above the answer.
 ```
 
 The opening link must point to the real original-message viewer; the path above is illustrative. Include each real annotation’s required inline directive with its answer. Do not underline or paraphrase the exact earlier-response and annotation quotations.
@@ -81,3 +81,7 @@ The opening link must point to the real original-message viewer; the path above 
 ## Attention finger coverage
 
 Check every complete assistant message for 🫵 at a real user action or 👉 directly before its main self-contained takeaway. Quotations and code examples do not count. Do not manufacture a user action or aim the pointer at boilerplate. The checker enforces presence and inline reading-pointer placement; selecting the meaningful takeaway still requires semantic review. Fragment-only unit tests disable presence checking; the CLI always requires it. Website tests require a real finger marker in every example assistant message.
+
+## Context when scanning backwards
+
+Pick a later underlined cue in each paragraph, then read it with the first underline. The first cue should name the concrete topic so the pair makes sense without searching other paragraphs. Use `skill-update decisions` followed by `agent-based`, not an isolated `agent-based`. Re-establish the subject when the topic changes; do not expand every cue into a whole sentence. This is a semantic review, not something the structural checker can prove.
