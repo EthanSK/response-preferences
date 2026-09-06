@@ -43,6 +43,11 @@ def check(text, check_paths=True):
                 fail('Use an approved marker without substitutions or combinations.')
             if line[:match.start()].strip() or raw.startswith((' ', '\t')):
                 fail('Place the marker first and left-aligned, before its text.')
+            tail = line[match.end():].strip()
+            if not tail:
+                fail('Add a small ▾ after a standalone section marker.')
+            elif tail.startswith('▾') and tail != '▾':
+                fail('The ▾ caret belongs only beside a standalone section marker, not inline text.')
             if match.group(2) == '⮑' and not previous.lstrip().startswith('>'):
                 fail('Put the relevant question/excerpt in a blockquote just above the answer.')
         if re.match(r'[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕]', stripped) and not stripped.startswith('|'):
@@ -58,7 +63,7 @@ def check(text, check_paths=True):
                 fail('Use an approved highlight colour with normal-size \\textsf.')
         if re.search(r'(?:\*\*)?Skill use:', line):
             current_marker = MARKER.match(line)
-            prior_marker = MARKER.fullmatch(previous.strip())
+            prior_marker = MARKER.fullmatch(previous.strip().removesuffix(' ▾'))
             if not any(m and m.group(2) == '🎯' for m in [current_marker, prior_marker]):
                 fail('Start skill announcements with 🎯.')
             if not any(m.group(1) == 'magenta' and m.group(2) == 'textrm' for m in COLOUR.finditer(line)):

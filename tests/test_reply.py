@@ -26,9 +26,15 @@ class ReplyChecks(unittest.TestCase):
     def test_colour_cannot_be_a_link_label(self):
         self.assertTrue(reply.check(r'[\(\color{#22c55e}{\textsf{Saved}}\)](/tmp/file.html)',False))
     def test_inline_information_and_multi_block_sections_are_valid(self):
-        self.assertEqual([],reply.check(r'\(\huge\text{✅}\) '+r'\(\color{#22c55e}{\textsf{Saved.}}\)'+'\n\n'+r'\(\huge\text{ⓘ}\)'+'\n\nFirst fact.\n\nSecond fact.'))
+        self.assertEqual([],reply.check(r'\(\huge\text{✅}\) '+r'\(\color{#22c55e}{\textsf{Saved.}}\)'+'\n\n'+r'\(\huge\text{ⓘ}\) ▾'+'\n\nFirst fact.\n\nSecond fact.'))
     def test_silent_preference_use_needs_no_announcement(self):
         self.assertEqual([],reply.check(r'\(\huge\text{ⓘ}\) This is an explanation.'))
     def test_metadata_and_old_markdown_links_are_rejected(self):
         for draft in ['<!-- codex-notification {} -->','[↗](/tmp/SKILL.md)','[open](/tmp/skill.html)']:
             self.assertTrue(reply.check(draft,False))
+
+    def test_standalone_caret_does_not_leak_to_inline_markers(self):
+        self.assertTrue(reply.check(r'\(\huge\text{ⓘ}\)'+'\n\nDetails below.'))
+        self.assertEqual([],reply.check(r'\(\huge\text{ⓘ}\) ▾'+'\n\nDetails below.'))
+        self.assertTrue(reply.check(r'\(\huge\text{✅}\) ▾ Saved.'))
+        self.assertEqual([],reply.check(r'\(\huge\text{✅}\) Saved.'))
