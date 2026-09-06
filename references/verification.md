@@ -6,10 +6,10 @@ Read this when changing the skill, auditing prior requests, or testing the respo
 
 1. Read the current installed skill when beginning a task, and reread it after a response-style correction. Old replies, screenshots and earlier in-memory skill text can contain superseded rules.
 2. Check the actual draft. Skill announcements need 🎯, magenta upright-serif names and a separate working ↗ for each name. Apply the response-preferences silent-use exception.
-3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour selectively to self-contained clauses or sentences. Read every coloured bit from its first word, without its surrounding prose; check it still names the subject and makes sense. Keep markers inline for short statements and above sections with multiple paragraphs/blocks, followed by a normal-size ▾ caret. Keep the return arrow beside the opening answer even when a table, list or code block follows. Tables use ordinary-sized markers and category text.
+3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour selectively to self-contained clauses or sentences. Read every coloured bit from its first word, without its surrounding prose; check it still names the subject and makes sense. Read only the underlined words in each prose sentence in order: check they carry its useful clues and retain crucial negations, uncertainty and conditions. Exact quotations, code and links stay untouched. Keep markers inline for short statements and above sections with multiple paragraphs/blocks, followed by a normal-size ▾ caret. Keep the return arrow beside the opening answer even when a table, list or code block follows. Tables use ordinary-sized markers and category text.
 4. Save final Markdown and run `scripts/check-reply.py /absolute/reply.md`. Fix failures, then prepare notification metadata separately using the installed native integration, if present. If the draft changes afterwards, check and prepare again.
 
-The checker is deliberately limited. It catches common structural regressions in conventional Markdown/LaTeX replies, including the missing-magenta announcement that prompted it. It does not parse every Markdown or LaTeX construct, decide what is important, prove a link supports a claim, detect every omitted marker, inspect the Codex renderer, or force another model to obey instructions. A passing result is not a guarantee of perfect formatting.
+The checker is deliberately limited. It catches common structural regressions in conventional Markdown/LaTeX replies, including the missing-magenta announcement that prompted it. It does not parse every Markdown or LaTeX construct, decide what is important, choose useful underlined words or guarantee sentence coverage, prove a link supports a claim, detect every omitted marker, inspect the Codex renderer, or force another model to obey instructions. A passing result is not a guarantee of perfect formatting.
 
 ## Coverage map
 
@@ -21,6 +21,7 @@ The checker is deliberately limited. It catches common structural regressions in
 | Marker placement | Left aligned, before content; inline for a short statement, standalone with a visible ▾ caret for multi-block sections; the return arrow stays beside its opening answer | Reply checker; website structure test; desktop/mobile inspection |
 | Marker size | Lowercase `\huge`, only marker enlarged | Checker; website marker size and screenshots |
 | Highlighting | Selected self-contained red/green/orange/cyan clauses or sentences in normal-size sans serif; no new colour meanings | Checker; website computed styles; manual reading of each highlight in isolation |
+| Underlined scanning cues | Useful words in every assistant prose sentence, inside colours and ordinary prose; preserve negatives and conditions | Manual sentence-by-sentence clue review; nested-colour checker regression; website quote/link preservation and scanning examples |
 | Skill references | 🎯 announcement, each skill name magenta upright serif with a real adjacent ↗; preference skill used silently | Historical failure fixture; local destination check; website computed styles and links |
 | Reply context | Relevant question/excerpt, user's perspective, blockquote restored, answer outside it and self-contained | Checker for quote placement; manual perspective/coverage review |
 | Original message | Exact source text, heading Your message, images preserved best effort, actual file link | Context helper and image-preservation tests |
@@ -50,7 +51,7 @@ The table below does not move the return arrow onto its own line:
 ```markdown
 > How about now?
 
-\(\huge\text{⮑}\) The sample copy finished; the upload is still waiting.
+\(\huge\text{⮑}\) The sample copy \(\underline{\textsf{finished}}\); the upload is \(\underline{\textsf{still waiting}}\).
 
 | Item | Status |
 |---|---|

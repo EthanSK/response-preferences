@@ -39,3 +39,5 @@ Notification titles describe the user's request in their perspective; a task lab
 ## Reply-format regression checks
 
 A saved formatting rule can remain intact while an assistant reply omits it. Validate the actual draft as well as the instructions. The reply-checker tests include the observed plain skill announcement and require magenta serif plus an adjacent existing link. Website tests check CSS variables as well as computed declarations because JSDOM leaves `var(...)` unresolved. Public-demo tests compare embedded source text with current Markdown so updating SKILL.md without regenerating its viewer fails CI. Semantic choice and actual Codex rendering remain separate manual checks.
+
+Nested underline braces inside coloured LaTeX must not bypass palette, font or adjacent-link checks. The old flat-text colour matcher skipped these spans entirely; `tests/test_reply.py` now checks invalid colours/fonts and missing magenta links with nested underlines. This remains a structural check, not a TeX parser or a semantic underline selector.

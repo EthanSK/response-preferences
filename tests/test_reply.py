@@ -46,3 +46,12 @@ class ReplyChecks(unittest.TestCase):
                 prefix='> How about now?\n\n'+r'\(\huge\text{⮑}\)'
                 self.assertEqual([],reply.check(prefix+' The copy finished.\n\n'+block))
                 self.assertTrue(reply.check(prefix+' '+reply.CARET+'\n\nThe copy finished.\n\n'+block))
+
+    def test_nested_underlines_keep_colour_and_skill_link_validation(self):
+        good=r'\(\color{#67e8f9}{\textsf{The viewer is a \underline{snapshot} of the file.}}\)'
+        self.assertEqual([],reply.check(good))
+        self.assertTrue(reply.check(good.replace('#67e8f9','gray')))
+        self.assertTrue(reply.check(good.replace('textsf','textrm')))
+        skill=r'\(\color{magenta}{\textrm{\underline{skill-creator}}}\)'
+        self.assertTrue(reply.check(skill))
+        self.assertEqual([],reply.check(skill+' [↗](/tmp/skill.html)',False))

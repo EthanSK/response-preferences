@@ -6,7 +6,8 @@ import re
 
 MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🎯', '➕➕'}
 MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
-COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{(?:\\.|[^{}])*\}\}\\\)')
+# Nested underlines do not exempt a highlight from palette/font/link checks.
+COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 CARET = '▾'
