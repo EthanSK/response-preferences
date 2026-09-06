@@ -10,10 +10,10 @@ MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
-CARET = r'\(\LARGE\text{⌄}\)'
+CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 
 
-def check(text, check_paths=True, approved_project_markers=(), require_pointer=True):
+def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False):
     errors = []
     previous = ''
     has_pointer = False
@@ -42,6 +42,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         for match in MARKER.finditer(line):
             if match.group(2) in {'🫵', '👉'}:
                 has_pointer = True
+                if commentary:
+                    fail('Reserve attention fingers for the final reply, not working commentary.')
             if match.group(2) == '👉' and line[match.end():].strip() in {'', CARET}:
                 fail('Put the reading pointer inline immediately before its takeaway.')
             if match.group(1) != 'huge':
@@ -53,7 +55,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             tail = line[match.end():].strip()
             if not tail:
                 fail('Add the approved enlarged ⌄ after a standalone section marker.')
-            elif tail in {'▾', '∨', '⌄'}:
+            elif tail in {'▾', '∨', '⌄', r'\(\LARGE\text{⌄}\)', r'\(\Large\text{⌄}\)'}:
                 fail('Replace the old tiny caret with the approved enlarged ⌄.')
             elif (tail.startswith(('▾', '∨', '⌄')) or tail.startswith(CARET)) and tail != CARET:
                 fail('The chevron belongs only beside a standalone section marker, not inline text.')
@@ -102,9 +104,10 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reply', type=Path)
+    parser.add_argument('--commentary', action='store_true', help='Check a work update: attention fingers are forbidden.')
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     args = parser.parse_args()
-    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker)
+    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary)
     print('\n'.join(errors) if errors else 'Reply structure passed. Meaning, coverage and visual appearance still need review.')
     raise SystemExit(bool(errors))
