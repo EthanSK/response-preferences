@@ -6,7 +6,7 @@
 <meta name="description" content="A Codex skill for how replies are written: fixed emoji meanings, self-contained coloured highlights, your question above each answer and a local Markdown and code editor, shown as an example conversation.">
 <meta name="theme-color" content="#161616"><meta property="og:title" content="Response Preferences"><meta property="og:description" content="A Codex skill for how replies are written, shown as an example conversation."><meta property="og:type" content="website"><meta property="og:url" content="https://ethansk.github.io/response-preferences/">
 <link rel="canonical" href="https://ethansk.github.io/response-preferences/"><link rel="icon" href="./mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=chat4"><script defer src="./site.js?v=chat3"></script>
+<link rel="stylesheet" href="./styles.css?v=chat5"><script defer src="./site.js?v=chat3"></script>
 </head>
 <body>
 <a class="skip" href="#thread">Skip to the conversation</a>
@@ -66,7 +66,7 @@
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
 <p>Every marker keeps a single meaning: a tick is only a confirmed result, a snail only work still running, an eye only the start of a check. There are 16 of them, and nothing outside the list is used, however fitting another emoji might look.</p>
 <p>Colour is rationed the same way. <span class="c-cyan">Each coloured highlight makes sense on its own.</span> You can start reading at its first word and understand it without the surrounding text. The rest of the explanation stays white. Red means you must read it, green marks the confirmed result, orange a warning.</p>
-<p>The return arrow stays beside the opening answer, even when a table or list follows. Other markers sit above a multi-block section with a visible ∨ caret, smaller than the emoji, and apply until the next marker.</p>
+<p>The return arrow stays beside the opening answer, even when a table or list follows. Other markers sit above a multi-block section with a small ▾ caret, and apply until the next marker.</p>
 </div>
 <p data-kind="other"><button type="button" class="mk">💡</button>In a hurry, read only the ⮑ line; the other sections are there when you want the detail.</p>
 <div class="sec" data-kind="other"><button type="button" class="mk">➕➕</button><p><strong>Added beyond your request</strong></p><p>The release-notes draft from earlier in this task was reformatted the same way, so both documents read consistently.</p></div>
@@ -110,7 +110,7 @@
 <div class="pane-bar"><span id="pane-title">Details</span><button type="button" class="pane-close" id="pane-close" aria-label="Close details">×</button></div>
 <section class="panel" id="marker" data-title="Marker" aria-labelledby="mk-name">
 <p class="panel-mk" id="mk-symbol" aria-hidden="true">⮑</p><h2 id="mk-name" tabindex="-1">Direct answer</h2><p id="mk-meaning">A direct answer to your question. The question or excerpt it answers sits in a quote just above it, and the answer still makes sense if you skip the quote.</p>
-<p class="small">Placement: keep the return arrow beside the opening answer, even when a table or list follows. Other markers stay inline for short statements, or sit with a visible ∨ caret above multi-block sections. Never after the text, centred or indented. Markers render at LaTeX <code>\huge</code> size; the caret uses a separate <code>\Large</code> span and prose stays normal size. The caret is a visual cue, not a dropdown control.</p>
+<p class="small">Placement: keep the return arrow beside the opening answer, even when a table or list follows. Other markers stay inline for short statements, or sit with a small ▾ caret above multi-block sections. Never after the text, centred or indented. Markers render at LaTeX <code>\huge</code> size; the caret and prose stay normal size. The caret is a visual cue, not a dropdown control.</p>
 <p class="small"><a href="#markers" data-pane="markers">All 16 markers</a></p>
 </section>
 <section class="panel" id="markers" data-title="Markers" aria-labelledby="markers-h">
