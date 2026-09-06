@@ -9,19 +9,19 @@ def check_fragment(*args, **kwargs):
 
 class ReplyChecks(unittest.TestCase):
     def test_historical_plain_skill_announcement_is_rejected(self):
-        self.assertTrue(check_fragment(r'\(\huge\text{🎯}\) Skill use: browser-test-on-macbook and use-macbook-display — open the site.'))
+        self.assertTrue(check_fragment(r'\(\huge\text{🧠}\) Skill use: browser-test-on-macbook and use-macbook-display — open the site.'))
     def test_each_coloured_skill_requires_its_own_existing_link(self):
         with tempfile.TemporaryDirectory() as directory:
             p=Path(directory)/'skill.html';p.write_text('example')
-            good=rf'\(\huge\text{{🎯}}\) **Skill use:** \(\color{{magenta}}{{\textrm{{skill-creator}}}}\) [↗]({p}) — update the skill.'
+            good=rf'\(\huge\text{{🧠}}\) **Skill use:** \(\color{{magenta}}{{\textrm{{skill-creator}}}}\) [↗]({p}) — update the skill.'
             self.assertEqual([],check_fragment(good))
             self.assertTrue(check_fragment(good.replace(f'[↗]({p})','')))
             p.unlink();self.assertTrue(check_fragment(good))
     def test_regressed_marker_and_colour_patterns_are_rejected(self):
-        for draft in [r'\(\Huge\text{✅}\) Done.',r'Done. \(\huge\text{✅}\)',r'\(\huge\text{🧠}\) Explanation.',r'\(\huge\text{➕}\) Added.',r'\(\color{gray}{\textsf{A fact}}\)',r'\(\color{magenta}{\textsf{skill-creator}}\)']:
+        for draft in [r'\(\Huge\text{✅}\) Done.',r'Done. \(\huge\text{✅}\)',r'\(\huge\text{🎯}\) Explanation.',r'\(\huge\text{➕}\) Added.',r'\(\color{gray}{\textsf{A fact}}\)',r'\(\color{magenta}{\textsf{skill-creator}}\)']:
             with self.subTest(draft=draft):self.assertTrue(check_fragment(draft))
     def test_quotes_and_code_examples_do_not_become_new_instructions(self):
-        self.assertEqual([],check_fragment('> Earlier response: '+r'\(\Huge\text{🧠}\)'+'\n\n```md\n<!-- example -->\n```'))
+        self.assertEqual([],check_fragment('> Earlier response: '+r'\(\Huge\text{🎯}\)'+'\n\n```md\n<!-- example -->\n```'))
     def test_direct_answer_needs_its_question_quote(self):
         answer=r'\(\huge\text{⮑}\) The quote line is restored.'
         self.assertTrue(check_fragment(answer))

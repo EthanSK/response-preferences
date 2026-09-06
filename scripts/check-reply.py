@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 import re
 
-MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🎯', '➕➕', '🖥️', '👉'}
+MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🧠', '➕➕', '🖥️', '👉'}
 MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
@@ -77,8 +77,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         if re.search(r'(?:\*\*)?Skill use:', line):
             current_marker = MARKER.match(line)
             prior_marker = MARKER.fullmatch(previous.strip().removesuffix(' ' + CARET))
-            if not any(m and m.group(2) == '🎯' for m in [current_marker, prior_marker]):
-                fail('Start skill announcements with 🎯.')
+            if not any(m and m.group(2) == '🧠' for m in [current_marker, prior_marker]):
+                fail('Start skill announcements with 🧠.')
             if not any(m.group(1) == 'magenta' and m.group(2) == 'textrm' for m in COLOUR.finditer(line)):
                 fail('Skill announcements need magenta upright-serif skill names and adjacent ↗ links.')
         for match in LINK.finditer(line):

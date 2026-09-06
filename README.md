@@ -24,7 +24,7 @@ Created from Ethan's preferences, shared so you can use or adapt them. The websi
 | Annotation context | Preserves the full annotation context, then the short question in your wording underneath, then the answer. Groups related answers without dropping either context layer. |
 | Notification wording | Defines short, complete notification summaries. Native notification delivery is an optional **separate** integration. |
 
-The response-preference skill itself is used silently. Other skill announcements use 🎯 with a magenta skill name and an adjacent opening link.
+The response-preference skill itself is used silently. Other skill announcements use 🧠 with a magenta skill name and an adjacent opening link.
 
 ## Install
 
@@ -59,7 +59,7 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | 🤨 | Unexpected behaviour | ⚠️ | Caution |
 | ❓ | Missing information | 💡 | Recommendation |
 | ⚖️ | Trade-offs | ⛔ | External blocker |
-| 🎯 | Skill use | ➕➕ | Added beyond your request |
+| 🧠 | Skill use | ➕➕ | Added beyond your request |
 | 🖥️ | Computer Use and manual browser/app tests | | |
 
 Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit above the content with a visible ⌄ chevron beside them and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. The caret points toward the section below; it is a visual cue, not a dropdown control or a new emoji meaning. Write `\(\huge\text{ⓘ}\) \(\raisebox{0.3em}{\Large\text{⌄}}\)`: keep the emoji at lowercase `\huge` and use `\Large` for the smaller chevron and raise it `0.3em` toward the emoji’s vertical centre. Do not use the old tiny `▾` triangle or mathematical `∨`. Inline and table-cell markers have no caret. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker. Reminders use a blockquote with a vertical line on the left; answers stay outside it. The return arrow stays on the same line as the opening answer, even when a table, list, code block or further paragraph follows. It has no caret. Answers name the actual subjects and make sense even when the reminder is skipped.
