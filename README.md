@@ -11,7 +11,7 @@ Created from Ethan's preferences, shared so you can use or adapt them. The websi
 | Feature | Behaviour |
 | --- | --- |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. No arbitrary emoji additions. |
-| Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings. Only key phrases are coloured. |
+| Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, light gray for important information. Only key phrases are coloured. |
 | Context above answers | Summarises your message in your own grammatical perspective, immediately above the direct-answer arrow. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
@@ -57,7 +57,7 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 
 Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit alone above the content and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker.
 
-Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, or orange `#fb923c`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
+Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or light gray `#d1d5db`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
 ## Generate a viewer
 
