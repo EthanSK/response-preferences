@@ -4,7 +4,7 @@ A personal Codex skill for **how replies are written**. Fixed emoji meanings, co
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
-Created from Ethan's preferences, shared so you can use or adapt them. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
+Created from Ethan's preferences, shared so you can use or adapt them. The website demonstrates the same dark response layout, markers, colours, context reminders and adjacent opening links. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
 ## What it does
 
