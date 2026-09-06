@@ -3,7 +3,7 @@
 const d=document;d.documentElement.classList.add('js');
 const norm=s=>s.replace(/\uFE0F/g,'').trim();
 const M={
-'⮑':['Direct answer','A direct answer to your question. The question or excerpt it answers sits in a quote just above it, and the answer still makes sense if you skip the quote.'],
+'⮑':['Direct answer','A direct answer to your question. The arrow stays beside the opening answer, even when a table or list follows. The question sits in a quote above it; the answer makes sense without rereading it.'],
 '✅':['Confirmed success','Only confirmed success or completion, never a general acknowledgement or a default prefix.'],
 '❌':['Failure','An actual failure, including a check that itself could not run.'],
 '👀':['Starting a check','Only when starting to look, check, inspect or review. A finished review reports its outcome with ✅, 🐞 or ❌ instead.'],
