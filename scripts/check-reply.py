@@ -10,7 +10,7 @@ MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
-CARET = '▾'
+CARET = r'\(\LARGE\text{⌄}\)'
 
 
 def check(text, check_paths=True):
@@ -47,8 +47,10 @@ def check(text, check_paths=True):
                 fail('Place the marker first and left-aligned, before its text.')
             tail = line[match.end():].strip()
             if not tail:
-                fail('Add a small ▾ after a standalone section marker.')
-            elif (tail.startswith(('▾', '∨')) or tail.startswith(CARET)) and tail != CARET:
+                fail('Add the approved enlarged ⌄ after a standalone section marker.')
+            elif tail in {'▾', '∨', '⌄'}:
+                fail('Replace the old tiny caret with the approved enlarged ⌄.')
+            elif (tail.startswith(('▾', '∨', '⌄')) or tail.startswith(CARET)) and tail != CARET:
                 fail('The chevron belongs only beside a standalone section marker, not inline text.')
             if match.group(2) == '⮑' and tail in {'', '▾', '∨', CARET}:
                 fail('Keep the return arrow beside the opening answer, even when a table or list follows.')

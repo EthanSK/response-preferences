@@ -55,3 +55,8 @@ class ReplyChecks(unittest.TestCase):
         skill=r'\(\color{magenta}{\textrm{\underline{skill-creator}}}\)'
         self.assertTrue(reply.check(skill))
         self.assertEqual([],reply.check(skill+' [↗](/tmp/skill.html)',False))
+
+    def test_old_tiny_section_caret_is_rejected(self):
+        for caret in ['▾', '∨', '⌄']:
+            self.assertTrue(reply.check(r'\(\huge\text{ⓘ}\) '+caret+'\n\nSection details.'))
+        self.assertEqual([],reply.check(r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nSection details.'))
