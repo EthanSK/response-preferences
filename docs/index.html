@@ -46,13 +46,13 @@
 <blockquote class="quote"><p>Can you check the export and tell me what I need to do? <a class="ctx" href="./message.html?v=4" data-file="message.html · Your message" aria-label="Open your original message">↗</a></p><p class="preview">Opens <b>Your message</b>: the exact original text with any attached images underneath, in the Markdown viewer. Codex shows the destination path on hover; this preview is a website extra.</p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button>The <u>export works again</u> after the segment-length fix, and the only thing you need to do is <u>restart the app before your next export</u>.</p>
 <p data-kind="success"><button type="button" class="mk">✅</button><u>Both sample exports finished</u> with the <u>correct final segment</u>.</p>
-<p data-kind="success" class="manual-check"><button type="button" class="mk">🖥️</button><span class="c-green">The manual playback check <u>passed in the app</u>, including the <u>final frames</u>.</span></p>
+<p data-kind="success" class="manual-check"><button type="button" class="mk">🖥️</button><span class="c-green">The <u>manual playback check</u> <u>passed in the app</u>, including the <u>final frames</u>.</span></p>
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
-<p>The last segment was <u>rounded down to 0 s</u> <u>whenever the clip length was not a multiple of the segment size</u>, so <u>short clips lost their final frames</u>. The fix <u>rounds the last segment up</u> instead. <span class="c-cyan">Your existing <u>project settings are unchanged</u>.</span></p>
+<p>The <u>last segment</u> was <u>rounded down to 0 s</u> <u>whenever the clip length was not a multiple of the segment size</u>, so <u>short clips lost their final frames</u>. The fix <u>rounds the last segment up</u> instead. <span class="c-cyan">Your existing <u>project settings are unchanged</u>.</span></p>
 <table class="tbl"><thead><tr><th scope="col">Status</th><th scope="col">Item</th><th scope="col">Result</th></tr></thead><tbody><tr><td>✅ Passed</td><td>3 s clip</td><td>1 segment, 3 s</td></tr><tr><td>✅ Passed</td><td>90 s clip</td><td>30 segments, last one 3 s</td></tr><tr><td>🫵 Your action</td><td>Restart the app</td><td>Needed before the next export</td></tr></tbody></table>
 </div>
 <div class="sec" data-kind="caution"><button type="button" class="mk">⚠️</button>
-<p><span class="c-orange">Export fixes take effect <u>after restarting the app</u>.</span> An export started now <u>still uses the old rounding</u>.</p>
+<p><span class="c-orange"><u>Export fixes</u> take effect <u>after restarting the app</u>.</span> An export started now <u>still uses the old rounding</u>.</p>
 <p><span class="c-red"><u>Save the project before restarting</u>, because <u>unsaved clips are discarded</u>.</span></p>
 </div>
 <p data-kind="action"><button type="button" class="mk">🫵</button><u>Restart the app</u>, then <u>re-export the short clip</u> you noticed the problem on.</p>
@@ -65,7 +65,7 @@
 <blockquote class="quote"><p>Can you make this easier to follow? <a class="ctx" href="./format-message.html?v=4" data-file="format-message.html · Your message" aria-label="Open your original message">↗</a></p><p class="preview">Opens <b>Your message</b> in the Markdown viewer, with the exact original text. Codex shows the destination path on hover; this preview is a website extra.</p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>Yes. <u>This reply’s format</u> now <u>starts with the direct answer</u>, keeps <u>your question just above it</u>, and marks each section with <u>one fixed symbol</u>, so you can jump to the part you want.</p>
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
-<p>Every marker keeps a <u>single meaning</u>: a <u>tick is only a confirmed result</u>, a <u>snail only work still running</u>, an <u>eye only the start of a check</u>. There are <u>18 global markers</u>, and <u>only user-approved project extensions add to the list</u>, however fitting another emoji might look.</p>
+<p><u>Every marker</u> keeps a <u>single meaning</u>: a <u>tick is only a confirmed result</u>, a <u>snail only work still running</u>, an <u>eye only the start of a check</u>. There are <u>18 global markers</u>, and <u>only user-approved project extensions add to the list</u>, however fitting another emoji might look.</p>
 <p><u>Colour is selected by meaning</u>. <span class="c-cyan"><u>Each coloured highlight makes sense on its own</u>.</span> You can <u>start reading at its first word</u> and understand it <u>without the surrounding text</u>. The rest of the <u>explanation stays white</u>. <u>Red means you must read it</u>, <u>green marks the confirmed result</u>, <u>orange a warning</u>.</p>
 <p><u>Every reply has an attention finger</u>: 🫵 for your actual action, or 👉 before the <u>most useful takeaway to read or continue from</u>.</p>
 <p><u>Underlined scanning cues</u> start each paragraph by naming <u>what the details are about</u>, so a later cue makes sense when you glance back.</p>
@@ -89,7 +89,7 @@
 <p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>Yes, the <u>response-preferences skill</u> <u>installs with one git clone</u> into your Codex skills folder and <u>one line</u> in your AGENTS.md.</p>
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
 <pre><code>git clone https://github.com/EthanSK/response-preferences.git ~/.codex/skills/response-preferences</code></pre>
-<p><u>Then add</u> <code>Use $response-preferences for all replies.</code> to your global or project <code>AGENTS.md</code>. <u>Python 3.9+ generates the viewers and message-context files</u>; <u>no Node build is needed</u> to use it.</p>
+<p>To activate <u>response preferences</u>, add <code>Use $response-preferences for all replies.</code> to your global or project <code>AGENTS.md</code>. <u>Python 3.9+ generates the viewers and message-context files</u>; <u>no Node build is needed</u> to use it.</p>
 </div>
 <p data-kind="caution"><button type="button" class="mk">⚠️</button><span class="c-orange"><u>Response Preferences uses Ethan’s formatting choices</u>.</span> Edit SKILL.md to <u>change them for yourself</u>. The rules are agent instructions, so they <u>cannot guarantee that a model always follows them</u>.</p>
 </div>
@@ -105,12 +105,12 @@
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote"><p>Is the flaky upload test fixed now? <a class="ctx" href="#backup-u1" aria-label="Jump to your message in this demo">↗</a></p><p class="preview">Jumps to your message above; the excerpt keeps your wording and drops the part about running the backup. In a real reply this ↗ opens a small local file headed <b>Your message</b>.</p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button><u>No.</u> The <u>upload test is not flaky</u>, it has a <u>real bug</u>: it <u>only passes when an earlier test left a cached token</u>. Tonight’s <u>backup upload failed for a separate reason</u>.</p>
-<p data-kind="problem"><button type="button" class="mk">❌</button><span class="c-red">The backup was <u>packed but not uploaded</u>, so there is <u>no off-site copy from tonight</u>.</span></p>
-<p data-kind="problem"><button type="button" class="mk">🐞</button><code>upload.test.ts</code> reads the token from a <u>cache written by the previous test file</u>, so <u>on its own, or run first, it fails every time</u>. The cause is in <code>src/auth/token.ts</code>, which <u>only refreshes when a cache file already exists</u>.</p>
-<p data-kind="other"><button type="button" class="mk">🤨</button>The pack step <u>reported 3,000 files</u>, but the <u>archive holds 2,998</u>: <u>two zero-byte lock files are skipped without any log line</u>.</p>
+<p data-kind="problem"><button type="button" class="mk">❌</button><span class="c-red">The <u>backup</u> was <u>packed but not uploaded</u>, so there is <u>no off-site copy from tonight</u>.</span></p>
+<p data-kind="problem"><button type="button" class="mk">🐞</button>The <u>token test</u> (<code>upload.test.ts</code>) reads the token from a <u>cache written by the previous test file</u>, so <u>on its own, or run first, it fails every time</u>. The cause is in <code>src/auth/token.ts</code>, which <u>only refreshes when a cache file already exists</u>.</p>
+<p data-kind="other"><button type="button" class="mk">🤨</button>The <u>pack step</u> <u>reported 3,000 files</u>, but the <u>archive holds 2,998</u>: <u>two zero-byte lock files are skipped without any log line</u>.</p>
 <p data-kind="other"><button type="button" class="mk">⛔</button>The upload failed because the <u>storage provider is returning 503 for the whole region</u>; the upload <u>needs the provider to recover</u>.</p>
 <p data-kind="other"><button type="button" class="mk">❓</button>I <u>could not tell if the 503s began before or after the token change</u>, because the provider’s <u>status page has no history</u>.</p>
-<p data-kind="other"><button type="button" class="mk">⚖️</button>Fixing the token refresh tonight makes the <u>test independent of order</u>, but touches <u>shared auth code two days before release</u>. <u>Skipping the test</u> instead keeps the release small and <u>leaves the bug in place</u>.</p>
+<p data-kind="other"><button type="button" class="mk">⚖️</button><u>Fixing the token refresh tonight</u> makes the <u>test independent of order</u>, but touches <u>shared auth code two days before release</u>. <u>Skipping the test</u> instead keeps the release small and <u>leaves the bug in place</u>.</p>
 <p data-kind="other"><button type="button" class="mk">💡</button><u>Fix the token refresh</u>: it is a <u>five-line change</u>, and the <u>test then proves it</u>.</p>
 <p data-kind="action"><button type="button" class="mk">🫵</button><u>Decide if the token fix goes into this release</u>, and <u>choose when I should retry the upload</u>.</p>
 </div>
