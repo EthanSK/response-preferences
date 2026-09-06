@@ -35,8 +35,6 @@ class ReplyChecks(unittest.TestCase):
 
     def test_standalone_caret_does_not_leak_to_inline_markers(self):
         self.assertTrue(reply.check(r'\(\huge\text{ⓘ}\)'+'\n\nDetails below.'))
-        self.assertTrue(reply.check(r'\(\huge\text{ⓘ}\) ▾'+'\n\nDetails below.'))
-        self.assertTrue(reply.check(r'\(\huge\text{ⓘ}\) ∨'+'\n\nDetails below.'))
         self.assertEqual([],reply.check(r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nDetails below.'))
         self.assertTrue(reply.check(r'\(\huge\text{✅}\) ▾ Saved.'))
         self.assertTrue(reply.check(r'\(\huge\text{✅}\) '+reply.CARET+' Saved.'))

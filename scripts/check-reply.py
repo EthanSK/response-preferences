@@ -9,7 +9,7 @@ MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{(?:\\.|[^{}])*\}\}\\\)')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
-CARET = r'\(\Large\vee\)'
+CARET = '▾'
 
 
 def check(text, check_paths=True):
@@ -45,8 +45,8 @@ def check(text, check_paths=True):
             if line[:match.start()].strip() or raw.startswith((' ', '\t')):
                 fail('Place the marker first and left-aligned, before its text.')
             tail = line[match.end():].strip()
-            if not tail or tail in {'▾', '∨'}:
-                fail('Use a clearly visible standalone caret: ' + CARET)
+            if not tail:
+                fail('Add a small ▾ after a standalone section marker.')
             elif (tail.startswith(('▾', '∨')) or tail.startswith(CARET)) and tail != CARET:
                 fail('The chevron belongs only beside a standalone section marker, not inline text.')
             if match.group(2) == '⮑' and tail in {'', '▾', '∨', CARET}:
