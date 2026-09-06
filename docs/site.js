@@ -11,6 +11,7 @@ const M={
 '🐌':['Work in progress','Work that is actively underway right now, including counts or percentages. Not for finished work, history, or things you still have to do.'],
 '🐞':['Actual bug','An actual bug being reported. Not plans to look for bugs, test activity, or incomplete verification.'],
 'ⓘ':['Information','Information, explanations and status summaries. A new ⓘ section starts when the purpose changes; a result section does not cover the explanation after it.'],
+'👉':['Read this','The most useful takeaway to read, remember or continue from. Every reply has this pointer when there is no real user action marked with 🫵.'],
 '🫵':['Your action','An outstanding action or decision for you.'],
 '🤨':['Unexpected','A weird or unexpected point.'],
 '\u26A0':['Caution','A caution. Orange marks the phrase that matters; red is kept for critical must-read text.'],
