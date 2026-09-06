@@ -48,7 +48,11 @@ test('the demo preserves the approved marker vocabulary and efficient section pl
    assert(!b.closest('blockquote'),'The answer marker must be outside the question quote');
    if(b.parentElement.classList.contains('sec'))assert(b.parentElement.children.length>2,'A single statement keeps its marker inline');
  }
- for(const p of d.querySelectorAll('[data-kind="answer"]'))assert(p.previousElementSibling.matches('blockquote.quote'));
+ for(const p of d.querySelectorAll('[data-kind="answer"]')){
+   assert(p.previousElementSibling.matches('blockquote.quote'));
+   assert.equal(p.tagName,'P','The opening answer stays beside the return arrow');
+   assert(p.textContent.replace('⮑','').trim(),'The arrow must have an opening answer');
+ }
  dom.window.close();
 });
 test('skill names remain magenta serif with a separate working HTML link',()=>{
