@@ -98,6 +98,18 @@ See [viewer instructions](references/viewer.md) for details. User clicks and aut
 
 Notifications lead with a short version of your request, in your wording and perspective. The text below pairs the status icon with a brief answer summary. Titles contain no emoji; the status icon starts the answer below. The native integration measures one title line and two answer lines before accepting the text. There is no universal macOS character count that guarantees a fit. Metadata stays out of chat. This repository does **not** install notification hooks, a native sender, task routing, or display-duration changes. On Ethan's Mac those are provided by a separate `macos-heads-up-notification` integration. Without it, the agent skips notification preparation. All other features work independently.
 
+## Keeping the format consistent
+
+The skill requires a quick check before every reply. Before sending a final reply, save its exact Markdown and run:
+
+```sh
+python3 ~/.codex/skills/response-preferences/scripts/check-reply.py /absolute/reply.md
+```
+
+This catches missing magenta skill announcements, missing opening links, unknown or misplaced wrapped markers, uppercase `\Huge`, obsolete colour/font combinations, missing question quotes, direct Markdown links and leaked notification comments. It checks local link destinations exist. Quoted earlier messages and code examples are excluded. It does not interpret meaning, guarantee model obedience or verify the app's rendering; see [verification and coverage](references/verification.md).
+
+GitHub Actions runs the test suite on every push and pull request, including regression cases for the reply checker and the website's marker, colour, quote and skill-link presentation.
+
 ## Develop
 
 Node.js 22+ and Python 3.9+:
