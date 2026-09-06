@@ -15,12 +15,13 @@ The checker is deliberately limited. It catches common structural regressions in
 
 | Area | Current contract | Verification |
 | --- | --- | --- |
-| Vocabulary | Closed 16-marker list, no inventions; ↗ only opens references | Reply checker; website vocabulary test; meaning review |
+| Vocabulary | Closed 17-marker global list plus user-approved scoped extensions, no inventions; ↗ only opens references | Reply checker; website vocabulary test; meaning review |
 | Activity and outcome | 👀 starts inspection, 🐌 live work, ✅ confirmed success, ❌ failure, 🐞 actual bug; other information uses ⓘ | Manual semantic review with activity/outcome cases |
 | Other meanings | 🫵 user action, 🤨 unusual, ⚠️ caution, ❓ uncertainty, 💡 recommendation, ⚖️ trade-offs, ⛔ external blocker, 🎯 skill use, ➕➕ extra scope, ⮑ answer | Closed vocabulary and website meaning controls |
 | Marker placement | Left aligned, before content; inline for a short statement, standalone with a visible ⌄ chevron for multi-block sections; the return arrow stays beside its opening answer | Reply checker; website structure test; desktop/mobile inspection |
 | Marker size | Lowercase `\huge`, only marker enlarged | Checker; website marker size and screenshots |
 | Highlighting | Selected self-contained red/green/orange/cyan clauses or sentences in normal-size sans serif; no new colour meanings | Checker; website computed styles; manual reading of each highlight in isolation |
+| Computer Use and automated checks | 🖥️ with explicit manual-test status; green only for successful manual tests, never automated tests/lint | Manual semantic check; website example and global/project marker tests |
 | Underlined scanning cues | Useful words in every assistant prose sentence, inside colours and ordinary prose; preserve negatives and conditions | Manual sentence-by-sentence clue review; nested-colour checker regression; website quote/link preservation and scanning examples |
 | Skill references | 🎯 announcement, each skill name magenta upright serif with a real adjacent ↗; preference skill used silently | Historical failure fixture; local destination check; website computed styles and links |
 | Reply context | Relevant question/excerpt, user's perspective, blockquote restored, answer outside it and self-contained | Checker for quote placement; manual perspective/coverage review |
