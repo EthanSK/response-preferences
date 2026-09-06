@@ -150,3 +150,9 @@ The agent checks the configured public source on first skill use when a week has
 ## A pointer in the final reply
 
 Only the final reply includes an attention finger: normally one 🫵 for your actual action or decision, otherwise one 👉 before the main takeaway. Two may help for distinct important items. Working commentary and progress updates have no attention fingers, so they do not steal your focus. Keep the finger beside its content, not isolated at the bottom. Other status markers keep their meanings.
+
+Closing outstanding-item recommendations include a ↗ link to their fuller saved context in a real local viewer. Env footers are reserved for AIMVS work, not unrelated tasks.
+
+## Original-message hover
+
+The quoted question can use `[↗](</Original user text here>)` to show the original text in Codex’s destination popup. This user-confirmed short-text technique includes a leading slash and is hover-only: clicking does not open a file. Keep a separate real context-viewer link for attached images or clickable context. Long messages, line breaks and special characters are not yet verified.
