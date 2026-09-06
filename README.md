@@ -55,7 +55,7 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | ⚖️ | Trade-offs | ⛔ | External blocker |
 | 🎯 | Skill use | ➕➕ | Added beyond your request |
 
-Markers start the section, before the title. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker.
+Section markers sit alone on a line above the title or content and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker.
 
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, or orange `#fb923c`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
