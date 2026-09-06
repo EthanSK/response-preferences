@@ -4,7 +4,7 @@ A personal Codex skill for **how replies are written**. Fixed emoji meanings, co
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
-Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 17 global markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
+Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 18 global markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
 ## What it does
 
@@ -146,3 +146,7 @@ MIT. CodeMirror, markdown-it, Highlight.js and their dependencies retain their o
 ## Weekly update checks
 
 The agent checks the configured public source on first skill use when a week has passed, using a shared local lease to avoid duplicate checks. It can install reviewed, compatible updates and tells you what changed; it preserves local edits and respects opt-outs. No background process is installed. Python 3 is needed for the date/lease helper; the skill can still be used without it. Copied installations need a trustworthy installation baseline; plugin installations use their host updater. See [the update procedure](references/public-updates.md).
+
+## A pointer in every reply
+
+Every assistant message includes 🫵 for an actual action or decision for you, or 👉 before the most useful takeaway to read or continue from. One is enough; no invented action, no pointer hidden in a quotation, and no standalone pointing finger. Other status markers keep their meanings.

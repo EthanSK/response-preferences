@@ -77,3 +77,7 @@ The full annotation context and short reminder are both required. Keep them as d
 ```
 
 The opening link must point to the real original-message viewer; the path above is illustrative. Include each real annotation’s required inline directive with its answer. Do not underline or paraphrase the exact earlier-response and annotation quotations.
+
+## Attention finger coverage
+
+Check every complete assistant message for 🫵 at a real user action or 👉 directly before its main self-contained takeaway. Quotations and code examples do not count. Do not manufacture a user action or aim the pointer at boilerplate. The checker enforces presence and inline reading-pointer placement; selecting the meaningful takeaway still requires semantic review. Fragment-only unit tests disable presence checking; the CLI always requires it. Website tests require a real finger marker in every example assistant message.

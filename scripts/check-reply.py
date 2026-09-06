@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 import re
 
-MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🎯', '➕➕', '🖥️'}
+MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🎯', '➕➕', '🖥️', '👉'}
 MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
@@ -13,9 +13,10 @@ PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 CARET = r'\(\LARGE\text{⌄}\)'
 
 
-def check(text, check_paths=True, approved_project_markers=()):
+def check(text, check_paths=True, approved_project_markers=(), require_pointer=True):
     errors = []
     previous = ''
+    has_pointer = False
     fence = None
     for number, raw in enumerate(text.splitlines(), 1):
         stripped = raw.lstrip()
@@ -39,11 +40,15 @@ def check(text, check_paths=True, approved_project_markers=()):
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         for match in MARKER.finditer(line):
+            if match.group(2) in {'🫵', '👉'}:
+                has_pointer = True
+            if match.group(2) == '👉' and line[match.end():].strip() in {'', CARET}:
+                fail('Put the reading pointer inline immediately before its takeaway.')
             if match.group(1) != 'huge':
                 fail('Use lowercase \\huge for section markers.')
             if match.group(2) not in MARKERS | set(approved_project_markers):
                 fail('Use an approved marker without substitutions or combinations.')
-            if line[:match.start()].strip() or raw.startswith((' ', '\t')):
+            if match.group(2) != '👉' and (line[:match.start()].strip() or raw.startswith((' ', '\t'))):
                 fail('Place the marker first and left-aligned, before its text.')
             tail = line[match.end():].strip()
             if not tail:
@@ -89,6 +94,8 @@ def check(text, check_paths=True, approved_project_markers=()):
                     fail('The local link destination does not exist: ' + path)
         if line.strip():
             previous = line
+    if require_pointer and not has_pointer:
+        errors.append('Include 🫵 for a real user action, or 👉 before the main reading takeaway.')
     return errors
 
 

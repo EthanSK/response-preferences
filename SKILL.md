@@ -44,6 +44,8 @@ For final replies, save the exact draft and run `python3 /absolute/path/to/respo
 - Use ⓘ for information, explanations, and historical status summaries. Use 🐌 for current work in progress, even when the update also provides factual information.
 - Use ⮑ for a direct answer to Ethan's question. Use ⓘ for supporting information that follows.
 - Use 🫵 for outstanding actions or decisions for Ethan.
+- Every assistant message to Ethan, including commentary and final replies, must contain at least one attention finger: 🫵 or 👉. Use 🫵 where Ethan actually needs to act or decide. If there is no 🫵, use one or more 👉 pointing right at the most useful part to read, remember or continue from, even when progress is not dependent on Ethan. Do not manufacture an action or decision just to include 🫵. These are rules for replies to Ethan, not changes to his original messages, quotations, code or notification metadata.
+- Use 👉 as a reading pointer immediately before the meaningful, self-contained takeaway. Choose the useful content rather than a generic “look here” label, a skill announcement or a footer. Render it as `\(\huge\text{👉}\)` inline with that content; never alone or with a section caret. It may appear after an existing section marker or within a section immediately before the key statement: this is an explicit exception to the section-marker-first rule. Preserve the direct-answer arrow and other semantic markers. One well-placed finger is enough; add more only for distinct useful takeaways. A quoted or code-example finger does not satisfy the requirement.
 - Use 🤨 (raised eyebrow) for weird or unexpected points.
 - Use ⚠️ for cautions.
 - Use ❓ for uncertainty or missing information.
