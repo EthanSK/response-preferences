@@ -4,6 +4,7 @@ const d=document;d.documentElement.classList.add('js');
 const norm=s=>s.replace(/\uFE0F/g,'').trim();
 const M={
 '⮑':['Direct answer','A direct answer to your question. The arrow stays beside the opening answer, even when a table or list follows. The question sits in a quote above it; the answer makes sense without rereading it.'],
+'🖥':['Computer Use','Manual browser/app interaction and tests, with explicit status wording. Green highlights confirmed manual success; failed or incomplete checks are not green. Automated tests and lint use ordinary text.'],
 '✅':['Confirmed success','Only confirmed success or completion, never a general acknowledgement or a default prefix.'],
 '❌':['Failure','An actual failure, including a check that itself could not run.'],
 '👀':['Starting a check','Only when starting to look, check, inspect or review. A finished review reports its outcome with ✅, 🐞 or ❌ instead.'],

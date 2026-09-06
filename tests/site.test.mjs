@@ -41,7 +41,7 @@ test('switching a viewed document requires confirmation; reopening it keeps edit
 });
 test('the demo preserves the approved marker vocabulary and efficient section placement',()=>{
  const dom=demo(),d=dom.window.document;
- const expected=['⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔','🎯','➕➕'];
+ const expected=['⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔','🎯','➕➕','🖥️'];
  assert.deepEqual(new Set([...d.querySelectorAll('.conversation .mk')].map(x=>x.textContent)),new Set(expected));
  for(const b of d.querySelectorAll('.conversation .mk')){
    assert.equal(b.parentElement.firstElementChild,b,'Marker precedes the section text');
@@ -96,5 +96,16 @@ test('full annotation context keeps a separate short question before the answer'
  assert(reminder.matches('blockquote.quote'));
  assert.equal(reminder.querySelector('a').getAttribute('href'),'#format-u3');
  assert(reminder.nextElementSibling.matches('p[data-kind="answer"]'));
+ dom.window.close();
+});
+
+test('automated results stay uncoloured and manual success uses the computer marker',()=>{
+ const dom=demo(),d=dom.window.document;
+ const automated=d.querySelector('#export p[data-kind="success"]');
+ assert(!automated.querySelector('.c-green'));
+ const manual=d.querySelector('.manual-check');
+ assert.equal(manual.querySelector('.mk').textContent,'🖥️');
+ assert(manual.querySelector('.c-green').textContent.includes('manual playback check'));
+ manual.querySelector('.mk').click();assert.equal(d.querySelector('#mk-name').textContent,'Computer Use');
  dom.window.close();
 });

@@ -4,15 +4,17 @@ A personal Codex skill for **how replies are written**. Fixed emoji meanings, co
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
-Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 16 markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
+Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 17 global markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
 ## What it does
 
 | Feature | Behaviour |
 | --- | --- |
-| Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. No arbitrary emoji additions. |
+| Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. Only user-approved project mappings may extend it; no arbitrary emoji additions. |
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
 | Sentence scanning | Underlines the most useful words in every assistant prose sentence, including ordinary and coloured text. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
+| Computer Use | 🖥️ for manual browser/app interaction, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
+| Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
 | Context above answers | Uses only the question or excerpt being answered, in your own grammatical perspective, in a blockquote above the direct-answer arrow. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
@@ -58,12 +60,17 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | ❓ | Missing information | 💡 | Recommendation |
 | ⚖️ | Trade-offs | ⛔ | External blocker |
 | 🎯 | Skill use | ➕➕ | Added beyond your request |
+| 🖥️ | Computer Use and manual browser/app tests | | |
 
 Markers stay inline for a single line or short statement. For sections spanning multiple paragraphs or blocks, they sit above the content with a visible ⌄ chevron beside them and apply until the next marker. Start a new marked section when the purpose changes, such as from a successful result to supporting information. Table-cell labels remain inline. The caret points toward the section below; it is a visual cue, not a dropdown control or a new emoji meaning. Write `\(\huge\text{ⓘ}\) \(\LARGE\text{⌄}\)`: keep the emoji at lowercase `\huge` and enlarge the chevron separately to `\LARGE`, one tier above `\Large`. Do not use the old tiny `▾` triangle or mathematical `∨`. Inline and table-cell markers have no caret. Their default rendering is inline LaTeX with lowercase `\huge`; prose stays normal size. ↗ is a link-opening control, not another section marker. Reminders use a blockquote with a vertical line on the left; answers stay outside it. The return arrow stays on the same line as the opening answer, even when a table, list, code block or further paragraph follows. It has no caret. Answers name the actual subjects and make sense even when the reminder is skipped.
 
 Read each highlighted clause or sentence on its own: it should make sense without the uncoloured words before or after it. This applies to all four highlight colours; magenta skill names keep their separate name-only styling.
 
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
+
+Automated test results, lint and other routine automated checks do not get green text. Successful manual tests can use green with 🖥️; failed or incomplete manual tests state that outcome without green. The computer marker takes precedence over generic progress/result markers in Computer Use sections.
+
+Projects can list additional user-approved emoji meanings in their existing instructions. Apply only the relevant project’s mappings; do not invent any or override global meanings without explicit approval. Pass approved extra symbols to the reply checker with repeatable `--approved-project-marker` flags. 🖥️ is global.
 
 ## Underlines for scanning
 

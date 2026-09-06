@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 import re
 
-MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🎯', '➕➕'}
+MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🎯', '➕➕', '🖥️'}
 MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
@@ -13,7 +13,7 @@ PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 CARET = r'\(\LARGE\text{⌄}\)'
 
 
-def check(text, check_paths=True):
+def check(text, check_paths=True, approved_project_markers=()):
     errors = []
     previous = ''
     fence = None
@@ -41,7 +41,7 @@ def check(text, check_paths=True):
         for match in MARKER.finditer(line):
             if match.group(1) != 'huge':
                 fail('Use lowercase \\huge for section markers.')
-            if match.group(2) not in MARKERS:
+            if match.group(2) not in MARKERS | set(approved_project_markers):
                 fail('Use an approved marker without substitutions or combinations.')
             if line[:match.start()].strip() or raw.startswith((' ', '\t')):
                 fail('Place the marker first and left-aligned, before its text.')
@@ -96,7 +96,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reply', type=Path)
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
+    parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     args = parser.parse_args()
-    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check)
+    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker)
     print('\n'.join(errors) if errors else 'Reply structure passed. Meaning, coverage and visual appearance still need review.')
     raise SystemExit(bool(errors))

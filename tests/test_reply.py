@@ -60,3 +60,10 @@ class ReplyChecks(unittest.TestCase):
         for caret in ['▾', '∨', '⌄']:
             self.assertTrue(reply.check(r'\(\huge\text{ⓘ}\) '+caret+'\n\nSection details.'))
         self.assertEqual([],reply.check(r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nSection details.'))
+
+    def test_computer_marker_is_global_and_project_extensions_are_scoped(self):
+        self.assertEqual([],reply.check(r'\(\huge\text{🖥️}\) Manual browser test passed.'))
+        example=r'\(\huge\text{🧪}\) Project-specific fixture.'
+        self.assertTrue(reply.check(example))
+        self.assertEqual([],reply.check(example, approved_project_markers=['🧪']))
+        self.assertTrue(reply.check(example))
