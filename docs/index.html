@@ -24,7 +24,7 @@
 <p class="nav-label">Details</p>
 <ul class="learn-list"><li><a href="#markers" data-pane="markers">The 18 global markers</a></li><li><a href="#colours" data-pane="colours">Colours</a></li><li><a href="#editor" data-pane="editor">Markdown and code editor</a></li><li><a href="#install" data-pane="install">Install in Codex</a></li></ul>
 <p class="nav-label">Links</p>
-<ul class="learn-list"><li><a href="./skill.html?v=27">Full skill text ↗</a></li><li><a href="./viewer.html?v=4">Editor, full page ↗</a></li><li><a href="https://github.com/EthanSK/response-preferences">GitHub ↗</a></li></ul>
+<ul class="learn-list"><li><a href="./skill.html?v=28">Full skill text ↗</a></li><li><a href="./viewer.html?v=4">Editor, full page ↗</a></li><li><a href="https://github.com/EthanSK/response-preferences">GitHub ↗</a></li></ul>
 </nav>
 <p class="side-foot">MIT licence · by <a href="https://github.com/EthanSK">Ethan</a> · independent of OpenAI, not an official Codex feature</p>
 </aside>
@@ -32,7 +32,7 @@
 <header class="chat-bar"><div class="chat-head"><h1 id="chat-title">Export check</h1><span class="badge">Fictional example</span></div>
 <div class="focus" role="group" aria-label="Focus the replies"><button type="button" data-focus="all" aria-pressed="true">All</button><button type="button" data-focus="answer" aria-pressed="false">⮑ Answers</button><button type="button" data-focus="success" aria-pressed="false">✅ Success</button><button type="button" data-focus="problem" aria-pressed="false">❌ 🐞 Problems</button><button type="button" data-focus="info" aria-pressed="false">ⓘ Information</button><button type="button" data-focus="caution" aria-pressed="false">⚠️ Cautions</button><button type="button" data-focus="action" aria-pressed="false">🫵 My actions</button></div>
 <p class="focus-note" id="focus-note" role="status">Showing whole replies. Click any marker to see its meaning.</p></header>
-<p class="notice">Three fictional exchanges show what a Codex reply looks like with the <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=27" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> skill: one marker per meaning, colour on the important part, written to make sense on its own, underlined clues in each sentence, and your own question quoted above each direct answer.</p>
+<p class="notice">Three fictional exchanges show what a Codex reply looks like with the <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=28" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> skill: one marker per meaning, colour on the important part, written to make sense on its own, underlined clues in each sentence, and your own question quoted above each direct answer.</p>
 <section class="conversation active" id="export" data-title="Export check" aria-labelledby="export-h">
 <h2 class="conv-title" id="export-h">Export check</h2>
 <div class="msg user" id="export-u1"><span class="who">You</span><p>Can you check the export and tell me what I need to do?</p></div>
@@ -63,12 +63,14 @@
 <div class="msg user" id="format-u1"><span class="who">You</span><p>Can you make this easier to follow?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote"><p>Can you make this easier to follow? <a class="ctx" href="./format-message.html?v=4" data-file="format-message.html · Your message" aria-label="Open your original message">↗</a></p><p class="preview">Opens <b>Your message</b> in the Markdown viewer, with the exact original text. Codex shows the destination path on hover; this preview is a website extra.</p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button><u>Yes.</u> This reply now <u>starts with the direct answer</u>, keeps <u>your question just above it</u>, and marks each section with <u>one fixed symbol</u>, so you can jump to the part you want.</p>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>Yes. <u>This reply’s format</u> now <u>starts with the direct answer</u>, keeps <u>your question just above it</u>, and marks each section with <u>one fixed symbol</u>, so you can jump to the part you want.</p>
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
 <p>Every marker keeps a <u>single meaning</u>: a <u>tick is only a confirmed result</u>, a <u>snail only work still running</u>, an <u>eye only the start of a check</u>. There are <u>18 global markers</u>, and <u>only user-approved project extensions add to the list</u>, however fitting another emoji might look.</p>
 <p><u>Colour is selected by meaning</u>. <span class="c-cyan"><u>Each coloured highlight makes sense on its own</u>.</span> You can <u>start reading at its first word</u> and understand it <u>without the surrounding text</u>. The rest of the <u>explanation stays white</u>. <u>Red means you must read it</u>, <u>green marks the confirmed result</u>, <u>orange a warning</u>.</p>
 <p><u>Every reply has an attention finger</u>: 🫵 for your actual action, or 👉 before the <u>most useful takeaway to read or continue from</u>.</p>
-<p><u>Every sentence underlines its most useful words</u>, so you can scan the clues before reading the full explanation. <u>Negatives and conditions</u> stay with the words they qualify; <u>“not uploaded” must not become just “uploaded”</u>.</p>
+<p><u>Underlined scanning cues</u> start each paragraph by naming <u>what the details are about</u>, so a later cue makes sense when you glance back.</p>
+<p>The <u>skill-update decisions</u> remain <u>agent-based</u>: a helper tracks the date, and the agent checks the repository.</p>
+<p><u>Each sentence still highlights useful clues</u>, without underlining everything. <u>Negatives and conditions</u> stay with the words they qualify; <u>“not uploaded” must not become just “uploaded”</u>.</p>
 <p>The <u>return arrow stays beside the opening answer</u>, <u>even when a table or list follows</u>. Other markers sit <u>above a multi-block section</u> with a visible ⌄ chevron, and <u>apply until the next marker</u>.</p>
 </div>
 <p data-kind="other"><button type="button" class="mk">💡</button>In a hurry, <u>read only the ⮑ line</u>; the other sections are there when you want the detail.</p>
@@ -78,13 +80,13 @@
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>Problem at hand:</strong> Keep the short question visible.<br><strong>Earlier response:</strong> The full annotation replaces the short question.<br><strong>Your annotation:</strong> Can I still see my short question below the full annotation?</p></blockquote>
 <blockquote class="quote"><p>Can I still see my short question below the full annotation? <a class="ctx" href="#format-u3" aria-label="Jump to your message in this demo">↗</a></p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>The short question stays <u>below the full annotation context</u>, directly above the answer, so you can <u>skip the bigger block</u>.</p>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>The <u>short question</u> stays <u>below the full annotation context</u>, directly above the answer, so you can <u>skip the bigger block</u>.</p>
 </div>
 <div class="msg user" id="format-u2"><span class="who">You</span><p>Which skill is doing this, and can I install it myself?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
-<p data-kind="other"><button type="button" class="mk">🎯</button><strong>Skill use:</strong> <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=27" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> because <u>you asked which skill formats these replies</u>.</p>
+<p data-kind="other"><button type="button" class="mk">🎯</button><strong>Skill use:</strong> <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=28" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> because <u>you asked which skill formats these replies</u>.</p>
 <blockquote class="quote"><p>Can I install it myself? <a class="ctx" href="#format-u2" aria-label="Jump to your message in this demo">↗</a></p><p class="preview">Jumps to your message above. In a real reply this ↗ opens a small local file headed <b>Your message</b>; Codex shows the destination path on hover.</p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>Yes, the response-preferences skill <u>installs with one git clone</u> into your Codex skills folder and <u>one line</u> in your AGENTS.md.</p>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>Yes, the <u>response-preferences skill</u> <u>installs with one git clone</u> into your Codex skills folder and <u>one line</u> in your AGENTS.md.</p>
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
 <pre><code>git clone https://github.com/EthanSK/response-preferences.git ~/.codex/skills/response-preferences</code></pre>
 <p><u>Then add</u> <code>Use $response-preferences for all replies.</code> to your global or project <code>AGENTS.md</code>. <u>Python 3.9+ generates the viewers and message-context files</u>; <u>no Node build is needed</u> to use it.</p>
@@ -157,7 +159,7 @@
 <li><b class="c-cyan">Cyan</b> · a selected piece of information worth noticing</li>
 <li><b class="skill">Magenta serif</b> · a skill name, followed by its own ↗ link</li>
 </ul>
-<p>Every red, green, orange or cyan highlight must make sense on its own, starting from its first word. Include enough subject and context; a short complete sentence is fine. Highlight selectively in the same sans-serif as the prose, and keep supporting explanation white. Underline the most useful words in every assistant prose sentence, inside colours as well as ordinary text; retain negatives and conditions. Colours remain understandable clauses, while underlines pick out scanning clues. Exact quotations, code and links keep their original formatting. Do not colour whole multi-sentence explanations, links, paths or code. Links keep their ordinary link colour and carry no extra meaning. Code stays monospace.</p>
+<p>Every red, green, orange or cyan highlight must make sense on its own, starting from its first word. Include enough subject and context; a short complete sentence is fine. Highlight selectively in the same sans-serif as the prose, and keep supporting explanation white. Make the first underline in each paragraph name the subject, so later underlined details have context when you glance back. Underline the most useful words in every assistant prose sentence, inside colours as well as ordinary text; retain negatives and conditions. Colours remain understandable clauses, while underlines pick out scanning clues. Exact quotations, code and links keep their original formatting. Do not colour whole multi-sentence explanations, links, paths or code. Links keep their ordinary link colour and carry no extra meaning. Code stays monospace.</p>
 <p>Automated tests, lint and routine automated checks stay ordinary text. Manual browser/app checks use 🖥️ with explicit status wording, and green only for confirmed manual success. A project can add user-approved mappings in its existing instructions; it cannot invent new meanings or silently replace the global set.</p>
 <p class="small">In Codex these highlights are written as inline LaTeX, for example <code>\(\color{#22c55e}{\textsf{The requested change is saved.}}\)</code>; this page reproduces the result with CSS.</p>
 </section>
@@ -177,7 +179,7 @@
 <pre><code>Use $response-preferences for all replies.</code></pre>
 <p>Python 3.9+ generates viewers and message-context files; no Node build is needed. The defaults follow Ethan’s preferences: edit <code>SKILL.md</code> to change them. A pre-send checker catches structural mistakes such as missing magenta skill names, missing links and misplaced markers. Automated tests run on every push. These are agent instructions, not a change to the Codex app: the checks cannot guarantee that a model always follows the rules or uses a marker with the right meaning.</p>
 <p class="small">Notification titles condense your question; the text underneath has a status icon and a brief answer summary. Titles contain no emoji; the integration checks one title line and two answer lines. The wording is specified, but native delivery is a separate optional integration that this repository does not ship. Replies never carry hidden metadata.</p>
-<p class="small">MIT licence, independent of OpenAI. <a href="./skill.html?v=27">Read the full skill ↗</a> · <a href="https://github.com/EthanSK/response-preferences">Source on GitHub ↗</a> · <a href="https://github.com/EthanSK/response-preferences/issues">Feedback ↗</a></p>
+<p class="small">MIT licence, independent of OpenAI. <a href="./skill.html?v=28">Read the full skill ↗</a> · <a href="https://github.com/EthanSK/response-preferences">Source on GitHub ↗</a> · <a href="https://github.com/EthanSK/response-preferences/issues">Feedback ↗</a></p>
 </section>
 </aside>
 </div>
