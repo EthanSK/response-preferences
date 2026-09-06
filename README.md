@@ -151,7 +151,7 @@ The agent checks the configured public source on first skill use when a week has
 
 Only the final reply includes an attention finger: normally one 🫵 for your actual action or decision, otherwise one 👉 before the main takeaway. Two may help for distinct important items. Working commentary and progress updates have no attention fingers, so they do not steal your focus. Keep the finger beside its content, not isolated at the bottom. Other status markers keep their meanings.
 
-Closing outstanding-item recommendations include a ↗ link to their fuller saved context in a real local viewer. Env footers are reserved for AIMVS work, not unrelated tasks.
+Closing outstanding-item recommendations include a hover-only ↗ whose destination text gives the fuller explanation; it is deliberately not a working file link. Env footers are reserved for AIMVS work, not unrelated tasks.
 
 ## Original-message hover
 
