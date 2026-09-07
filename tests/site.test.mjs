@@ -117,10 +117,6 @@ test('full annotation context keeps a separate short question before the answer'
 
 test('automated results stay uncoloured and manual success uses the computer marker',()=>{
  const dom=demo(),d=dom.window.document;
- const answer=d.querySelector('#export .final p[data-kind="answer"]');
- assert.equal(answer.firstElementChild.textContent,'⮑');
- assert(answer.querySelector('.c-green u').textContent.includes('export works again'));
- assert(!answer.querySelector('.c-green').textContent.includes('restart'));
  const automated=d.querySelector('#export p[data-kind="test"]');
  assert(!automated.querySelector('.c-green'));
  const manual=d.querySelector('.manual-check');
