@@ -57,3 +57,7 @@ Copy buttons need explicit foreground and background styles at the same specific
 A long single coloured `\textsf` expression with nested underlines was visibly clipped in Codex desktop 26.901.51231 (8109). The bundled `.katex .base` uses `white-space: nowrap` and inline-block layout. A synthetic reproduction using that client's KaTeX JS/CSS measured 1069px of content in 700px and 316px paragraphs; a short complete coloured statement plus ordinary supporting prose fit both widths. This is an authoring workaround, not an app-renderer fix. The public website uses HTML/CSS and cannot establish native rendering.
 
 The draft checker now rejects inline prose expressions above 80 approximate visible characters, including nested underlines and long topic labels. This catches the observed failure pattern but does not measure glyph widths. Keep spans substantially shorter where possible and preserve negations and qualifications. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.
+
+## Personal desktop wrapper
+
+The desktop menu must reserve the measured widths of the app menus, system controls and clock before choosing visible app icons. A fixed viewport estimate overlapped the clock at 390 pixels; the measured layout was verified in Chrome at mobile and desktop widths. Keep hidden apps reachable through the searchable directory. Escape in that modal must stop propagation so it does not also close an underlying guide pane, and dismissal must restore focus without leaving a stale tooltip.
