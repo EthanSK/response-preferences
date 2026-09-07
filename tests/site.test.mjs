@@ -24,7 +24,8 @@ test('conversation navigation, meanings and focus filters preserve the reply',()
  assert(!d.querySelector('#backup [data-kind="problem"]').classList.contains('dim'));
  const bug=[...d.querySelectorAll('#backup .mk')].find(b=>b.textContent==='🐞');bug.focus();bug.click();
  assert.equal(d.querySelector('#mk-name').textContent,'Actual bug');
- d.querySelector('#pane-close').click();assert.equal(d.activeElement,bug);
+ assert(!d.querySelector('#app').classList.contains('pane-open'));
+ d.querySelector('.marker-popover button').click();assert.equal(d.activeElement,bug);
  dom.window.close();
 });
 test('mobile pane isolates background and Escape restores the opener',()=>{
@@ -227,6 +228,18 @@ test('the first home reply previews the range and its marker controls open real 
  assert(first.querySelector('a[data-file][href^="./message.html"]'));
  assert(first.querySelector('a[href="#format-u3"]'));assert(first.querySelector('.notification-example'));
  const failure=[...first.querySelectorAll('.welcome-marker-range .mk')].find(x=>x.textContent==='❌');failure.click();
- assert.equal(d.querySelector('#mk-name').textContent,'Failure');assert(d.querySelector('#app').classList.contains('pane-open'));
+ assert.equal(d.querySelector('#mk-name').textContent,'Failure');assert(!d.querySelector('#app').classList.contains('pane-open'));assert.equal(d.querySelector('.marker-popover').getAttribute('aria-label'),'Failure');
+ dom.window.close();
+});
+
+test('marker popovers toggle, dismiss with Escape and preserve the open document pane',()=>{
+ const dom=demo(),d=dom.window.document,button=d.querySelector('.welcome-colours .mk');
+ const classes=d.querySelector('#app').className;button.click();assert.equal(d.querySelector('#app').className,classes);assert(d.querySelector('.marker-popover'));
+ button.click();assert(!d.querySelector('.marker-popover'));
+ button.click();d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));assert(!d.querySelector('.marker-popover'));assert.equal(d.activeElement,button);
+ d.querySelector('[data-pane="editor"]').click();button.click();d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));assert(d.querySelector('#app').classList.contains('pane-open'));
+ button.click();dom.window.dispatchEvent(new dom.window.Event('resize'));assert(d.querySelector('.marker-popover'));
+ d.body.dispatchEvent(new dom.window.Event('pointerdown',{bubbles:true}));assert(!d.querySelector('.marker-popover'));
+ assert(!d.querySelector('#side-nav').textContent.includes('Full skill text'));
  dom.window.close();
 });
