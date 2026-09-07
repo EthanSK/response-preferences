@@ -6,7 +6,7 @@
 <meta name="description" content="A Codex skill for how replies are written: fixed emoji meanings, self-contained coloured highlights, your question above each answer and a local Markdown and code editor, shown as an example conversation.">
 <meta name="theme-color" content="#161616"><meta property="og:title" content="Response Preferences"><meta property="og:description" content="A Codex skill for how replies are written, shown as an example conversation."><meta property="og:type" content="website"><meta property="og:url" content="https://ethansk.github.io/response-preferences/">
 <link rel="canonical" href="https://ethansk.github.io/response-preferences/"><link rel="icon" href="./mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=chat8"><script defer src="./site.js?v=window1"></script>
+<link rel="stylesheet" href="./styles.css?v=topic-chat8"><script defer src="./site.js?v=window1"></script>
 <link rel="stylesheet" href="./window.css?v=window1"><script defer src="./window.js?v=window1"></script>
 </head>
 <body>
@@ -25,7 +25,7 @@
 <p class="nav-label">Details</p>
 <ul class="learn-list"><li><a href="#markers" data-pane="markers">The 18 global markers</a></li><li><a href="#colours" data-pane="colours">Colours</a></li><li><a href="#editor" data-pane="editor">Markdown and code editor</a></li><li><a href="#install" data-pane="install">Install in Codex</a></li></ul>
 <p class="nav-label">Links</p>
-<ul class="learn-list"><li><a href="./skill.html?v=31">Full skill text ↗</a></li><li><a href="./viewer.html?v=4">Editor, full page ↗</a></li><li><a href="https://github.com/EthanSK/response-preferences">GitHub ↗</a></li></ul>
+<ul class="learn-list"><li><a href="./skill.html?v=32">Full skill text ↗</a></li><li><a href="./viewer.html?v=4">Editor, full page ↗</a></li><li><a href="https://github.com/EthanSK/response-preferences">GitHub ↗</a></li></ul>
 </nav>
 <p class="side-foot">MIT licence · by <a href="https://github.com/EthanSK">Ethan</a> · independent of OpenAI, not an official Codex feature</p>
 </aside>
@@ -33,15 +33,17 @@
 <header class="chat-bar"><div class="chat-head"><h1 id="chat-title">Export check</h1><span class="badge">Fictional example</span></div>
 <div class="focus" role="group" aria-label="Focus the replies"><button type="button" data-focus="all" aria-pressed="true">All</button><button type="button" data-focus="answer" aria-pressed="false">⮑ Answers</button><button type="button" data-focus="success" aria-pressed="false">✅ Success</button><button type="button" data-focus="problem" aria-pressed="false">❌ 🐞 Problems</button><button type="button" data-focus="info" aria-pressed="false">ⓘ Information</button><button type="button" data-focus="caution" aria-pressed="false">⚠️ Cautions</button><button type="button" data-focus="action" aria-pressed="false">🫵 My actions</button></div>
 <p class="focus-note" id="focus-note" role="status">Showing whole replies. Click any marker to see its meaning.</p></header>
-<p class="notice">Three fictional exchanges show what a Codex reply looks like with the <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=31" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> skill: one marker per meaning, colour on the important part, written to make sense on its own, underlined clues in each sentence, and your own question quoted above each direct answer.</p>
+<p class="notice">Three fictional exchanges show what a Codex reply looks like with the <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=32" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> skill: one marker per meaning, colour on the important part, written to make sense on its own, underlined clues in each sentence, your own question quoted above each direct answer, and a closing topic reminder for when you return later.</p>
 <section class="conversation active" id="export" data-title="Export check" aria-labelledby="export-h">
 <h2 class="conv-title" id="export-h">Export check</h2>
 <div class="msg user" id="export-u1"><span class="who">You</span><p>Can you check the export and tell me what I need to do?</p></div>
-<div class="msg assistant"><span class="who">Assistant</span><p><button type="button" class="mk">👀</button><u>Checking the export code</u> and the <u>two runs that failed yesterday</u>.</p></div>
+<div class="msg assistant"><span class="who">Assistant</span><p><button type="button" class="mk">👀</button><u>Checking the export code</u> and the <u>two runs that failed yesterday</u>.</p><p class="topic-reminder">About: checking the export code and yesterday’s failed runs.</p>
+</div>
 <p class="act"><b>Read</b> src/export/segment.ts</p>
 <p class="act"><b>Ran</b> npm test -- export <i>2 passed</i></p>
 <p class="act"><b>Ran</b> npm run export -- sample-3s.mp4</p>
-<div class="msg assistant"><span class="who">Assistant</span><p><button type="button" class="mk">🐌</button><u>Exporting the 3 s and 90 s sample clips</u>, <u>1 of 2 finished</u>.</p></div>
+<div class="msg assistant"><span class="who">Assistant</span><p><button type="button" class="mk">🐌</button><u>Exporting the 3 s and 90 s sample clips</u>, <u>1 of 2 finished</u>.</p><p class="topic-reminder">About: progress on the two sample video exports.</p>
+</div>
 <p class="act"><b>Ran</b> npm run export -- sample-90s.mp4</p>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote"><p>Can you check the export and tell me what I need to do? <a class="ctx" href="./message.html?v=4" data-file="message.html · Your message" aria-label="Open your original message">↗</a></p><p class="preview">Opens <b>Your message</b>: the exact original text with any attached images underneath, in the Markdown viewer. The native hover-only alternative puts the original text in a fake destination, with a leading slash; it cannot open a file. This demo keeps a working viewer link.</p></blockquote>
@@ -57,6 +59,7 @@
 <p><span class="c-red"><u>Save the project before restarting</u>, because <u>unsaved clips are discarded</u>.</span></p>
 </div>
 <p data-kind="action"><button type="button" class="mk">🫵</button><u>Restart the app</u>, then <u>re-export the short clip</u> you noticed the problem on.</p>
+<p class="topic-reminder">About: the export fix, its checks and the restart needed to use it.</p>
 </div>
 </section>
 <section class="conversation" id="format" data-title="Easier to follow" aria-labelledby="format-h">
@@ -68,6 +71,7 @@
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
 <p><u>Every marker</u> keeps a <u>single meaning</u>: a <u>tick is only a confirmed result</u>, a <u>snail only work still running</u>, an <u>eye only the start of a check</u>. There are <u>18 global markers</u>, and <u>only user-approved project extensions add to the list</u>, however fitting another emoji might look.</p>
 <p><u>Colour is selected by meaning</u>. <span class="c-cyan"><u>Each coloured highlight makes sense on its own</u>.</span> You can <u>start reading at its first word</u> and understand it <u>without the surrounding text</u>. The rest of the <u>explanation stays white</u>. <u>Red means you must read it</u>, <u>green marks the confirmed result</u>, <u>orange a warning</u>.</p>
+<p>A <u>muted-lavender topic reminder</u> ends every message, including working updates, so you can <u>recognise the whole subject when you return later</u>. Your <u>quoted question stays above its answer</u>.</p>
 <p><u>Only the final reply has an attention finger</u>: usually one 🫵 for your action or 👉 for the <u>main takeaway</u>; two only for distinct important items. Working updates <u>have no attention fingers</u>.</p>
 <p><u>Underlined scanning cues</u> start each paragraph by naming <u>what the details are about</u>, so a later cue makes sense when you glance back.</p>
 <p>The <u>skill-update decisions</u> remain <u>agent-based</u>: a helper tracks the date, and the agent checks the repository.</p>
@@ -76,16 +80,18 @@
 </div>
 <p data-kind="other"><button type="button" class="mk">💡</button>In a hurry, <u>read only the ⮑ line</u>; the other sections are there when you want the detail.</p>
 <div class="sec" data-kind="other"><button type="button" class="mk">➕➕</button><p><strong>Added beyond your request</strong></p><p>The <u>release-notes draft</u> from earlier in this task was <u>reformatted the same way</u>, so both documents read consistently.</p></div>
+<p class="topic-reminder">About: reply formatting: markers, colours, scanning clues and context reminders.</p>
 </div>
 <div class="msg user" id="format-u3"><span class="who">You</span><p>Your annotation: Can I still see my short question below the full annotation?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>Problem at hand:</strong> Keep the short question visible.<br><strong>Earlier response:</strong> The full annotation replaces the short question.<br><strong>Your annotation:</strong> Can I still see my short question below the full annotation?</p></blockquote>
 <blockquote class="quote"><p>Can I still see my short question below the full annotation? <a class="ctx" href="#format-u3" aria-label="Jump to your message in this demo">↗</a></p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>The <u>short question</u> stays <u>below the full annotation context</u>, directly above the answer, so you can <u>skip the bigger block</u>.</p>
+<p class="topic-reminder">About: keeping the short question below the full annotation context.</p>
 </div>
 <div class="msg user" id="format-u2"><span class="who">You</span><p>Which skill is doing this, and can I install it myself?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
-<p data-kind="other"><button type="button" class="mk">🧠</button><strong>Skill use:</strong> <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=31" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> because <u>you asked which skill formats these replies</u>.</p>
+<p data-kind="other"><button type="button" class="mk">🧠</button><strong>Skill use:</strong> <span class="skill">response-preferences</span> <a class="open" href="./skill.html?v=32" data-file="SKILL.md · response-preferences" aria-label="Open the response-preferences skill">↗</a> because <u>you asked which skill formats these replies</u>.</p>
 <blockquote class="quote"><p>Can I install it myself? <a class="ctx" href="#format-u2" aria-label="Jump to your message in this demo">↗</a></p><p class="preview">Jumps to your message above. In a real reply this ↗ opens a small local file headed <b>Your message</b>; a separate hover-only control can show original text through a fake destination, but cannot open it.</p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button><button type="button" class="mk">👉</button>Yes, the <u>response-preferences skill</u> <u>installs with one git clone</u> into your Codex skills folder and <u>one line</u> in your AGENTS.md.</p>
 <div class="sec" data-kind="info"><button type="button" class="mk">ⓘ</button>
@@ -93,13 +99,15 @@
 <p>To activate <u>response preferences</u>, add <code>Use $response-preferences for all replies.</code> to your global or project <code>AGENTS.md</code>. <u>Python 3.9+ generates the viewers and message-context files</u>; <u>no Node build is needed</u> to use it.</p>
 </div>
 <p data-kind="caution"><button type="button" class="mk">⚠️</button><span class="c-orange"><u>Response Preferences uses Ethan’s formatting choices</u>.</span> Edit SKILL.md to <u>change them for yourself</u>. The rules are agent instructions, so they <u>cannot guarantee that a model always follows them</u>.</p>
+<p class="topic-reminder">About: installing and customising the Response Preferences skill.</p>
 </div>
 </section>
 <section class="conversation" id="backup" data-title="Nightly backup" aria-labelledby="backup-h">
 <h2 class="conv-title" id="backup-h">Nightly backup</h2>
 <div class="msg user" id="backup-u1"><span class="who">You</span><p>Run the nightly backup and tell me if the flaky upload test is fixed now.</p></div>
 <p class="act"><b>Ran</b> python3 scripts/backup.py --pack</p>
-<div class="msg assistant"><span class="who">Assistant</span><p><button type="button" class="mk">🐌</button><u>Packing the backup</u>: <u>1,240 of 3,000 files (41%)</u>.</p></div>
+<div class="msg assistant"><span class="who">Assistant</span><p><button type="button" class="mk">🐌</button><u>Packing the backup</u>: <u>1,240 of 3,000 files (41%)</u>.</p><p class="topic-reminder">About: progress on packing the nightly backup.</p>
+</div>
 <p class="act"><b>Ran</b> python3 scripts/backup.py --upload <i>exit 1</i></p>
 <p class="act"><b>Ran</b> npm test -- upload <i>1 failed</i></p>
 <p class="act"><b>Read</b> src/auth/token.ts</p>
@@ -114,6 +122,7 @@
 <p data-kind="other"><button type="button" class="mk">⚖️</button><u>Fixing the token refresh tonight</u> makes the <u>test independent of order</u>, but touches <u>shared auth code two days before release</u>. <u>Skipping the test</u> instead keeps the release small and <u>leaves the bug in place</u>.</p>
 <p data-kind="other"><button type="button" class="mk">💡</button><u>Fix the token refresh</u>: it is a <u>five-line change</u>, and the <u>test then proves it</u>.</p>
 <p data-kind="action"><button type="button" class="mk">🫵</button><u>Decide if the token fix goes into this release</u>, and <u>choose when I should retry the upload</u>.</p>
+<p class="topic-reminder">About: the failed backup upload, token-test bug and release decision.</p>
 </div>
 </section>
 <footer class="composer-note"><p>Nothing to type here: this demo shows fixed example replies. To get them in your own Codex, <a href="#install" data-pane="install">install the skill</a>.</p></footer>
@@ -152,12 +161,13 @@
 <p class="small">Activity and outcome stay apart: 👀 starts a check, 🐌 is work still running, and a finished check reports ✅, 🐞 or ❌. Finding a bug is not a failed review. The ↗ after a reference opens it: your original message, a skill, a file or a passage.</p>
 </section>
 <section class="panel" id="colours" data-title="Colours" aria-labelledby="colours-h">
-<h2 id="colours-h" tabindex="-1">Four highlight colours, plus skill names</h2>
+<h2 id="colours-h" tabindex="-1">Highlight colours, skill names and topic reminders</h2>
 <ul class="legend">
 <li><b class="c-red">Red</b> · critical, you must read this</li>
 <li><b class="c-green">Green</b> · the confirmed result, for a glance</li>
 <li><b class="c-orange">Orange</b> · a warning or kind-of-important detail</li>
 <li><b class="c-cyan">Cyan</b> · a selected piece of information worth noticing</li>
+<li><b class="topic-colour">Muted lavender</b> · a brief topic reminder at the end of every assistant message</li>
 <li><b class="skill">Magenta serif</b> · a skill name, followed by its own ↗ link</li>
 </ul>
 <p>Every red, green, orange or cyan highlight must make sense on its own, starting from its first word. Include enough subject and context; a short complete sentence is fine. Highlight selectively in the same sans-serif as the prose, and keep supporting explanation white. Make the first underline in each paragraph name the subject, so later underlined details have context when you glance back. Underline the most useful words in every assistant prose sentence, inside colours as well as ordinary text; retain negatives and conditions. Colours remain understandable clauses, while underlines pick out scanning clues. Exact quotations, code and links keep their original formatting. Do not colour whole multi-sentence explanations, links, paths or code. Links keep their ordinary link colour and carry no extra meaning. Code stays monospace.</p>
@@ -181,7 +191,7 @@
 <p>Python 3.9+ generates viewers and message-context files; no Node build is needed. The defaults follow Ethan’s preferences: edit <code>SKILL.md</code> to change them. A pre-send checker catches structural mistakes such as missing magenta skill names, missing links and misplaced markers. Automated tests run on every push. These are agent instructions, not a change to the Codex app: the checks cannot guarantee that a model always follows the rules or uses a marker with the right meaning.</p>
 <p class="small">Notification titles condense your question; the text underneath has a status icon and a brief answer summary. Titles contain no emoji; the integration checks one title line and two answer lines. The wording is specified, but native delivery is a separate optional integration that this repository does not ship. Replies never carry hidden metadata.</p>
 <p class="small">A closing outstanding-item recommendation includes a hover-only ↗ with its fuller explanation in the destination text; clicking does not open a file. Env footers belong to AIMVS work, not unrelated tasks.</p>
-<p class="small">MIT licence, independent of OpenAI. <a href="./skill.html?v=31">Read the full skill ↗</a> · <a href="https://github.com/EthanSK/response-preferences">Source on GitHub ↗</a> · <a href="https://github.com/EthanSK/response-preferences/issues">Feedback ↗</a></p>
+<p class="small">MIT licence, independent of OpenAI. <a href="./skill.html?v=32">Read the full skill ↗</a> · <a href="https://github.com/EthanSK/response-preferences">Source on GitHub ↗</a> · <a href="https://github.com/EthanSK/response-preferences/issues">Feedback ↗</a></p>
 </section>
 </aside>
 </div>
