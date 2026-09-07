@@ -172,7 +172,7 @@ The agent checks the configured public source on first skill use when a week has
 
 ## A pointer in the final reply
 
-Only the final reply includes an attention finger: normally one 🫵 for your actual action or decision, otherwise one 👉 before the main takeaway. Two may help for distinct important items. Working commentary and progress updates have no attention fingers, so they do not steal your focus. Keep the finger beside its content, not isolated at the bottom. Other status markers keep their meanings.
+Only the final reply includes an attention finger: normally one, leaning towards 🫵 when something is needed from you or it is your turn next, and towards 👉 when it is mainly “here is the main information”. These are preferences to guide the choice, not absolute rules. Two may help for distinct important items. Working commentary and progress updates have no attention fingers, so they do not steal your focus. Keep the finger beside its content, not isolated at the bottom. Other status markers keep their meanings.
 
 Every assistant message, including working updates, closes with two short sentences: a brief overall summary, then more specific context to remind you exactly what we are doing. For example: **About: fixing the video export. Restart the app, then retry the clip.** The second sentence adds the action, problem, result or next step instead of repeating the overview. Keep it concise, but let it wrap rather than squeezing it into one line.
 

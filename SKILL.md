@@ -45,7 +45,7 @@ Use only these meanings; do not invent, swap or combine markers. User-approved p
 | 🐞 | Reporting an actual bug; not looking for one or incomplete verification |
 | 🛠️ | Planning and brainstorming together: options, approach, next steps |
 | ⓘ | Information, explanations and historical status |
-| 🫵 | Actual action or decision needed from the user |
+| 🫵 | Something needed from the user, or their next step |
 | 👉 | Main self-contained reading takeaway |
 | 🤨 | Weird or unexpected points |
 | ⚠️ / ❓ | Caution / uncertainty or missing information |
@@ -62,7 +62,7 @@ Prefer the specific scenario over generic information/activity/results. 🧪 tak
 - A short statement keeps its marker inline, first and left-aligned. A multi-paragraph/block section starts with the emoji plus `\(\raisebox{0.3em}{\Large\text{⌄}}\)` on its own left-aligned line. The chevron is smaller, vertically raised, naturally proportioned, and only a visual cue. No old tiny `▾`, mathematical `∨`, centring, indentation or trailing markers.
 - **⮑ always stays beside the opening answer**, even with a table/list/code block below; never alone and never with a caret.
 - Start a new marker when purpose changes; a success marker does not cover later explanation or cautions. Consecutive content with the same purpose shares its marker.
-- **Final replies normally have one attention finger:** 🫵 beside a real user action/decision, otherwise 👉 immediately before the main meaningful takeaway. Two only for distinct important items. Neither appears in commentary. Never invent a user action or isolate a finger after the content. 👉 can follow a semantic marker as an explicit placement exception, but never has a caret.
+- **Final replies normally have one attention finger:** favour 🫵 when the message requires something from the user or it is their turn next; favour 👉 when it mainly says “here is the main information”. These are tendencies to skew the choice, not absolute rules; use judgment in context. Two only for distinct important items. Neither appears in commentary. Never invent a user action or isolate a finger after the content. 👉 can follow a semantic marker as an explicit placement exception, but never has a caret.
 - Use approved status/category emojis in tables when grouping helps; keep the wording beside them, group related rows where sensible, preserve meaningful ranking/order, and avoid decoration in every cell. Table formatting is not a preference to use tables everywhere.
 
 ## Question context and links
