@@ -137,3 +137,21 @@ class ReplyChecks(unittest.TestCase):
         for invalid in [TOPIC.replace('About: ', ''), TOPIC.replace('textsf', 'textrm'),
                         'More text '+TOPIC, r'\(\color{#b8a4d9}{\textsf{About: }}\)']:
             self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.'+'\n\n'+invalid))
+
+
+    def test_oversized_inline_prose_is_rejected_without_hiding_nested_underlines(self):
+        long_warning = r'\(\color{#fb923c}{\textsf{The \underline{release is still pending}: its working copy has \underline{many outstanding changes}, needs \underline{another review before publication}, and its last recorded task run was interrupted.}}\)'
+        self.assertTrue(any('may overflow' in e for e in check_fragment(long_warning)))
+        short = r'\(\color{#fb923c}{\textsf{The \underline{release is still pending}.}}\) The dependency needs another review before publication.'
+        self.assertEqual([], check_fragment(short))
+        self.assertEqual([], check_fragment(short, commentary=True))
+        for prefix in [r'\underline{\textsf{', r'\color{#67e8f9}{\textsf{', r'\color{#b8a4d9}{\textsf{About: ']:
+            self.assertTrue(any('may overflow' in e for e in check_fragment(r'\('+prefix+'A long but meaningful statement. '*5+r'}}\)')))
+        self.assertEqual([], check_fragment('> '+long_warning+'\n\n```md\n'+long_warning+'\n```\n\n`'+long_warning+'`'))
+        self.assertEqual([], check_fragment(r'\('+'x + '*100+r'y\)'))
+
+    def test_prose_length_counts_visible_words_not_wrapper_names(self):
+        self.assertEqual(len('The release is still pending.'), reply.prose_length(r'\color{#fb923c}{\textsf{The \underline{release is still pending}.}}'))
+        self.assertEqual(5, reply.prose_length(r'\textsf{A \& B}'))
+        self.assertEqual([], check_fragment(r'\(\textsf{'+'x'*80+r'}\)'))
+        self.assertTrue(any('may overflow' in e for e in check_fragment(r'\(\textsf{'+'x'*81+r'}\)')))
