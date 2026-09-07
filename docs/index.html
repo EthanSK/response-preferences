@@ -6,7 +6,8 @@
 <meta name="description" content="A Codex skill for how replies are written: fixed emoji meanings, self-contained coloured highlights, your question above each answer and a local Markdown and code editor, shown as an example conversation.">
 <meta name="theme-color" content="#161616"><meta property="og:title" content="Response Preferences"><meta property="og:description" content="A Codex skill for how replies are written, shown as an example conversation."><meta property="og:type" content="website"><meta property="og:url" content="https://ethansk.github.io/response-preferences/">
 <link rel="canonical" href="https://ethansk.github.io/response-preferences/"><link rel="icon" href="./mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=chat8"><script defer src="./site.js?v=chat7"></script>
+<link rel="stylesheet" href="./styles.css?v=chat8"><script defer src="./site.js?v=window1"></script>
+<link rel="stylesheet" href="./window.css?v=window1"><script defer src="./window.js?v=window1"></script>
 </head>
 <body>
 <a class="skip" href="#thread">Skip to the conversation</a>
@@ -116,7 +117,7 @@
 </div>
 </section>
 <footer class="composer-note"><p>Nothing to type here: this demo shows fixed example replies. To get them in your own Codex, <a href="#install" data-pane="install">install the skill</a>.</p></footer>
-<p class="small">A closing outstanding-item recommendation includes a hover-only ↗ with its fuller explanation in the destination text; clicking does not open a file. Env footers belong to AIMVS work, not unrelated tasks.</p></main>
+</main>
 <aside class="pane" id="pane" aria-label="Details">
 <div class="pane-bar"><span id="pane-title">Details</span><button type="button" class="pane-close" id="pane-close" aria-label="Close details">×</button></div>
 <section class="panel" id="marker" data-title="Marker" aria-labelledby="mk-name">
@@ -179,6 +180,7 @@
 <pre><code>Use $response-preferences for all replies.</code></pre>
 <p>Python 3.9+ generates viewers and message-context files; no Node build is needed. The defaults follow Ethan’s preferences: edit <code>SKILL.md</code> to change them. A pre-send checker catches structural mistakes such as missing magenta skill names, missing links and misplaced markers. Automated tests run on every push. These are agent instructions, not a change to the Codex app: the checks cannot guarantee that a model always follows the rules or uses a marker with the right meaning.</p>
 <p class="small">Notification titles condense your question; the text underneath has a status icon and a brief answer summary. Titles contain no emoji; the integration checks one title line and two answer lines. The wording is specified, but native delivery is a separate optional integration that this repository does not ship. Replies never carry hidden metadata.</p>
+<p class="small">A closing outstanding-item recommendation includes a hover-only ↗ with its fuller explanation in the destination text; clicking does not open a file. Env footers belong to AIMVS work, not unrelated tasks.</p>
 <p class="small">MIT licence, independent of OpenAI. <a href="./skill.html?v=31">Read the full skill ↗</a> · <a href="https://github.com/EthanSK/response-preferences">Source on GitHub ↗</a> · <a href="https://github.com/EthanSK/response-preferences/issues">Feedback ↗</a></p>
 </section>
 </aside>
