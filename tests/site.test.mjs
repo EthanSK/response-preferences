@@ -4,7 +4,11 @@ import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 function demo(mobile=false){
  const dom=new JSDOM(readFileSync('docs/index.html','utf8'),{url:'https://example.test/',runScripts:'outside-only'});
- dom.window.matchMedia=q=>({matches:q.includes('900px')&&mobile,addEventListener(){}});
+ const queries=new Map();dom.window.matchMedia=q=>{
+  if(!queries.has(q))queries.set(q,{matches:/(900|1150)px/.test(q)&&mobile,listeners:[],addEventListener(_,fn){this.listeners.push(fn);}});
+  return queries.get(q);
+ };
+ dom.changeMedia=(query,matches)=>{const media=dom.window.matchMedia(query);media.matches=matches;media.listeners.forEach(fn=>fn({matches}));};
  dom.window.HTMLElement.prototype.scrollIntoView=function(){};
  const style=dom.window.document.createElement('style');style.textContent=readFileSync('docs/styles.css','utf8')+'\n'+readFileSync('docs/window.css','utf8');dom.window.document.head.append(style);
  dom.window.eval(readFileSync('docs/site.js','utf8'));
@@ -119,17 +123,66 @@ test('only final example replies have attention fingers',()=>{
  dom.window.close();
 });
 
-test('window search, menu dismissal and draft queue preserve local content',()=>{
+test('window search, menu dismissal and agent handoff preserve local content',async()=>{
  const dom=demo(),d=dom.window.document;
  d.querySelector('.search-examples').click();
  const input=d.querySelector('#example-search');input.value='backup';input.dispatchEvent(new dom.window.Event('input'));
  assert.equal(d.querySelectorAll('.search-results button').length,1);
  d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));
  assert.equal(d.querySelector('.window-popover'),null);assert.equal(d.activeElement,d.querySelector('.search-examples'));
- const count=d.querySelectorAll('.conversation .msg').length;const draft=d.querySelector('#demo-draft');draft.value='Local draft';d.querySelector('.demo-composer').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));
- assert.equal(d.querySelector('.queued-draft span').textContent,'Local draft');assert.equal(d.querySelectorAll('.conversation .msg').length,count);
- assert.match(d.querySelector('#local-status').textContent,/No message was sent/);
- d.querySelector('.queued-draft button').click();assert.equal(d.querySelectorAll('.queued-draft').length,0);dom.window.close();
+ let copied;Object.defineProperty(dom.window.navigator,'clipboard',{value:{writeText:async text=>{copied=text;}}});
+ const count=d.querySelectorAll('.conversation .msg').length;const draft=d.querySelector('#demo-draft');draft.value='Can I change the cyan?';d.querySelector('.demo-composer').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));await new Promise(resolve=>setTimeout(resolve,0));
+ assert(copied.includes('https://github.com/EthanSK/response-preferences'));assert(copied.endsWith('My question: Can I change the cyan?'));
+ assert.equal(draft.value,'Can I change the cyan?');assert.equal(d.querySelectorAll('.conversation .msg').length,count);
+ assert.match(d.querySelector('#local-status').textContent,/Paste into your agent task/);dom.window.close();
+});
+
+test('traffic lights preserve the page, restore focus and expand reversibly',()=>{
+ const dom=demo(),d=dom.window.document,app=d.querySelector('#app');
+ assert.equal(d.querySelector('.workspace-pill'),null);assert.equal(d.querySelectorAll('.traffic').length,3);
+ d.querySelector('#demo-draft').value='Keep my question';
+ for(const name of ['close-window','minimise-window']){
+  const control=d.querySelector('.'+name);control.click();assert.equal(app.hidden,true);
+  assert.equal(dom.window.getComputedStyle(app).display,'none');
+  assert.equal(d.querySelector('.restore-preview').hidden,false);
+  d.querySelector('.restore-preview button').click();assert.equal(app.hidden,false);
+  assert.equal(d.activeElement,control);assert.equal(d.querySelector('#demo-draft').value,'Keep my question');
+ }
+ const expand=d.querySelector('.expand-window');expand.click();assert(d.body.classList.contains('demo-expanded'));assert.equal(expand.getAttribute('aria-pressed'),'true');
+ expand.click();assert(!d.body.classList.contains('demo-expanded'));dom.window.close();
+});
+
+test('installation controls copy their exact visible instructions and preserve failure recovery',async()=>{
+ const dom=demo(),d=dom.window.document;let copied;
+ Object.defineProperty(dom.window.navigator,'clipboard',{value:{writeText:async text=>{copied=text;}}});
+ for(const control of d.querySelectorAll('[data-copy-source]')){
+  control.click();await Promise.resolve();
+  assert.equal(copied,d.getElementById(control.dataset.copySource).textContent);
+ }
+ assert.equal(d.querySelector('#setup-prompt').textContent.trim(),readFileSync('docs/install-prompt.txt','utf8').trim());
+ const style=dom.window.getComputedStyle(d.querySelector('#setup .primary-action'));
+ assert.equal(style.color,'rgb(25, 25, 25)');assert.equal(style.backgroundColor,'rgb(229, 229, 231)');
+ assert(d.querySelector('#setup-prompt').textContent.includes('preserve any local changes'));
+ assert(d.querySelector('#setup-prompt').textContent.includes('Ask me before installing any future skill updates'));
+ dom.window.navigator.clipboard.writeText=async()=>{throw Error('Clipboard denied');};
+ const control=d.querySelector('[data-copy-source="setup-prompt"]');control.click();await new Promise(resolve=>setTimeout(resolve,0));
+ assert.match(control.parentElement.querySelector('.copy-feedback').textContent,/Select the text/);
+ assert.equal(dom.window.getSelection().toString(),d.querySelector('#setup-prompt').textContent);dom.window.close();
+});
+
+test('compact layouts dismiss the details card on resize and after choosing a destination',()=>{
+ const dom=demo(),d=dom.window.document,card=d.querySelector('.details-card');assert.equal(card.hidden,false);
+ dom.changeMedia('(max-width: 1150px)',true);assert.equal(card.hidden,true);assert(!d.querySelector('#app').classList.contains('details-open'));
+ d.querySelector('.toggle-details').click();assert.equal(card.hidden,false);card.querySelector('a').click();assert.equal(card.hidden,true);dom.window.close();
+});
+
+test('the welcome route leads through all six conversations and returns from install details',()=>{
+ const dom=demo(),d=dom.window.document;assert.equal(d.querySelector('.conversation.active').id,'welcome');
+ assert.equal(d.querySelectorAll('.chat-list [data-chat]').length,6);
+ for(const link of d.querySelectorAll('.chat-list [data-chat]'))assert(d.getElementById(link.dataset.chat));
+ d.querySelector('[data-pane="install"]').click();assert(d.querySelector('#app').classList.contains('pane-open'));
+ d.querySelector('[data-chat="setup"]').click();assert.equal(d.querySelector('.conversation.active').id,'setup');assert(!d.querySelector('#app').classList.contains('pane-open'));
+ assert.equal(d.querySelectorAll('.glossary .mk').length,18);assert.match(d.querySelector('#markers-h').textContent,/Eighteen/);dom.window.close();
 });
 test('mobile sidebar and editor isolate the background and restore it',async()=>{
  const dom=demo(true),d=dom.window.document;
