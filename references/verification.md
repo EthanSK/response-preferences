@@ -15,8 +15,9 @@ The checker is deliberately limited. It catches common structural regressions in
 
 | Area | Current contract | Verification |
 | --- | --- | --- |
-| Vocabulary | Closed 19-marker global list plus user-approved scoped extensions, no inventions; ↗ only opens references | Reply checker; website vocabulary test; meaning review |
+| Vocabulary | Closed 20-marker global list plus user-approved scoped extensions, no inventions; ↗ only opens references | Reply checker; website vocabulary test; meaning review |
 | Activity and outcome | 👀 starts inspection, 🐌 live work, ✅ confirmed success, ❌ failure, 🐞 actual bug; other information uses ⓘ | Manual semantic review with activity/outcome cases |
+| Tests | 🧪 marks test information, progress and results with explicit status; 🖥️ remains Computer Use and 🐞 actual bugs; automated results stay uncoloured | Reply checker in both phases; home/export examples, test popover and filter |
 | Planning and brainstorming | 🛠️ is one shared category for options, approaches and next steps; ⓘ remains facts and 🐌 execution underway | Reply checker in both phases; home example, click popover and planning filter |
 | Other meanings | 🫵 user action, 🤨 unusual, ⚠️ caution, ❓ uncertainty, 💡 recommendation, ⚖️ trade-offs, ⛔ external blocker, 🧠 skill use, ➕➕ extra scope, ⮑ answer | Closed vocabulary and website meaning controls |
 | Marker placement | Left aligned, before content; inline for a short statement, standalone with a visible ⌄ chevron for multi-block sections; the return arrow stays beside its opening answer | Reply checker; website structure test; desktop/mobile inspection |

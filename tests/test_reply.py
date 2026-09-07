@@ -34,6 +34,11 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(check_fragment(r'[\(\color{#22c55e}{\textsf{Saved}}\)](/tmp/file.html)',False))
     def test_inline_information_and_multi_block_sections_are_valid(self):
         self.assertEqual([],check_fragment(r'\(\huge\text{✅}\) '+r'\(\color{#22c55e}{\textsf{Saved.}}\)'+'\n\n'+r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nFirst fact.\n\nSecond fact.'))
+    def test_tests_marker_is_global_with_explicit_status_in_both_phases(self):
+        for status in ['Running', 'Passed', 'Failed', 'Not run']:
+            self.assertEqual([],check_fragment('🧪 '+status+': export tests.', commentary=True))
+            self.assertEqual([],check_fragment(r'\(\huge\text{🧪}\) '+status+': export tests.'))
+        self.assertEqual([],check_fragment(r'\(\huge\text{🧪}\) '+reply.CARET+'\n\nTwo tests passed.\n\nThe remaining test was not run.'))
     def test_planning_marker_works_in_both_reply_phases(self):
         self.assertEqual([],check_fragment('🛠️ Outline the next steps.', commentary=True))
         self.assertEqual([],check_fragment(r'\(\huge\text{🛠️}\) Outline the next steps.'))
@@ -76,9 +81,9 @@ class ReplyChecks(unittest.TestCase):
 
     def test_computer_marker_is_global_and_project_extensions_are_scoped(self):
         self.assertEqual([],check_fragment(r'\(\huge\text{🖥️}\) Manual browser test passed.'))
-        example=r'\(\huge\text{🧪}\) Project-specific fixture.'
+        example=r'\(\huge\text{🧬}\) Project-specific fixture.'
         self.assertTrue(check_fragment(example))
-        self.assertEqual([],check_fragment(example, approved_project_markers=['🧪']))
+        self.assertEqual([],check_fragment(example, approved_project_markers=['🧬']))
         self.assertTrue(check_fragment(example))
 
     def test_every_reply_needs_an_attention_finger(self):

@@ -47,7 +47,7 @@ test('switching a viewed document requires confirmation; reopening it keeps edit
 });
 test('the demo preserves the approved marker vocabulary and efficient section placement',()=>{
  const dom=demo(),d=dom.window.document;
- const expected=['🛠️','⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔','🧠','➕➕','🖥️','👉'];
+ const expected=['🧪','🛠️','⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔','🧠','➕➕','🖥️','👉'];
  assert.deepEqual(new Set([...d.querySelectorAll('.conversation .mk')].map(x=>x.textContent)),new Set(expected));
  for(const b of d.querySelectorAll('.conversation .mk')){
    if(b.textContent!=='👉')assert.equal(b.parentElement.firstElementChild,b,'Marker precedes the section text');
@@ -117,7 +117,7 @@ test('full annotation context keeps a separate short question before the answer'
 
 test('automated results stay uncoloured and manual success uses the computer marker',()=>{
  const dom=demo(),d=dom.window.document;
- const automated=d.querySelector('#export p[data-kind="success"]');
+ const automated=d.querySelector('#export p[data-kind="test"]');
  assert(!automated.querySelector('.c-green'));
  const manual=d.querySelector('.manual-check');
  assert.equal(manual.querySelector('.mk').textContent,'🖥️');
@@ -193,7 +193,7 @@ test('the welcome route leads through all six conversations and returns from ins
  for(const link of d.querySelectorAll('.chat-list [data-chat]'))assert(d.getElementById(link.dataset.chat));
  d.querySelector('[data-pane="install"]').click();assert(d.querySelector('#app').classList.contains('pane-open'));
  d.querySelector('[data-chat="setup"]').click();assert.equal(d.querySelector('.conversation.active').id,'setup');assert(!d.querySelector('#app').classList.contains('pane-open'));
- assert.equal(d.querySelectorAll('.glossary .mk').length,19);assert.match(d.querySelector('#markers-h').textContent,/Nineteen/);dom.window.close();
+ assert.equal(d.querySelectorAll('.glossary .mk').length,20);assert.match(d.querySelector('#markers-h').textContent,/Twenty/);dom.window.close();
 });
 test('mobile sidebar and editor isolate the background and restore it',async()=>{
  const dom=demo(true),d=dom.window.document;
@@ -221,7 +221,7 @@ test('every assistant example closes with a distinct topic reminder after its co
 test('the first home reply previews the range and its marker controls open real explanations',()=>{
  const dom=demo(),d=dom.window.document,home=d.querySelector('#welcome'),first=home.querySelector('.final');
  for(const c of ['c-green','c-cyan','c-orange','c-red'])assert(first.querySelector('.'+c+' u'));
- assert.equal(first.querySelectorAll('.welcome-marker-range .mk').length,19);
+ assert.equal(first.querySelectorAll('.welcome-marker-range .mk').length,20);
  assert(home.querySelector('.assistant:not(.final) .skill'));
  assert(first.querySelector('.sec > .mk'));assert(first.querySelector('table'));
  assert(first.querySelector('a[data-file][href^="./viewer.html"]'));
@@ -255,5 +255,23 @@ test('planning and brainstorming share a working marker, explanation and filter'
  assert(!example.classList.contains('dim'));
  assert(d.querySelector('#welcome [data-kind="success"]').classList.contains('dim'));
  assert(d.querySelector('#format .sec[data-kind="plan"] .mk'));
+ dom.window.close();
+});
+
+
+test('test information uses the test marker without implying success or hiding limits',()=>{
+ const dom=demo(),d=dom.window.document,example=d.querySelector('#welcome .testing-example');
+ assert.match(example.textContent,/not covered/);
+ assert(!example.querySelector('[class^="c-"]'));
+ example.querySelector('.mk').click();
+ assert.equal(d.querySelector('#mk-name').textContent,'Tests');
+ assert.match(d.querySelector('.marker-popover').textContent,/coverage, progress and results/);
+ d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+ d.querySelector('[data-focus="test"]').click();
+ assert(!example.classList.contains('dim'));
+ assert(d.querySelector('#welcome [data-kind="info"]').classList.contains('dim'));
+ assert.equal(d.querySelector('#export .assistant:not(.final) [data-kind="test"] .mk').textContent,'🧪');
+ assert.equal(d.querySelector('#export .final [data-kind="test"] .mk').textContent,'🧪');
+ assert.equal(d.querySelector('#backup [data-kind="problem"]:has(code) .mk').textContent,'🐞');
  dom.window.close();
 });
