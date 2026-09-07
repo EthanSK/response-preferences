@@ -41,3 +41,11 @@ Notification titles describe the user's request in their perspective; a task lab
 A saved formatting rule can remain intact while an assistant reply omits it. Validate the actual draft as well as the instructions. The reply-checker tests include the observed plain skill announcement and require magenta serif plus an adjacent existing link. Website tests check CSS variables as well as computed declarations because JSDOM leaves `var(...)` unresolved. Public-demo tests compare embedded source text with current Markdown so updating SKILL.md without regenerating its viewer fails CI. Semantic choice and actual Codex rendering remain separate manual checks.
 
 Nested underline braces inside coloured LaTeX must not bypass palette, font or adjacent-link checks. The old flat-text colour matcher skipped these spans entirely; `tests/test_reply.py` now checks invalid colours/fonts and missing magenta links with nested underlines. This remains a structural check, not a TeX parser or a semantic underline selector.
+
+## Guide controls and responsive state
+
+The macOS traffic lights control only the example window and retain its DOM when closed or minimised, so restoring preserves draft text and the editor. Keep a visible restore route and return focus to the initiating control. Installation prompts copy their visible text; failed clipboard access selects that text for manual copying.
+
+The desktop details card needs a media-query listener to close when moving to a compact viewport, and it closes after a compact-layout navigation choice. CSS alone can otherwise leave the card covering the conversation. Chrome desktop and 390-pixel checks reproduced and verified this transition; `tests/site.test.mjs` covers the state changes.
+
+Copy buttons need explicit foreground and background styles at the same specificity: the general `.copy-row button` rule previously overrode the primary background while leaving its dark text. The installation-button computed-style check preserves the readable pair.

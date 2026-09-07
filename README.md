@@ -6,7 +6,7 @@ A personal Codex skill for **how replies are written**. Fixed emoji meanings, co
 
 Created from Ethan's preferences, shared so you can use or adapt them. The website presents the examples inside a nearly full-window Codex-style desktop: a task sidebar, compact title bar, centered conversation, source/details panel and bottom composer. It is an independent, interactive demonstration—not the Codex app—and does not run an AI.
 
-Three fictional conversations demonstrate all 18 global markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open the working Markdown/code editor; its ↗ opens the same document in a full tab. Composer drafts stay in the page and do not contact a model. Install instructions and the full skill remain available in the interface.
+Six example conversations introduce the skill, guide installation and customisation, explain the response format, demonstrate file/context links, and show successful and failed tasks. Together they demonstrate all 18 global markers, the full colour palette, underlined scanning clues, quoted questions and closing topic reminders. The window has standard macOS traffic lights, reversible preview controls and keyboard-accessible navigation. Click a marker for its meaning or open a file in the working Markdown/code editor. Copy an installation prompt, manual commands or a question for your own agent; this website does not contact a model or install anything itself.
 
 This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
@@ -32,6 +32,8 @@ This is a set of agent instructions with helper scripts, not a modification of t
 The response-preference skill itself is used silently. Other skill announcements use 🧠 with a magenta skill name and an adjacent opening link.
 
 ## Install
+
+On the [website’s installation walkthrough](https://ethansk.github.io/response-preferences/#setup), choose **Copy installation prompt** and paste it into your Codex task. The prompt asks your agent to check for an existing installation, preserve local edits, add the activation line without duplicating it and demonstrate the installed format. You can also [read the exact prompt](docs/install-prompt.txt) or install manually below.
 
 Requirements: Codex with local skills support and **Python 3.9+** for generated viewers and message-context files. The built viewer is included; no Node installation or build step is needed to use it.
 

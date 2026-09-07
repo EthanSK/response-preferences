@@ -28,7 +28,7 @@ const chats=$$('.conversation'),panels=$$('.panel'),reduce=matchMedia('(prefers-
 let kind='all', paneOpener=null; const mobile=matchMedia('(max-width: 900px)');
 const applyFilter=()=>$$('[data-kind]').forEach(el=>el.classList.toggle('dim',kind!=='all'&&el.dataset.kind!==kind));
 const closeMenu=()=>{side.classList.remove('open');menu.setAttribute('aria-expanded','false');};
-function showChat(id){const c=chats.find(x=>x.id===id);if(!c)return false;chats.forEach(x=>x.classList.toggle('active',x===c));chatTitle.textContent=c.dataset.title;$$('[data-chat]').forEach(a=>a.setAttribute('aria-current',a.dataset.chat===id?'page':'false'));closeMenu();return true;}
+function showChat(id){const c=chats.find(x=>x.id===id);if(!c)return false;app.classList.remove('pane-open');side.inert=false;$('#thread').inert=false;chats.forEach(x=>x.classList.toggle('active',x===c));chatTitle.textContent=c.dataset.title;$$('[data-chat]').forEach(a=>a.setAttribute('aria-current',a.dataset.chat===id?'page':'false'));closeMenu();return true;}
 function showPane(id,focus){if(!pane.contains(d.activeElement))paneOpener=d.activeElement;const p=panels.find(x=>x.id===id);if(!p)return false;panels.forEach(x=>x.classList.toggle('active',x===p));app.classList.add('pane-open');paneTitle.textContent=p.dataset.title;$$('[data-pane]').forEach(a=>a.setAttribute('aria-current',a.dataset.pane===id?'true':'false'));pane.scrollTop=0;if(mobile.matches){side.inert=true;$('#thread').inert=true;}if(focus){const h=p.querySelector('h2');if(h)h.focus({preventScroll:true});}return true;}
 function closePane(){app.classList.remove('pane-open');side.inert=false;$('#thread').inert=false;if(paneOpener&&paneOpener.isConnected)paneOpener.focus({preventScroll:true});$$('[data-pane]').forEach(a=>a.setAttribute('aria-current','false'));if(panels.some(p=>'#'+p.id===location.hash))history.replaceState(null,'',location.pathname+location.search);}
 function flash(t){t.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});if(!t.hasAttribute('tabindex'))t.setAttribute('tabindex','-1');t.focus({preventScroll:true});t.classList.add('flash');setTimeout(()=>t.classList.remove('flash'),1600);}
@@ -47,5 +47,5 @@ d.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(app.classList.con
 $('#copy-install').addEventListener('click',async()=>{const s=$('#copy-status');try{await navigator.clipboard.writeText('git clone https://github.com/EthanSK/response-preferences.git ~/.codex/skills/response-preferences');s.textContent='Command copied.';}catch{s.textContent='Could not copy. Select the command above instead.';}});
 mobile.addEventListener('change',()=>{const blocked=mobile.matches&&app.classList.contains('pane-open');side.inert=blocked;$('#thread').inert=blocked;});
 addEventListener('hashchange',route);
-showChat('format');route();
+showChat('welcome');route();
 })();
