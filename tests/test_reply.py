@@ -34,6 +34,12 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(check_fragment(r'[\(\color{#22c55e}{\textsf{Saved}}\)](/tmp/file.html)',False))
     def test_inline_information_and_multi_block_sections_are_valid(self):
         self.assertEqual([],check_fragment(r'\(\huge\text{✅}\) '+r'\(\color{#22c55e}{\textsf{Saved.}}\)'+'\n\n'+r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nFirst fact.\n\nSecond fact.'))
+    def test_planning_marker_works_in_both_reply_phases(self):
+        self.assertEqual([],check_fragment('🛠️ Outline the next steps.', commentary=True))
+        self.assertEqual([],check_fragment(r'\(\huge\text{🛠️}\) Outline the next steps.'))
+        self.assertEqual([],check_fragment(r'\(\huge\text{🛠️}\) '+reply.CARET+'\n\nCompare two approaches.\n\nThen outline the steps.'))
+        self.assertTrue(check_fragment(r'\(\huge\text{🗺️}\) Outline the next steps.'))
+        self.assertTrue(check_fragment(r'\(\huge\text{🌩️}\) Explore ideas.'))
     def test_silent_preference_use_needs_no_announcement(self):
         self.assertEqual([],check_fragment(r'\(\huge\text{ⓘ}\) This is an explanation.'))
     def test_metadata_and_old_markdown_links_are_rejected(self):

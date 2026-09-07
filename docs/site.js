@@ -3,6 +3,7 @@
 const d=document;d.documentElement.classList.add('js');
 const norm=s=>s.replace(/\uFE0F/g,'').trim();
 const M={
+'🛠':['Planning and brainstorming','Planned or proposed work, not progress underway.'],
 '⮑':['Direct answer','A direct answer to your question. The arrow stays beside the opening answer, even when a table or list follows. The question sits in a quote above it; the answer makes sense without rereading it.'],
 '🖥':['Computer Use','Manual browser/app interaction and tests, with explicit status wording. Green highlights confirmed manual success; failed or incomplete checks are not green. Automated tests and lint use ordinary text.'],
 '✅':['Confirmed success','Only confirmed success or completion, never a general acknowledgement or a default prefix.'],
@@ -42,7 +43,7 @@ function showMarker(symbol,opener){
  markerOpener=opener;opener.setAttribute('aria-expanded','true');
  const pop=d.createElement('div');pop.className='marker-popover';pop.setAttribute('role','dialog');pop.setAttribute('aria-label',m[0]);
  const head=d.createElement('div');head.className='marker-popover-head';const title=d.createElement('strong');title.textContent=symbol+' '+m[0];const close=d.createElement('button');close.type='button';close.textContent='×';close.setAttribute('aria-label','Close details');close.addEventListener('click',()=>closeMarker());head.append(title,close);
- const meaning=d.createElement('p');meaning.textContent=m[1];const all=d.createElement('a');all.href='#markers';all.textContent='All 18 global markers';all.addEventListener('click',()=>closeMarker(false));
+ const meaning=d.createElement('p');meaning.textContent=m[1];const all=d.createElement('a');all.href='#markers';all.textContent='All 19 global markers';all.addEventListener('click',()=>closeMarker(false));
  pop.append(head,meaning,all);d.body.append(pop);markerPopover=pop;
  positionMarker();
  pop.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();closeMarker();}});close.focus({preventScroll:true});
