@@ -65,3 +65,9 @@ The desktop menu must reserve the measured widths of the app menus, system contr
 ## Marker explanations without layout shifts
 
 Opening the full details pane for a small marker explanation squeezed the chat header and wrapped the title and Install button. Marker explanations now use a compact anchored popover; full document views keep the pane. Size header controls against the chat container, not only the browser viewport, and keep the sidebar width stable when a pane opens. Chrome desktop and phone checks verified warning clicks, Escape focus restoration and the editor header. Reposition popovers on scroll and resize rather than dismissing them during focus-driven scrolling or viewport capture.
+
+## Long-session style reliability
+
+A large skill read can be truncated even when the invocation succeeds. Keep the always-read core compact, retrieve missing output, and refresh after compaction or a correction. Preserve full preferences in a directly linked reference. A completion guard catches structural omissions when the author skips its draft check, but Stop runs after text is shown and supports only a bounded continuation, not removal of streamed text.
+
+Combine style and notification repair into one bound. After it is exhausted, cosmetic errors must not suppress an otherwise valid completion alert. Internal subagent results need an explicit user-facing classification before style enforcement; event delivery eligibility alone is insufficient. Exact plain-text/YAML requests need an exception bound to the original task and final reply because the guard cannot infer user instructions from answer text. Tests exercise these boundaries; semantic emphasis and native rendering remain separate.

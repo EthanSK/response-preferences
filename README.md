@@ -145,6 +145,10 @@ This catches missing magenta skill announcements, missing opening links, unknown
 
 GitHub Actions runs the test suite on every push and pull request, including regression cases for the reply checker and the website's marker, colour, quote and skill-link presentation.
 
+The always-read skill is a compact core; [the detailed reference](references/style-reference.md) retains the complete preferences. Read the core separately and retrieve missing ranges if a tool truncates it. Refresh it after compaction or a style correction.
+
+An optional [automatic completion guard](references/reliability.md) can catch omissions in the actual final reply even when the agent skips the draft check. It requires a separately configured synchronous completion adapter, shares one correction with notification preparation, and leaves explicit exact-format requests alone through a task/reply-specific exception. It does not install a global hook for you, hide text already shown, check every working update, or guarantee correct emphasis. Ethan's local adapter includes an off switch; other installations need their own supported adapter.
+
 ## Develop
 
 Node.js 22+ and Python 3.9+:
