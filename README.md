@@ -1,4 +1,6 @@
-# Response Preferences
+# Response Preferences<br>⮑ 🖥️ ✅ ❌ 👀 🐌 🐞 ⓘ 👉 🫵 🤨 ⚠️ ❓ 💡 ⚖️ ⛔ 🧠 ➕➕
+
+[![Example Codex reply: magenta skill names, green success, cyan information, orange caution, red critical text, underlined scanning clues and a lavender topic reminder.](docs/readme-preview.svg)](https://ethansk.github.io/response-preferences/)
 
 A personal Codex skill for **how replies are written**. Fixed emoji meanings, coloured highlights, underlined scanning cues, original-message context, and a local Markdown/code editor.
 
