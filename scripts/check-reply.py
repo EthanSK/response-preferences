@@ -5,13 +5,21 @@ from pathlib import Path
 import re
 
 MARKERS = {'⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🧠', '➕➕', '🖥️', '👉'}
-MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
+MARKER = re.compile(r'\\\((?:\\([a-zA-Z]+))?\\text\{([^{}]+)\}\\\)')
+# Match plain leading markers too, so commentary still checks vocabulary and placement.
+# The empty first group keeps the same (size, symbol) shape as wrapped markers.
+PLAIN_MARKER = re.compile(r'()(➕➕|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕⚖❓][\ufe0f]?)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 TOPIC_COLOUR = '#b8a4d9'
 CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
+WORKING_CARET = '⌄'
+
+
+def leading_marker(line):
+    return MARKER.match(line) or PLAIN_MARKER.match(line)
 
 
 def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True):
@@ -21,6 +29,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
     previous = ''
     has_pointer = False
     fence = None
+    caret = WORKING_CARET if commentary else CARET
     for number, raw in enumerate(text.splitlines(), 1):
         stripped = raw.lstrip()
         opening = re.match(r'(`{3,}|~{3,})', stripped)
@@ -42,14 +51,20 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             errors.append(f'Line {number}: {message}')
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
-        for match in MARKER.finditer(line):
+        matches = list(MARKER.finditer(line))
+        plain = PLAIN_MARKER.match(line, len(line) - len(line.lstrip()))
+        if plain:
+            matches.insert(0, plain)
+        for match in matches:
             if match.group(2) in {'🫵', '👉'}:
                 has_pointer = True
                 if commentary:
                     fail('Reserve attention fingers for the final reply, not working commentary.')
-            if match.group(2) == '👉' and line[match.end():].strip() in {'', CARET}:
+            if match.group(2) == '👉' and line[match.end():].strip() in {'', CARET, WORKING_CARET}:
                 fail('Put the reading pointer inline immediately before its takeaway.')
-            if match.group(1) != 'huge':
+            if commentary and match.re is MARKER:
+                fail('Use plain normal-size markers in working commentary, without LaTeX size wrappers.')
+            elif not commentary and match.group(1) != 'huge':
                 fail('Use lowercase \\huge for section markers.')
             if match.group(2) not in MARKERS | set(approved_project_markers):
                 fail('Use an approved marker without substitutions or combinations.')
@@ -57,17 +72,15 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail('Place the marker first and left-aligned, before its text.')
             tail = line[match.end():].strip()
             if not tail:
-                fail('Add the approved enlarged ⌄ after a standalone section marker.')
-            elif tail in {'▾', '∨', '⌄', r'\(\LARGE\text{⌄}\)', r'\(\Large\text{⌄}\)'}:
-                fail('Replace the old tiny caret with the approved enlarged ⌄.')
-            elif (tail.startswith(('▾', '∨', '⌄')) or tail.startswith(CARET)) and tail != CARET:
+                fail('Add the approved ⌄ after a standalone section marker, using this reply phase’s size.')
+            elif tail in {'▾', '∨', WORKING_CARET, CARET, r'\(\LARGE\text{⌄}\)', r'\(\Large\text{⌄}\)'} and tail != caret:
+                fail('Use the approved ⌄ size for this reply phase.')
+            elif (tail.startswith(('▾', '∨', '⌄')) or tail.startswith(CARET)) and tail != caret:
                 fail('The chevron belongs only beside a standalone section marker, not inline text.')
-            if match.group(2) == '⮑' and tail in {'', '▾', '∨', CARET}:
+            if match.group(2) == '⮑' and tail in {'', '▾', '∨', CARET, WORKING_CARET}:
                 fail('Keep the return arrow beside the opening answer, even when a table or list follows.')
             if match.group(2) == '⮑' and not previous.lstrip().startswith('>'):
                 fail('Put the relevant question/excerpt in a blockquote just above the answer.')
-        if re.match(r'[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕]', stripped) and not stripped.startswith('|'):
-            fail('Render a section marker with the approved lowercase \\huge wrapper.')
         for match in COLOUR.finditer(line):
             colour, font = match.group(1, 2)
             if colour == 'magenta':
@@ -84,8 +97,11 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             elif colour not in PALETTE or font != 'textsf':
                 fail('Use an approved highlight colour with normal-size \\textsf.')
         if re.search(r'(?:\*\*)?Skill use:', line):
-            current_marker = MARKER.match(line)
-            prior_marker = MARKER.fullmatch(previous.strip().removesuffix(' ' + CARET))
+            current_marker = leading_marker(line)
+            prior = previous.strip().removesuffix(' ' + caret)
+            prior_marker = leading_marker(prior)
+            if prior_marker and prior_marker.end() != len(prior):
+                prior_marker = None
             if not any(m and m.group(2) == '🧠' for m in [current_marker, prior_marker]):
                 fail('Start skill announcements with 🧠.')
             if not any(m.group(1) == 'magenta' and m.group(2) == 'textrm' for m in COLOUR.finditer(line)):
@@ -115,7 +131,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reply', type=Path)
-    parser.add_argument('--commentary', action='store_true', help='Check a work update: attention fingers are forbidden.')
+    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers; attention fingers are forbidden.')
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')

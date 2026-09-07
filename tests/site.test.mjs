@@ -76,6 +76,16 @@ test('skill names remain magenta serif with a separate working HTML link',()=>{
  dom.window.close();
 });
 
+test('working markers use text size while final markers stay enlarged',()=>{
+ const dom=demo(),d=dom.window.document,style=el=>dom.window.getComputedStyle(el);
+ const working=[...d.querySelectorAll('.msg.assistant:not(.final) .mk')];
+ assert(working.some(el=>el.textContent==='🧠'),'Show the small skill announcement too');
+ for(const marker of working){assert.equal(style(marker).fontSize,style(marker.parentElement).fontSize);assert.equal(style(marker).verticalAlign,'baseline');}
+ for(const marker of d.querySelectorAll('.msg.assistant.final .mk'))assert.equal(style(marker).fontSize,'32px');
+ assert(d.querySelector('#format').textContent.includes('Working messages use small markers'));
+ dom.window.close();
+});
+
 test('scanning cues preserve qualifications, colours, quotations and real links',()=>{
  const dom=demo(),d=dom.window.document;
  assert.equal(d.querySelectorAll('.quote u,.user u,code u,a u,u a,u code').length,0);
