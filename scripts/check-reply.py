@@ -10,11 +10,14 @@ MARKER = re.compile(r'\\\(\\(huge|Huge)\\text\{([^{}]+)\}\\\)')
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
+TOPIC_COLOUR = '#b8a4d9'
 CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 
 
-def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=()):
+def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True):
     errors = []
+    topic_lines = []
+    last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
     has_pointer = False
     fence = None
@@ -72,6 +75,12 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('Skill names use upright serif \\textrm in magenta.')
                 if not re.match(r'\s*\[↗\]\(', line[match.end():]):
                     fail('Follow each magenta skill name with its own clickable ↗.')
+            elif colour == TOPIC_COLOUR:
+                if font != 'textsf' or COLOUR.fullmatch(line.strip()) is None or not line.strip().startswith(r'\(\color{#b8a4d9}{\textsf{About: ') or not line.strip().removeprefix(r'\(\color{#b8a4d9}{\textsf{About: ').removesuffix(r'}}\)').strip():
+                    fail('Use muted lavender only for a standalone About: topic reminder in normal-size \\textsf.')
+                topic_lines.append(number)
+                if number != last_line:
+                    fail('Put the topic reminder at the very end, after all other message content.')
             elif colour not in PALETTE or font != 'textsf':
                 fail('Use an approved highlight colour with normal-size \\textsf.')
         if re.search(r'(?:\*\*)?Skill use:', line):
@@ -96,6 +105,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('The local link destination does not exist: ' + path)
         if line.strip():
             previous = line
+    if require_topic and len(topic_lines) != 1:
+        errors.append('End every message with exactly one muted-lavender About: topic reminder.')
     if require_pointer and not has_pointer:
         errors.append('Include 🫵 for a real user action, or 👉 before the main reading takeaway.')
     return errors

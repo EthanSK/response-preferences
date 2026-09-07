@@ -79,7 +79,7 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
  const cues=[...d.querySelectorAll('.conversation .assistant u')].map(x=>x.textContent);
  for(const clue of ['packed but not uploaded','no off-site copy from tonight','after restarting the app','cannot guarantee that a model always follows them'])assert(cues.includes(clue),'Retain decisive qualification: '+clue);
  for(const p of d.querySelectorAll('.conversation .assistant p')){
-  if(p.closest('blockquote')||p.textContent==='Added beyond your request')continue;
+  if(p.closest('blockquote')||p.matches('.topic-reminder')||p.textContent==='Added beyond your request')continue;
   assert(p.querySelector('u'),'Assistant prose has scanning cues: '+p.textContent);
  }
  const u=d.querySelector('.conversation .assistant u');
@@ -137,4 +137,19 @@ test('mobile sidebar and editor isolate the background and restore it',async()=>
  d.querySelector('.collapse-side').click();await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);
  d.querySelector('[data-pane="editor"]').click();await Promise.resolve();assert.equal(d.querySelector('#thread').inert,true);assert.equal(d.querySelector('#sidebar').inert,true);
  d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);dom.window.close();
+});
+
+test('every assistant example closes with a distinct topic reminder after its content',()=>{
+ const dom=demo(),d=dom.window.document;
+ for(const msg of d.querySelectorAll('.msg.assistant')){
+  const reminders=msg.querySelectorAll('.topic-reminder');assert.equal(reminders.length,1);
+  const reminder=reminders[0];assert.equal(msg.lastElementChild,reminder);
+  assert.match(reminder.textContent,/^About: .+/);
+  assert.equal(reminder.querySelectorAll('u,a,.mk').length,0);
+  assert.equal(dom.window.getComputedStyle(reminder).color,'var(--topic)');
+ }
+ assert.equal(d.querySelectorAll('.user .topic-reminder,.quote .topic-reminder').length,0);
+ assert.equal(dom.window.getComputedStyle(d.documentElement).getPropertyValue('--topic'),'#b8a4d9');
+ assert(d.querySelector('#backup .final .topic-reminder').textContent.includes('release decision'));
+ dom.window.close();
 });

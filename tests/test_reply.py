@@ -4,8 +4,12 @@ import tempfile
 import unittest
 spec=importlib.util.spec_from_file_location('reply',Path(__file__).resolve().parents[1]/'scripts/check-reply.py')
 reply=importlib.util.module_from_spec(spec);spec.loader.exec_module(reply)
+TOPIC = r'\(\color{#b8a4d9}{\textsf{About: the requested file change and its current status.}}\)'
+def check_message(text, **kwargs):
+    return reply.check(text+'\n\n'+TOPIC, **kwargs)
+
 def check_fragment(*args, **kwargs):
-    return reply.check(*args, require_pointer=False, **kwargs)
+    return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
     def test_historical_plain_skill_announcement_is_rejected(self):
@@ -72,14 +76,35 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(check_fragment(example))
 
     def test_every_reply_needs_an_attention_finger(self):
-        self.assertTrue(reply.check(r'\(\huge\text{✅}\) Saved.'))
-        self.assertEqual([], reply.check(r'\(\huge\text{👉}\) The change is saved.'))
-        self.assertEqual([], reply.check(r'\(\huge\text{🫵}\) Choose the destination.'))
-        self.assertEqual([], reply.check(r'\(\huge\text{✅}\) \(\huge\text{👉}\) The change is saved.'))
-        self.assertTrue(reply.check('> 🫵 Your earlier action.\n\n```text\n👉 example\n```\n\nSaved.'))
-        self.assertTrue(reply.check(r'\(\huge\text{👉}\) '+reply.CARET+'\n\nThe result.'))
+        self.assertTrue(check_message(r'\(\huge\text{✅}\) Saved.'))
+        self.assertEqual([], check_message(r'\(\huge\text{👉}\) The change is saved.'))
+        self.assertEqual([], check_message(r'\(\huge\text{🫵}\) Choose the destination.'))
+        self.assertEqual([], check_message(r'\(\huge\text{✅}\) \(\huge\text{👉}\) The change is saved.'))
+        self.assertTrue(check_message('> 🫵 Your earlier action.\n\n```text\n👉 example\n```\n\nSaved.'))
+        self.assertTrue(check_message(r'\(\huge\text{👉}\) '+reply.CARET+'\n\nThe result.'))
 
     def test_commentary_reserves_fingers_for_final(self):
-        self.assertEqual([], reply.check(r'\(\huge\text{🐌}\) Checking the files.', require_pointer=False, commentary=True))
+        self.assertEqual([], check_message(r'\(\huge\text{🐌}\) Checking the files.', require_pointer=False, commentary=True))
         for finger in ['👉', '🫵']:
-            self.assertTrue(reply.check('\\(\\huge\\text{'+finger+'}\\) Read this.', require_pointer=False, commentary=True))
+            self.assertTrue(check_message('\\(\\huge\\text{'+finger+'}\\) Read this.', require_pointer=False, commentary=True))
+
+
+    def test_topic_reminder_is_required_in_final_and_commentary(self):
+        for body, options in [(r'\(\huge\text{👉}\) The file is saved.', {}),
+                              (r'\(\huge\text{🐌}\) Saving the file.', {'commentary': True, 'require_pointer': False})]:
+            with self.subTest(options=options):
+                self.assertTrue(reply.check(body, **options))
+                self.assertEqual([], reply.check(body+'\n\n'+TOPIC+'\n', **options))
+
+    def test_topic_reminder_must_follow_actions_quotes_and_code(self):
+        body=r'\(\huge\text{🫵}\) Choose the destination.'
+        for later in [body, '> Additional quoted context', '```text\nLater example\n```']:
+            self.assertTrue(reply.check(body+'\n\n'+TOPIC+'\n\n'+later))
+        self.assertTrue(reply.check(body+'\n\n'+TOPIC+'\n\n'+TOPIC))
+        self.assertTrue(reply.check(body+'\n\n> '+TOPIC))
+        self.assertTrue(reply.check(body+'\n\n```text\n'+TOPIC+'\n```'))
+
+    def test_lavender_is_reserved_for_nonempty_topic_labels(self):
+        for invalid in [TOPIC.replace('About: ', ''), TOPIC.replace('textsf', 'textrm'),
+                        'More text '+TOPIC, r'\(\color{#b8a4d9}{\textsf{About: }}\)']:
+            self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.'+'\n\n'+invalid))

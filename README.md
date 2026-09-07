@@ -16,6 +16,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | --- | --- |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. Only user-approved project mappings may extend it; no arbitrary emoji additions. |
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
+| Closing topic reminder | Every assistant message ends with one brief `About:` line in muted lavender (`#b8a4d9`), naming the whole message’s subject for returning readers. It comes after actions and other closing details; the relevant question above each answer stays in place. |
 | Sentence scanning | Underlines the most useful words in every assistant prose sentence, including ordinary and coloured text. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
 | Computer Use | 🖥️ for manual browser/app interaction, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
@@ -126,7 +127,7 @@ The skill requires a quick check before every reply. Before sending a final repl
 python3 ~/.codex/skills/response-preferences/scripts/check-reply.py /absolute/reply.md
 ```
 
-This catches missing magenta skill announcements, missing opening links, unknown or misplaced wrapped markers, uppercase `\Huge`, obsolete colour/font combinations, missing question quotes, direct Markdown links and leaked notification comments. It checks local link destinations exist. Quoted earlier messages and code examples are excluded. It does not interpret meaning, guarantee model obedience or verify the app's rendering; see [verification and coverage](references/verification.md).
+This catches missing magenta skill announcements, missing opening links, unknown or misplaced wrapped markers, uppercase `\Huge`, obsolete colour/font combinations, missing question quotes, missing or misplaced closing topic reminders, direct Markdown links and leaked notification comments. It checks local link destinations exist. Quoted earlier messages and code examples are excluded. It does not interpret meaning, guarantee model obedience or verify the app's rendering; see [verification and coverage](references/verification.md).
 
 GitHub Actions runs the test suite on every push and pull request, including regression cases for the reply checker and the website's marker, colour, quote and skill-link presentation.
 
@@ -154,6 +155,8 @@ The agent checks the configured public source on first skill use when a week has
 ## A pointer in the final reply
 
 Only the final reply includes an attention finger: normally one 🫵 for your actual action or decision, otherwise one 👉 before the main takeaway. Two may help for distinct important items. Working commentary and progress updates have no attention fingers, so they do not steal your focus. Keep the finger beside its content, not isolated at the bottom. Other status markers keep their meanings.
+
+The last line of every assistant message, including working updates, is a short topic reminder: `\(\color{#b8a4d9}{\textsf{About: the export fix, its checks and the restart needed to use it.}}\)`. Muted lavender is reserved for this context label, with no extra emoji, underline or divider. It describes the whole reply, while the first-person quote above an answer remains the relevant question. The reminder stays last after any outstanding-item recommendation or applicable environment details; narrow screens may wrap it naturally.
 
 Closing outstanding-item recommendations include a hover-only ↗ whose destination text gives the fuller explanation; it is deliberately not a working file link. Env footers are reserved for AIMVS work, not unrelated tasks.
 
