@@ -139,6 +139,18 @@ class ReplyChecks(unittest.TestCase):
             self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.'+'\n\n'+invalid))
 
 
+    def test_topic_reminder_can_wrap_between_short_lavender_expressions(self):
+        overview = r'\(\color{#b8a4d9}{\textsf{About: fixing the video export.}}\)'
+        detail = r'\(\color{#b8a4d9}{\textsf{Restart the app, then retry the clip.}}\)'
+        for body, options in [(r'\(\huge\text{👉}\) Restart to use the export fix.', {}),
+                              ('🐌 Checking the export fix.', {'commentary': True, 'require_pointer': False})]:
+            self.assertEqual([], reply.check(body+'\n\n'+overview+' '+detail, **options))
+            for bad in [overview+' '+overview, overview+' stray text '+detail,
+                        overview+' '+detail.replace('#b8a4d9', '#67e8f9'),
+                        overview+' '+detail.replace('textsf', 'textrm'),
+                        overview+' '+detail.replace('Restart the app, then retry the clip.', '')]:
+                self.assertTrue(reply.check(body+'\n\n'+bad, **options), bad)
+
     def test_oversized_inline_prose_is_rejected_without_hiding_nested_underlines(self):
         long_warning = r'\(\color{#fb923c}{\textsf{The \underline{release is still pending}: its working copy has \underline{many outstanding changes}, needs \underline{another review before publication}, and its last recorded task run was interrupted.}}\)'
         self.assertTrue(any('may overflow' in e for e in check_fragment(long_warning)))

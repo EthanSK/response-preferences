@@ -106,9 +106,18 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 if not re.match(r'\s*\[↗\]\(', line[match.end():]):
                     fail('Follow each magenta skill name with its own clickable ↗.')
             elif colour == TOPIC_COLOUR:
-                if font != 'textsf' or COLOUR.fullmatch(line.strip()) is None or not line.strip().startswith(r'\(\color{#b8a4d9}{\textsf{About: ') or not line.strip().removeprefix(r'\(\color{#b8a4d9}{\textsf{About: ').removesuffix(r'}}\)').strip():
-                    fail('Use muted lavender only for a standalone About: topic reminder in normal-size \\textsf.')
-                topic_lines.append(number)
+                # A single closing reminder may use several short boxes to wrap.
+                parts = list(COLOUR.finditer(line))
+                prefix = r'\(\color{#b8a4d9}{\textsf{About: '
+                valid = (line.strip().startswith(prefix)
+                         and line.count(r'\textsf{About: ') == 1
+                         and not COLOUR.sub('', line).strip()
+                         and all(p.group(1) == TOPIC_COLOUR and p.group(2) == 'textsf' for p in parts)
+                         and all(p.group(0).split(r'\textsf{', 1)[1].removesuffix(r'}}\)').removeprefix('About: ').strip() for p in parts))
+                if not valid:
+                    fail('Use muted lavender only for one closing About: reminder in normal-size \\textsf, optionally split into short colour expressions.')
+                if number not in topic_lines:
+                    topic_lines.append(number)
                 if number != last_line:
                     fail('Put the topic reminder at the very end, after all other message content.')
             elif colour not in PALETTE or font != 'textsf':
