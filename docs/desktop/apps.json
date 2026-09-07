@@ -414,15 +414,6 @@
     "menu": true
   },
   {
-    "id": "youtube-spotify-media-key",
-    "name": "YouTube Spotify Media Key",
-    "url": null,
-    "icon": "./desktop/icons/youtube-spotify-media-key.png",
-    "note": "Local media-key helper. No public download is linked.",
-    "dock": false,
-    "menu": true
-  },
-  {
     "id": "trash",
     "name": "Trash",
     "url": "https://support.apple.com/guide/mac-help/delete-files-and-folders-on-mac-mchlp1093/mac",

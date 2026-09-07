@@ -11,20 +11,22 @@ function boot(width=1680){
 }
 test('desktop keeps every real app reachable with correct public links and no local paths',()=>{
  const dom=boot(),d=dom.window.document,data=dom.window.DESKTOP_APPS;
- assert.equal(data.length,48);assert.equal(d.querySelectorAll('.desktop-app-card').length,data.length);
+ assert.equal(data.length,47);assert.equal(d.querySelectorAll('.desktop-app-card').length,data.length);
  assert.equal(d.querySelectorAll('.mac-dock [data-app-id]').length,38);
  assert.equal(d.querySelector('.mac-dock [data-app-id]').dataset.appId,'finder');
- assert.equal(d.querySelectorAll('.mac-menu-app').length,28);
+ assert.equal(d.querySelectorAll('.mac-menu-app').length,27);
  for(const a of d.querySelectorAll('a[target="_blank"]')){
   assert.match(a.rel,/noopener/);assert.match(a.rel,/noreferrer/);assert.match(a.href,/^https:\/\/|^https:\/\/example.test\//);
  }
  for(const a of data){assert(existsSync('docs/'+a.icon));assert(!JSON.stringify(a).includes('/Users/'));if(a.url)assert.match(a.url,/^https:\/\//);}
  const source=readFileSync('docs/desktop-data.js','utf8');assert(!/file:\/\/|\/Users\/|token=|api[_-]?key/i.test(source));
- assert.equal(d.querySelector('[data-app-id="aiwallpaper"]').href,'https://www.aiwallpapergenerator.ai/');
+ for(const a of d.querySelectorAll('.mac-menu-app'))assert.equal(a.href,'https://www.menubardock.com/');
+ assert.equal(d.querySelectorAll('.dock-folder').length,0);
+ assert.equal(d.querySelector('.desktop-app-list [data-app-id="aiwallpaper"]').href,'https://www.aiwallpapergenerator.ai/');
  assert.equal(d.querySelector('[data-app-id="menu-bar-dock"]').href,'https://www.menubardock.com/');
  dom.window.close();
 });
-test('overflow menu searches all apps, explains the local helper and restores focus',()=>{
+test('overflow menu searches shareable apps and restores focus',()=>{
  const dom=boot(390),w=dom.window,d=w.document;
  assert([...d.querySelectorAll('.mac-menu-app')].some(n=>n.hidden));
  const opener=d.querySelector('.mac-more-apps');opener.click();assert(d.querySelector('dialog').open);
@@ -33,8 +35,6 @@ test('overflow menu searches all apps, explains the local helper and restores fo
  input.value='no matching application';input.dispatchEvent(new w.Event('input'));assert.equal(d.querySelector('.desktop-no-apps').hidden,false);
  input.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));
  assert.equal(d.querySelector('dialog').open,false);assert.equal(d.activeElement,opener);assert.equal(d.querySelector('.desktop-tooltip').hidden,true);
- d.querySelector('.mac-menu-app[data-app-id="youtube-spotify-media-key"]').click();
- assert(d.querySelector('dialog').open);assert.equal(d.querySelectorAll('.desktop-app-card:not([hidden])').length,1);assert.match(d.querySelector('.desktop-app-card:not([hidden])').textContent,/No public download is linked/);
  dom.window.close();
 });
 test('tooltips follow keyboard focus and resize hides stale hover content',()=>{
