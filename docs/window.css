@@ -21,3 +21,10 @@ body{padding:12px;height:100dvh;overflow:hidden}.app{position:relative;height:10
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 
 @media(max-width:1150px){.details-card{max-height:calc(100% - 80px);overflow:auto}}
+
+/* Marker explanations must not reflow the example chat. */
+.marker-popover{position:fixed;z-index:120;width:320px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 52px);overflow:auto;padding:14px 16px;background:#242426;border:1px solid #4a4a4e;border-radius:12px;box-shadow:0 12px 38px #0008;color:#dedede;font:13px/1.55 -apple-system,BlinkMacSystemFont,sans-serif}.marker-popover-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.marker-popover-head strong{font-size:14px}.marker-popover-head button{border:0;background:none;color:#aaa;font-size:20px;padding:0 4px;line-height:1.2;border-radius:4px}.marker-popover p{margin:9px 0}.marker-popover a{font-size:12px}.marker-popover-head button:hover{color:white;background:#ffffff12}.chat{container-type:inline-size}.chat-head{flex:1;overflow:hidden}.chat-head h1{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.header-nav,.title-tools{flex-shrink:0}.install-shortcut{white-space:nowrap}.js .app.pane-open{grid-template-columns:280px minmax(0,1fr) minmax(320px,36%)}
+@container(max-width:850px){.chat-head:before{display:none}.title-tools .share-label{display:none}}
+@container(max-width:480px){.title-tools .share-demo,.title-tools .about-demo{display:none}.title-tools{gap:2px}.chat-bar{padding:7px 8px;gap:4px}.title-tools .install-shortcut{padding:5px 8px;font-size:11px}}
+
+.js .app.sidebar-collapsed.pane-open{grid-template-columns:minmax(0,1fr) minmax(320px,36%)}

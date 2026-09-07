@@ -61,3 +61,7 @@ The draft checker now rejects inline prose expressions above 80 approximate visi
 ## Personal desktop wrapper
 
 The desktop menu must reserve the measured widths of the app menus, system controls and clock before choosing visible app icons. A fixed viewport estimate overlapped the clock at 390 pixels; the measured layout was verified in Chrome at mobile and desktop widths. Keep hidden apps reachable through the searchable directory. Escape in that modal must stop propagation so it does not also close an underlying guide pane, and dismissal must restore focus without leaving a stale tooltip.
+
+## Marker explanations without layout shifts
+
+Opening the full details pane for a small marker explanation squeezed the chat header and wrapped the title and Install button. Marker explanations now use a compact anchored popover; full document views keep the pane. Size header controls against the chat container, not only the browser viewport, and keep the sidebar width stable when a pane opens. Chrome desktop and phone checks verified warning clicks, Escape focus restoration and the editor header. Reposition popovers on scroll and resize rather than dismissing them during focus-driven scrolling or viewport capture.
