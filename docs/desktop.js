@@ -15,11 +15,12 @@ function bindTip(n,title,detail){
  const show=()=>{tip.replaceChildren(el('strong','',title),el('span','',detail));tip.hidden=false;tipOwner=n;n.setAttribute('aria-describedby',tip.id);const r=n.getBoundingClientRect(),b=tip.getBoundingClientRect();tip.style.left=Math.max(8,Math.min(innerWidth-b.width-8,r.left+r.width/2-b.width/2))+'px';tip.style.top=(n.closest('.mac-dock')?r.top-b.height-16:r.bottom+10)+'px';};
  n.addEventListener('pointerenter',show);n.addEventListener('pointerleave',hideTip);n.addEventListener('focus',show);n.addEventListener('blur',hideTip);n.addEventListener('click',hideTip);
 }
-function appLink(a,cls){
- const n=el(a.url?'a':'button',cls);if(a.url){n.href=a.url;n.target='_blank';n.rel='noopener noreferrer';}else{n.type='button';n.addEventListener('click',()=>openDirectory(n,a.name));}
- n.dataset.appId=a.id;n.setAttribute('aria-label',a.name+(a.url?' — open website in new tab':' — view local helper details'));
+function appLink(a,cls,menu=false){
+ const url=menu?'https://www.menubardock.com/':a.url;
+ const n=el(url?'a':'button',cls);if(url){n.href=url;n.target='_blank';n.rel='noopener noreferrer';}else{n.type='button';n.addEventListener('click',()=>openDirectory(n,a.name));}
+ n.dataset.appId=a.id;n.setAttribute('aria-label',a.name+(menu?' icon, opens Menu Bar Dock website':url?' — open website in new tab':' — view local helper details'));
  const image=el('img');image.src=a.icon;image.alt='';image.width=64;image.height=64;n.append(image);
- bindTip(n,a.name,a.url?'Open website in new tab':'Local helper · view details');return n;
+ bindTip(n,a.name,menu?'Opens Menu Bar Dock website':url?'Open website in new tab':'Local helper · view details');return n;
 }
 const bar=el('header','mac-menu-bar');bar.setAttribute('aria-label','Example macOS menu bar');
 const menus=el('nav','mac-app-menus');menus.setAttribute('aria-label','Desktop menu');
@@ -29,7 +30,7 @@ for(const [name,target] of [['File','#files'],['Edit','#setup'],['View','#format
 const status=el('nav','mac-status');status.setAttribute('aria-label','Ethan’s menu bar apps');
 const share=el('a','mac-screen-sharing');share.href='https://support.apple.com/guide/mac-help/share-the-screen-of-another-mac-mh14066/mac';share.target='_blank';share.rel='noopener noreferrer';share.innerHTML=svg(symbols.display);share.setAttribute('aria-label','Screen sharing — Apple guide');bindTip(share,'Screen sharing','Open Apple guide');status.append(share);
 const menuApps=el('div','mac-menu-apps');
-for(const id of window.DESKTOP_MENU_ORDER||[]){const a=byId.get(id);if(a)menuApps.append(appLink(a,'mac-menu-app'));}status.append(menuApps);
+for(const id of window.DESKTOP_MENU_ORDER||[]){const a=byId.get(id);if(a)menuApps.append(appLink(a,'mac-menu-app',true));}status.append(menuApps);
 const more=el('button','mac-more-apps');more.type='button';more.innerHTML=svg(symbols.more);more.setAttribute('aria-label','More apps');more.addEventListener('click',()=>openDirectory(more));bindTip(more,'Apps in this setup','See the full Dock and menu bar');status.append(more);
 const system=el('div','mac-system-items');
 const systemItems=[
@@ -43,7 +44,6 @@ bar.append(menus,status);d.body.prepend(bar);
 const dock=el('nav','mac-dock');dock.setAttribute('aria-label','Ethan’s Dock — app websites');
 const dockItems=el('div','mac-dock-items');
 for(const a of apps.filter(a=>a.dock&&a.id!=='trash')){const n=appLink(a,'mac-dock-app');if(a.id==='textedit')n.classList.add('dock-divider');dockItems.append(n);}
-for(const name of ['MusicOutput','Screenshots','Downloads','YOMG2Assets']){const n=el('a','mac-dock-app dock-folder');n.href=byId.get('finder').url;n.target='_blank';n.rel='noopener noreferrer';n.innerHTML=svg(symbols.folder);n.setAttribute('aria-label',name+' folder — open Finder guide');bindTip(n,name,'Local folder · open Finder guide');dockItems.append(n);}
 const trash=byId.get('trash');if(trash)dockItems.append(appLink(trash,'mac-dock-app'));
 dock.append(dockItems);d.body.append(dock);
 const wallpaper=el('button','desktop-wallpaper-link','Ethan’s setup ↗');wallpaper.type='button';wallpaper.addEventListener('click',()=>openDirectory(wallpaper));bindTip(wallpaper,'Recreate this setup','Explore the apps and wallpaper');d.body.append(wallpaper);

@@ -216,3 +216,17 @@ test('every assistant example closes with a distinct topic reminder after its co
  assert(d.querySelector('#backup .final .topic-reminder').textContent.includes('release decision'));
  dom.window.close();
 });
+
+test('the first home reply previews the range and its marker controls open real explanations',()=>{
+ const dom=demo(),d=dom.window.document,home=d.querySelector('#welcome'),first=home.querySelector('.final');
+ for(const c of ['c-green','c-cyan','c-orange','c-red'])assert(first.querySelector('.'+c+' u'));
+ assert.equal(first.querySelectorAll('.welcome-marker-range .mk').length,18);
+ assert(home.querySelector('.assistant:not(.final) .skill'));
+ assert(first.querySelector('.sec > .mk'));assert(first.querySelector('table'));
+ assert(first.querySelector('a[data-file][href^="./viewer.html"]'));
+ assert(first.querySelector('a[data-file][href^="./message.html"]'));
+ assert(first.querySelector('a[href="#format-u3"]'));assert(first.querySelector('.notification-example'));
+ const failure=[...first.querySelectorAll('.welcome-marker-range .mk')].find(x=>x.textContent==='❌');failure.click();
+ assert.equal(d.querySelector('#mk-name').textContent,'Failure');assert(d.querySelector('#app').classList.contains('pane-open'));
+ dom.window.close();
+});
