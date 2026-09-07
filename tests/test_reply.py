@@ -84,14 +84,43 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(check_message(r'\(\huge\text{👉}\) '+reply.CARET+'\n\nThe result.'))
 
     def test_commentary_reserves_fingers_for_final(self):
-        self.assertEqual([], check_message(r'\(\huge\text{🐌}\) Checking the files.', require_pointer=False, commentary=True))
+        self.assertEqual([], check_message('🐌 Checking the files.', require_pointer=False, commentary=True))
         for finger in ['👉', '🫵']:
             self.assertTrue(check_message('\\(\\huge\\text{'+finger+'}\\) Read this.', require_pointer=False, commentary=True))
+            self.assertTrue(check_message(finger+' Read this.', require_pointer=False, commentary=True))
+
+    def test_marker_sizes_depend_on_reply_phase(self):
+        for symbol in reply.MARKERS - {'🫵', '👉'}:
+            with self.subTest(symbol=symbol):
+                prefix = '> Check the files.\n\n' if symbol == '⮑' else ''
+                plain = prefix + symbol + ' Checking the files.'
+                large = prefix + r'\(\huge\text{' + symbol + r'}\) Checking the files.'
+                self.assertEqual([], check_fragment(plain, commentary=True))
+                self.assertTrue(check_fragment(large, commentary=True))
+                self.assertEqual([], check_fragment(large))
+                self.assertTrue(check_fragment(plain))
+        for wrapper in [r'\(\Large\text{ⓘ}\)', r'\(\Huge\text{ⓘ}\)', r'\(\text{ⓘ}\)']:
+            self.assertTrue(check_fragment(wrapper+' Details.', commentary=True))
+
+    def test_small_commentary_markers_keep_structure_and_reference_checks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory)/'skill.html'; p.write_text('example')
+            good=rf'🧠 **Skill use:** \(\color{{magenta}}{{\textrm{{skill-creator}}}}\) [↗]({p}) — check the files.'
+            self.assertEqual([],check_fragment(good,commentary=True))
+            self.assertEqual([],check_fragment(good.replace('🧠 ', '🧠 ⌄\n\n'),commentary=True))
+            self.assertTrue(check_fragment(good.replace('🧠','🎯'),commentary=True))
+            self.assertTrue(check_fragment(good.replace(f'[↗]({p})',''),commentary=True))
+            self.assertTrue(check_fragment('🧠 Skill use: skill-creator.',commentary=True))
+            p.unlink(); self.assertTrue(check_fragment(good,commentary=True))
+        self.assertEqual([],check_fragment('ⓘ ⌄\n\nFirst fact.\n\nSecond fact.',commentary=True))
+        for bad in ['ⓘ', 'ⓘ '+reply.CARET, 'ⓘ ⌄ Details.', '🎯 Details.', '⮑ Answer.', '> Question?\n\n⮑ ⌄\n\nAnswer.', '  ⓘ Indented.']:
+            self.assertTrue(check_fragment(bad,commentary=True),bad)
+        self.assertEqual([],check_fragment('> Earlier: '+r'\(\huge\text{🧠}\)'+'\n\n```text\n👉 example\n```\n\nⓘ Details.\n\n| Item | Status |\n|---|---|\n| Check | ✅ Passed |',commentary=True))
 
 
     def test_topic_reminder_is_required_in_final_and_commentary(self):
         for body, options in [(r'\(\huge\text{👉}\) The file is saved.', {}),
-                              (r'\(\huge\text{🐌}\) Saving the file.', {'commentary': True, 'require_pointer': False})]:
+                              ('🐌 Saving the file.', {'commentary': True, 'require_pointer': False})]:
             with self.subTest(options=options):
                 self.assertTrue(reply.check(body, **options))
                 self.assertEqual([], reply.check(body+'\n\n'+TOPIC+'\n', **options))
