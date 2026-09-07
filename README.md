@@ -1,6 +1,6 @@
-# Response Preferences<br>⮑ 🛠️ 🖥️ ✅ ❌ 👀 🐌 🐞 ⓘ 👉 🫵 🤨 ⚠️ ❓ 💡 ⚖️ ⛔ 🧠 ➕➕
+# Response Preferences<br>⮑ 🛠️ 🧪 🖥️ ✅ ❌ 👀 🐌 🐞 ⓘ 👉 🫵 🤨 ⚠️ ❓ 💡 ⚖️ ⛔ 🧠 ➕➕
 
-[![Example Codex reply: magenta skill names, green success, cyan information, orange caution, red critical text, underlined scanning clues and a lavender topic reminder.](docs/readme-preview.svg)](https://ethansk.github.io/response-preferences/)
+[![Example Codex reply: magenta skill names, planning, test results, green success, cyan information, orange caution, red critical text, underlined scanning clues and a lavender topic reminder.](docs/readme-preview.svg)](https://ethansk.github.io/response-preferences/)
 
 A personal Codex skill for **how replies are written**. Fixed emoji meanings, coloured highlights, underlined scanning cues, original-message context, and a local Markdown/code editor.
 
@@ -8,7 +8,7 @@ A personal Codex skill for **how replies are written**. Fixed emoji meanings, co
 
 Created from Ethan's preferences, shared so you can use or adapt them. The website presents the examples inside a smaller Codex-style window on a macOS desktop: a task sidebar, compact title bar, centered conversation, source/details panel and bottom composer. It is an independent, interactive demonstration—not the Codex app—and does not run an AI.
 
-Six example conversations introduce the skill, guide installation and customisation, explain the response format, demonstrate file/context links, and show successful and failed tasks. Together they demonstrate all 19 global markers, the full colour palette, underlined scanning clues, quoted questions and closing topic reminders. The home chat previews the full range straight away: working and final markers, all 19 meanings, colours, underlines, section carets, tables, file and message links, annotations and optional notification summaries. The guide sits on a macOS Tahoe desktop with Ethan’s app icons and menu-bar apps recovered from his ultrawide reference. Dock icons open each app’s public website; menu-bar app icons open Menu Bar Dock, which supplies the app strip. Hover or focus an icon to see its destination. The **Apps in this setup** directory keeps every app reachable on small screens and links the wallpaper. Personal folders and the local-only media-key helper are omitted. The window has standard macOS traffic lights, reversible preview controls and keyboard-accessible navigation. Click a marker for a compact explanation that keeps the chat in place, or open a file in the working Markdown/code editor. Copy an installation prompt, manual commands or a question for your own agent; this website does not contact a model or install anything itself.
+Six example conversations introduce the skill, guide installation and customisation, explain the response format, demonstrate file/context links, and show successful and failed tasks. Together they demonstrate all 20 global markers, the full colour palette, underlined scanning clues, quoted questions and closing topic reminders. The home chat previews the full range straight away: working and final markers, all 20 meanings, colours, underlines, section carets, tables, file and message links, annotations and optional notification summaries. The guide sits on a macOS Tahoe desktop with Ethan’s app icons and menu-bar apps recovered from his ultrawide reference. Dock icons open each app’s public website; menu-bar app icons open Menu Bar Dock, which supplies the app strip. Hover or focus an icon to see its destination. The **Apps in this setup** directory keeps every app reachable on small screens and links the wallpaper. Personal folders and the local-only media-key helper are omitted. The window has standard macOS traffic lights, reversible preview controls and keyboard-accessible navigation. Click a marker for a compact explanation that keeps the chat in place, or open a file in the working Markdown/code editor. Copy an installation prompt, manual commands or a question for your own agent; this website does not contact a model or install anything itself.
 
 This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
@@ -71,7 +71,9 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | ⚖️ | Trade-offs | ⛔ | External blocker |
 | 🧠 | Skill use | ➕➕ | Added beyond your request |
 | 🖥️ | Computer Use and manual browser/app tests | 👉 | Main takeaway |
-| 🛠️ | Planning and brainstorming | | |
+| 🛠️ | Planning and brainstorming | 🧪 | Tests |
+
+Test-related information uses **🧪**: setup, coverage, progress, results and limitations. State the actual status in words; the icon does not mean a test passed. Automated results remain uncoloured. **🖥️** still marks actual Computer Use/manual browser or app tests, and **🐞** still reports actual bugs.
 
 Planning and brainstorming share **🛠️**: exploring options, proposing an approach and outlining next steps. Use it instead of information for plans; **🐌** remains execution underway and **💡** remains a recommendation. For example: `🛠️ Install the skill, try it on a real reply, then change the markers to suit you.`
 
