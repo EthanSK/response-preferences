@@ -80,7 +80,7 @@ Long inline LaTeX prose can extend beyond the Codex message pane. Keep each colo
 
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
-Automated test results, lint and other routine automated checks do not get green text. Successful manual tests can use green with 🖥️; failed or incomplete manual tests state that outcome without green. The computer marker takes precedence over generic progress/result markers in Computer Use sections.
+Final successful completion statements use green, including **committed, merged, saved and deployed**. Colour the short confirmed outcome itself, not only its tick. Automated test results, lint and other routine automated checks do not get green text. Successful manual tests can use green with 🖥️; failed or incomplete manual tests state that outcome without green. The computer marker takes precedence over generic progress/result markers in Computer Use sections.
 
 Projects can list additional user-approved emoji meanings in their existing instructions. Apply only the relevant project’s mappings; do not invent any or override global meanings without explicit approval. Pass approved extra symbols to the reply checker with repeatable `--approved-project-marker` flags. 🖥️ is global.
 
@@ -128,7 +128,7 @@ Notifications lead with a short version of your request, in your wording and per
 
 ## Keeping the format consistent
 
-The skill requires a quick check before every reply. Before sending a final reply, save its exact Markdown and run:
+The skill requires a quick check before every reply. Immediately before a final completion reply, reread its colour and final-check rules; reread the full skill after compaction or a user style correction. This follows context changes and completion, rather than an arbitrary message counter. Before sending a final reply, save its exact Markdown and run:
 
 ```sh
 python3 ~/.codex/skills/response-preferences/scripts/check-reply.py /absolute/reply.md
