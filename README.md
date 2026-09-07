@@ -4,7 +4,11 @@ A personal Codex skill for **how replies are written**. Fixed emoji meanings, co
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
-Created from Ethan's preferences, shared so you can use or adapt them. The website is an interactive Codex-style conversation demo: three fictional exchanges demonstrate all 18 global markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open an editor pane; its ↗ opens the same document in a full tab. This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
+Created from Ethan's preferences, shared so you can use or adapt them. The website presents the examples inside a nearly full-window Codex-style desktop: a task sidebar, compact title bar, centered conversation, source/details panel and bottom composer. It is an independent, interactive demonstration—not the Codex app—and does not run an AI.
+
+Three fictional conversations demonstrate all 18 global markers, colours, underlined sentence clues, quoted question reminders and adjacent opening links. Switch conversations in the sidebar, emphasise a type of reply with the focus controls, or click a marker to read its meaning. File links open the working Markdown/code editor; its ↗ opens the same document in a full tab. Composer drafts stay in the page and do not contact a model. Install instructions and the full skill remain available in the interface.
+
+This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
 ## What it does
 

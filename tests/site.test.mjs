@@ -6,8 +6,9 @@ function demo(mobile=false){
  const dom=new JSDOM(readFileSync('docs/index.html','utf8'),{url:'https://example.test/',runScripts:'outside-only'});
  dom.window.matchMedia=q=>({matches:q.includes('900px')&&mobile,addEventListener(){}});
  dom.window.HTMLElement.prototype.scrollIntoView=function(){};
- const style=dom.window.document.createElement('style');style.textContent=readFileSync('docs/styles.css','utf8');dom.window.document.head.append(style);
+ const style=dom.window.document.createElement('style');style.textContent=readFileSync('docs/styles.css','utf8')+'\n'+readFileSync('docs/window.css','utf8');dom.window.document.head.append(style);
  dom.window.eval(readFileSync('docs/site.js','utf8'));
+ dom.window.eval(readFileSync('docs/window.js','utf8'));
  return dom;
 }
 test('conversation navigation, meanings and focus filters preserve the reply',()=>{
@@ -116,4 +117,24 @@ test('only final example replies have attention fingers',()=>{
   assert.equal([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵'].includes(m.textContent)),msg.classList.contains('final'));
  }
  dom.window.close();
+});
+
+test('window search, menu dismissal and draft queue preserve local content',()=>{
+ const dom=demo(),d=dom.window.document;
+ d.querySelector('.search-examples').click();
+ const input=d.querySelector('#example-search');input.value='backup';input.dispatchEvent(new dom.window.Event('input'));
+ assert.equal(d.querySelectorAll('.search-results button').length,1);
+ d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));
+ assert.equal(d.querySelector('.window-popover'),null);assert.equal(d.activeElement,d.querySelector('.search-examples'));
+ const count=d.querySelectorAll('.conversation .msg').length;const draft=d.querySelector('#demo-draft');draft.value='Local draft';d.querySelector('.demo-composer').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));
+ assert.equal(d.querySelector('.queued-draft span').textContent,'Local draft');assert.equal(d.querySelectorAll('.conversation .msg').length,count);
+ assert.match(d.querySelector('#local-status').textContent,/No message was sent/);
+ d.querySelector('.queued-draft button').click();assert.equal(d.querySelectorAll('.queued-draft').length,0);dom.window.close();
+});
+test('mobile sidebar and editor isolate the background and restore it',async()=>{
+ const dom=demo(true),d=dom.window.document;
+ d.querySelector('.header-sidebar').click();await Promise.resolve();assert.equal(d.querySelector('#thread').inert,true);
+ d.querySelector('.collapse-side').click();await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);
+ d.querySelector('[data-pane="editor"]').click();await Promise.resolve();assert.equal(d.querySelector('#thread').inert,true);assert.equal(d.querySelector('#sidebar').inert,true);
+ d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);dom.window.close();
 });

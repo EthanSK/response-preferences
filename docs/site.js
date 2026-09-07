@@ -47,5 +47,5 @@ d.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(app.classList.con
 $('#copy-install').addEventListener('click',async()=>{const s=$('#copy-status');try{await navigator.clipboard.writeText('git clone https://github.com/EthanSK/response-preferences.git ~/.codex/skills/response-preferences');s.textContent='Command copied.';}catch{s.textContent='Could not copy. Select the command above instead.';}});
 mobile.addEventListener('change',()=>{const blocked=mobile.matches&&app.classList.contains('pane-open');side.inert=blocked;$('#thread').inert=blocked;});
 addEventListener('hashchange',route);
-showChat(chats[0].id);route();
+showChat('format');route();
 })();
