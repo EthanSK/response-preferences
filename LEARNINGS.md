@@ -51,3 +51,9 @@ The macOS traffic lights control only the example window and retain its DOM when
 The desktop details card needs a media-query listener to close when moving to a compact viewport, and it closes after a compact-layout navigation choice. CSS alone can otherwise leave the card covering the conversation. Chrome desktop and 390-pixel checks reproduced and verified this transition; `tests/site.test.mjs` covers the state changes.
 
 Copy buttons need explicit foreground and background styles at the same specificity: the general `.copy-row button` rule previously overrode the primary background while leaving its dark text. The installation-button computed-style check preserves the readable pair.
+
+## Inline prose overflow
+
+A long single coloured `\textsf` expression with nested underlines was visibly clipped in Codex desktop 26.901.51231 (8109). The bundled `.katex .base` uses `white-space: nowrap` and inline-block layout. A synthetic reproduction using that client's KaTeX JS/CSS measured 1069px of content in 700px and 316px paragraphs; a short complete coloured statement plus ordinary supporting prose fit both widths. This is an authoring workaround, not an app-renderer fix. The public website uses HTML/CSS and cannot establish native rendering.
+
+The draft checker now rejects inline prose expressions above 80 approximate visible characters, including nested underlines and long topic labels. This catches the observed failure pattern but does not measure glyph widths. Keep spans substantially shorter where possible and preserve negations and qualifications. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.

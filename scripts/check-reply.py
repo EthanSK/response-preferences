@@ -16,6 +16,20 @@ PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 TOPIC_COLOUR = '#b8a4d9'
 CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 WORKING_CARET = '⌄'
+# Authoring guardrail only: glyph widths and the available pane still vary.
+MAX_PROSE_CHARACTERS = 80
+INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
+
+
+def prose_length(expression):
+    """Approximate visible text in the supported inline prose syntax, not TeX math."""
+    if not re.search(r'\\(?:textsf|textrm|text)\{', expression):
+        return 0
+    # Remove command arguments that are not visible text before stripping wrappers.
+    visible = re.sub(r'\\(?:color|textcolor|raisebox)\{[^{}]*\}', '', expression)
+    visible = re.sub(r'\\[A-Za-z]+\s*', '', visible)
+    visible = re.sub(r'\\([^A-Za-z])', r'\1', visible)
+    return len(re.sub(r'\s+', ' ', visible.replace('{', '').replace('}', '')).strip())
 
 
 def leading_marker(line):
@@ -49,6 +63,9 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         line = re.sub(r'(`+).*?\1', '', raw)
         def fail(message):
             errors.append(f'Line {number}: {message}')
+        for expression in INLINE_MATH.finditer(line):
+            if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
+                fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         matches = list(MARKER.finditer(line))

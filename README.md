@@ -74,6 +74,8 @@ Markers stay inline for a single line or short statement. For sections spanning 
 
 Read each highlighted clause or sentence on its own: it should make sense without the uncoloured words before or after it. This applies to all four highlight colours; magenta skill names keep their separate name-only styling.
 
+Long inline LaTeX prose can extend beyond the Codex message pane. Keep each coloured statement short and independently understandable, with supporting details in ordinary wrapping Markdown. Apply this to underline boxes and the closing topic reminder too. Aim for about 40 visible characters or fewer per box; the checker rejects expressions over 80 approximate visible characters as a guardrail, not a guarantee of fit at every width or zoom. Preserve useful facts and qualifications. For example, colour **The release is still pending.** and keep the review details in normal prose.
+
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
 Automated test results, lint and other routine automated checks do not get green text. Successful manual tests can use green with 🖥️; failed or incomplete manual tests state that outcome without green. The computer marker takes precedence over generic progress/result markers in Computer Use sections.
@@ -130,7 +132,7 @@ The skill requires a quick check before every reply. Before sending a final repl
 python3 ~/.codex/skills/response-preferences/scripts/check-reply.py /absolute/reply.md
 ```
 
-This catches missing magenta skill announcements, missing opening links, unknown or misplaced wrapped markers, wrong marker sizes for working/final messages, uppercase `\Huge`, obsolete colour/font combinations, missing question quotes, missing or misplaced closing topic reminders, direct Markdown links and leaked notification comments. It checks local link destinations exist. Quoted earlier messages and code examples are excluded. It does not interpret meaning, guarantee model obedience or verify the app's rendering; see [verification and coverage](references/verification.md).
+This catches missing magenta skill announcements, missing opening links, unknown or misplaced wrapped markers, wrong marker sizes for working/final messages, uppercase `\Huge`, obsolete colour/font combinations, oversized inline LaTeX prose, missing question quotes, missing or misplaced closing topic reminders, direct Markdown links and leaked notification comments. It checks local link destinations exist. Quoted earlier messages and code examples are excluded. It does not interpret meaning, guarantee model obedience or verify the app's rendering; see [verification and coverage](references/verification.md).
 
 GitHub Actions runs the test suite on every push and pull request, including regression cases for the reply checker and the website's marker, colour, quote and skill-link presentation.
 
