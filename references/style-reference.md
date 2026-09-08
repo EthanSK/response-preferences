@@ -75,7 +75,7 @@ For final replies, save the exact draft and run `python3 /absolute/path/to/respo
 
 ### Literal text inside LaTeX
 
-Treat styled prose as TeX, not plain text. Inside `\(...\)`, write a literal percent sign as `\%`: `\(\underline{\textsf{Coverage is 54\%}}\)`. Bare `%` starts a comment and can expose red raw syntax instead of the intended underline or colour. Escape other TeX-special characters when needed, or keep that text in ordinary Markdown. Do not escape ordinary Markdown percentages, quoted source/code, URLs or colour values as if they were styled prose. The checker rejects unescaped `%` in inline LaTeX; it is not a complete TeX parser.
+Treat styled prose as TeX, not plain text. Inside `\(...\)`, write a literal percent sign as `\%`: `\(\underline{\textsf{Coverage is 54\%}}\)`. Bare `%` starts a comment and can expose red raw syntax instead of the intended underline or colour. Escape other TeX-special characters when needed, or keep that text in ordinary Markdown. Do not escape ordinary Markdown percentages, quoted source/code, URLs or colour values as if they were styled prose. Keep tool names and other identifiers such as `sample_tool` in ordinary inline code and underline the surrounding readable prose. If an identifier must appear in a LaTeX text wrapper, escape its underscores as `sample\_tool`; bare `_` is invalid in text mode and can expose red raw syntax. The checker rejects unescaped `%` in inline LaTeX and literal `_` in text wrappers; mathematical subscripts remain valid. It is not a complete TeX parser.
 
 ## Context above direct replies
 

@@ -12,6 +12,23 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_literal_identifier_underscores_in_text_are_rejected(self):
+        for wrapper in [r'\underline{\textsf{%s}}', r'\color{#67e8f9}{\textsf{\underline{%s}}}', r'\underline{\text{%s}}']:
+            bad = r'\(' + wrapper % 'sample_tool instructions' + r'\)'
+            for commentary in [False, True]:
+                with self.subTest(wrapper=wrapper, commentary=commentary):
+                    self.assertTrue(any('underscore' in e for e in check_fragment(bad, commentary=commentary)))
+                    self.assertEqual([], check_fragment(bad.replace('_', r'\_'), commentary=commentary))
+
+    def test_underscore_escape_parity_and_math_context(self):
+        self.assertTrue(check_fragment(r'\(\textsf{sample\\_tool}\)'))
+        for good in [r'\(x_i\)', r'\(x_i\text{ items}\)', r'\(\textsf{Value \ensuremath{x_i}}\)', r'\(\textsf{Value $x_i$}\)', r'\(\textsf{sample\_tool}\)', r'\(\textsf{a\{b\_c\}}\)']:
+            self.assertEqual([], check_fragment(good), good)
+
+    def test_underscores_in_plain_text_quotes_code_and_urls_are_unchanged(self):
+        for good in ['sample_tool', r'> \(\textsf{sample_tool}\)', r'`\(\textsf{sample_tool}\)`', '```tex\n'+r'\(\textsf{sample_tool}\)'+'\n```', '[Source](https://example.com/sample_tool)']:
+            self.assertEqual([], check_fragment(good), good)
+
     def test_literal_percentages_inside_styled_prose_must_be_escaped(self):
         examples = [r'\(\underline{\textsf{Matching list covers about 54%}}\)',
                     r'\(\underline{\textsf{Close matches (37%)}}\)',
