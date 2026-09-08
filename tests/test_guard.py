@@ -12,6 +12,11 @@ guard = importlib.util.module_from_spec(spec); spec.loader.exec_module(guard)
 GOOD = r'\(\huge\text{👉}\) The \(\underline{\textsf{export keeps every final frame}}\).' + '\n\n' + r'\(\color{#b8a4d9}{\textsf{About: the export fix.}}\)'
 
 class GuardTests(unittest.TestCase):
+    def test_completion_guard_catches_percent_renderer_failure(self):
+        broken = GOOD.replace('export keeps every final frame','matching list covers about 54%')
+        self.assertTrue(any('percent' in e for e in guard.errors_for(broken)))
+        self.assertEqual([],guard.errors_for(broken.replace('%',r'\%')))
+
     def test_explicit_plain_text_and_yaml_exceptions_are_task_and_reply_bound(self):
         session = '01a07780-aa0b-7352-b2dc-44a38a666d42'
         other = '01a071d2-bfc5-7151-ac5a-30ebf54dd7aa'

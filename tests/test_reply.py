@@ -12,6 +12,22 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_literal_percentages_inside_styled_prose_must_be_escaped(self):
+        examples = [r'\(\underline{\textsf{Matching list covers about 54%}}\)',
+                    r'\(\underline{\textsf{Close matches (37%)}}\)',
+                    r'\(\color{#67e8f9}{\textsf{\underline{Coverage is 54%}}}\)']
+        for draft in examples:
+            for commentary in [False, True]:
+                with self.subTest(draft=draft,commentary=commentary):
+                    self.assertTrue(any('percent' in e for e in check_fragment(draft, commentary=commentary)))
+                    self.assertEqual([], check_fragment(draft.replace('%',r'\%'), commentary=commentary))
+
+    def test_percent_escape_parity_and_non_latex_context(self):
+        self.assertTrue(check_fragment(r'\(\textsf{54\\%}\)'))
+        self.assertEqual([],check_fragment(r'\(\textsf{54\%}\)'))
+        for draft in ['Coverage is 54%.',r'> \(\textsf{54%}\)',r'`\(\textsf{54%}\)`','```tex\n'+r'\(\textsf{54%}\)'+'\n```','[Source](https://example.com/a%20b)']:
+            self.assertEqual([],check_fragment(draft),draft)
+
     def test_historical_plain_skill_announcement_is_rejected(self):
         self.assertTrue(check_fragment(r'\(\huge\text{🧠}\) Skill use: browser-test-on-macbook and use-macbook-display — open the site.'))
     def test_each_coloured_skill_requires_its_own_existing_link(self):

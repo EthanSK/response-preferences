@@ -19,6 +19,8 @@ WORKING_CARET = '⌄'
 # Authoring guardrail only: glyph widths and the available pane still vary.
 MAX_PROSE_CHARACTERS = 80
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
+# An even run of backslashes does not escape TeX's comment character.
+UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
 
 
 def prose_length(expression):
@@ -64,6 +66,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         def fail(message):
             errors.append(f'Line {number}: {message}')
         for expression in INLINE_MATH.finditer(line):
+            if UNESCAPED_PERCENT.search(expression.group(1)):
+                fail(r'Escape literal percent signs inside LaTeX as \%; bare % starts a TeX comment and can break rendering. Leave ordinary Markdown percentages unchanged.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
                 fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
         if '<!--' in line:
