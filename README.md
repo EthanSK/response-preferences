@@ -83,6 +83,8 @@ Read each highlighted clause or sentence on its own: it should make sense withou
 
 Long inline LaTeX prose can extend beyond the Codex message pane. Keep each coloured statement short and independently understandable, with supporting details in ordinary wrapping Markdown. Apply this to underline boxes and the closing topic reminder too. Aim for about 40 visible characters or fewer per box; the checker rejects expressions over 80 approximate visible characters as a guardrail, not a guarantee of fit at every width or zoom. Preserve useful facts and qualifications. For example, colour **The release is still pending.** and keep the review details in normal prose.
 
+Inside LaTeX highlights or underlines, escape percent signs: `\(\underline{\textsf{Coverage is 54\%}}\)` renders “Coverage is 54%”. A bare `%` starts a TeX comment and can make the expression appear as red raw syntax. Ordinary Markdown percentages stay unchanged. The reply checker catches this in both working and final replies.
+
 Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
 Use cyan selectively for **useful explanations of what changed or how the resulting system behaves**, including the main explanation in an opening direct answer after ⮑ or 👉. For example, “Both Playlist types share one visual row” is cyan; “The clipping bug is fixed” is an explicit confirmed success statement and is green. A completion reply does not make every descriptive sentence green. Keep each highlight short and understandable on its own.

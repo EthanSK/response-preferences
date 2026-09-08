@@ -73,6 +73,10 @@ For final replies, save the exact draft and run `python3 /absolute/path/to/respo
 - Use the existing approved meanings: for example, ✅ for confirmed success/completion, ❌ for actual failure, 🐌 for active work, 🐞 for actual bugs, and 🫵 for Ethan's actions or decisions. Do not invent category emojis or use ticks/crosses as arbitrary labels. If no approved meaning fits, use a plain-text category.
 - Keep the category/status wording alongside its emoji so the table remains understandable without recognising the symbol. Use markers where they help scanning, not in every cell or as decoration. These are table-cell labels, not section headings; keep them at normal table-text size.
 
+### Literal text inside LaTeX
+
+Treat styled prose as TeX, not plain text. Inside `\(...\)`, write a literal percent sign as `\%`: `\(\underline{\textsf{Coverage is 54\%}}\)`. Bare `%` starts a comment and can expose red raw syntax instead of the intended underline or colour. Escape other TeX-special characters when needed, or keep that text in ordinary Markdown. Do not escape ordinary Markdown percentages, quoted source/code, URLs or colour values as if they were styled prose. The checker rejects unescaped `%` in inline LaTeX; it is not a complete TeX parser.
+
 ## Context above direct replies
 
 - Immediately above each direct-answer ⮑ line, put only the question or specific part of Ethan’s message that the answer underneath addresses, followed by the appropriate native or fallback context control described below. Put the reminder and its hover control in a Markdown blockquote (`> excerpt [↗](</Original user text>)`) with a vertical line on the left. Leave a blank line after the quote, then put the direct-answer arrow outside it, on the same line as the opening answer. A table, list, code block or further paragraph below does not move the return arrow onto its own line. Keep the arrow and opening answer in one paragraph, with no caret; natural wrapping on a narrow screen is fine. Start a separate information section when the purpose changes to supporting explanation. Do not add a section emoji to the reminder; the answer's approved arrow remains first.
