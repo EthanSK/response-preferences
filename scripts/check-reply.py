@@ -23,6 +23,31 @@ INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
 
 
+def has_text_underscore(expression):
+    """Catch literal underscores in text wrappers, preserving math subscripts."""
+    modes = [False]
+    pending = None
+    for token in re.findall(r'\\[A-Za-z]+|\\.|[^\\]', expression):
+        if token.startswith('\\'):
+            if token in {r'\textsf', r'\textrm', r'\text'}:
+                pending = True
+            elif token == r'\ensuremath':
+                pending = False
+            continue
+        if token == '{':
+            modes.append(modes[-1] if pending is None else pending)
+            pending = None
+        elif token == '}' and len(modes) > 1:
+            modes.pop()
+        elif token == '$':
+            modes[-1] = not modes[-1]
+        elif token == '_' and modes[-1]:
+            return True
+        elif not token.isspace():
+            pending = None
+    return False
+
+
 def prose_length(expression):
     """Approximate visible text in the supported inline prose syntax, not TeX math."""
     if not re.search(r'\\(?:textsf|textrm|text)\{', expression):
@@ -68,6 +93,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         for expression in INLINE_MATH.finditer(line):
             if UNESCAPED_PERCENT.search(expression.group(1)):
                 fail(r'Escape literal percent signs inside LaTeX as \%; bare % starts a TeX comment and can break rendering. Leave ordinary Markdown percentages unchanged.')
+            if has_text_underscore(expression.group(1)):
+                fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
                 fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
         if '<!--' in line:
