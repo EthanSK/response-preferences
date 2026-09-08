@@ -22,8 +22,10 @@ class ReplyChecks(unittest.TestCase):
 
     def test_underscore_escape_parity_and_math_context(self):
         self.assertTrue(check_fragment(r'\(\textsf{sample\\_tool}\)'))
-        for good in [r'\(x_i\)', r'\(x_i\text{ items}\)', r'\(\textsf{Value \ensuremath{x_i}}\)', r'\(\textsf{Value $x_i$}\)', r'\(\textsf{sample\_tool}\)', r'\(\textsf{a\{b\_c\}}\)']:
+        for good in [r'\(x_i\)', r'\(x_i\text{ items}\)', r'\(\textsf{Value $x_i$}\)', r'\(\textsf{sample\_tool}\)', r'\(\textsf{a\{b\_c\}}\)']:
             self.assertEqual([], check_fragment(good), good)
+        # TeX support must be established by the actual renderer, not our scanner.
+        self.assertTrue(check_fragment(r'\(\textsf{Value \ensuremath{x_i}}\)'))
 
     def test_underscores_in_plain_text_quotes_code_and_urls_are_unchanged(self):
         for good in ['sample_tool', r'> \(\textsf{sample_tool}\)', r'`\(\textsf{sample_tool}\)`', '```tex\n'+r'\(\textsf{sample_tool}\)'+'\n```', '[Source](https://example.com/sample_tool)']:

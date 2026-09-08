@@ -12,6 +12,12 @@ guard = importlib.util.module_from_spec(spec); spec.loader.exec_module(guard)
 GOOD = r'\(\huge\text{👉}\) The \(\underline{\textsf{export keeps every final frame}}\).' + '\n\n' + r'\(\color{#b8a4d9}{\textsf{About: the export fix.}}\)'
 
 class GuardTests(unittest.TestCase):
+    def test_completion_guard_uses_renderer_and_delimiter_validation(self):
+        for value in ['C# project', 'A & B', r'\unknowncommand', 'extra}brace']:
+            self.assertTrue(any('KaTeX' in e for e in guard.errors_for(GOOD.replace('export keeps every final frame', value))))
+        self.assertTrue(any('delimiter' in e for e in guard.errors_for(GOOD[:-2])))
+        self.assertEqual([], guard.errors_for(GOOD.replace('export keeps every final frame', r'C\# project')))
+
     def test_completion_guard_catches_percent_renderer_failure(self):
         broken = GOOD.replace('export keeps every final frame','matching list covers about 54%')
         self.assertTrue(any('percent' in e for e in guard.errors_for(broken)))

@@ -3,6 +3,11 @@
 import argparse
 from pathlib import Path
 import re
+import importlib.util
+
+_spec = importlib.util.spec_from_file_location('reply_math', Path(__file__).with_name('math-validation.py'))
+math_validation = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(math_validation)
 
 MARKERS = {'🧪', '🛠️', '⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🧠', '➕➕', '🖥️', '👉'}
 MARKER = re.compile(r'\\\((?:\\([a-zA-Z]+))?\\text\{([^{}]+)\}\\\)')
@@ -64,7 +69,7 @@ def leading_marker(line):
 
 
 def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True):
-    errors = []
+    errors = math_validation.check_math(text)
     topic_lines = []
     last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
