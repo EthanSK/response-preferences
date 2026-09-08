@@ -4,7 +4,7 @@ Instructions do not guarantee model obedience. Keep the core short enough to rea
 
 ## Explicit draft check
 
-Before a final answer, run `scripts/check-reply.py` on the exact draft. Working updates can use `--commentary`. The checker catches deterministic omissions, marker placement/sizing, colour syntax, skill announcements and excessive inline LaTeX width. Meaning, per-sentence underline quality, useful emphasis and native visual rendering still require judgment.
+Before a final answer, run `scripts/check-reply.py` on the exact draft. Working updates containing LaTeX must use `--commentary` before sending. The checker catches deterministic omissions, marker placement/sizing, colour syntax, skill announcements and excessive inline LaTeX width. It also sends explicit math expressions through bundled KaTeX 0.16.22 with errors enabled, trusted commands disabled and bounded expansion/time. Delimiter mismatches and renderer/runtime failures cannot pass. Node.js must be available on PATH or selected with `RESPONSE_PREFERENCES_NODE`; the copied bundle has no npm/runtime network dependency. Meaning, per-sentence underline quality, useful emphasis and native visual rendering still require judgment. Single-dollar syntax is intentionally excluded to avoid interpreting prices as math; use explicit delimiters for authored math.
 
 ## Optional automatic completion guard
 

@@ -80,3 +80,9 @@ KaTeX 0.16.22 rejects an underlined text expression containing a bare percent si
 ## Literal underscores in text wrappers
 
 KaTeX 0.16.22 renders `\underline{\textsf{sample_tool instructions}}` as a red error because `_` is a math subscript operator, invalid in text mode. Escaping it as `\_` succeeds. The percentage guard and freshly read rules did not catch this separate character: the original exact draft still passed. Check literal underscores in text-mode arguments, including nested underlines, while allowing escaped underscores, ordinary code/quotes/URLs and real math subscripts such as `x_i\text{ items}`. Prefer identifiers in ordinary inline code, with readable scanning cues around them. This is a specific authoring guard, not a complete TeX parser.
+
+## Validate with the renderer, not successive character checks
+
+A draft with literal `C#` inside `\textsf` passed the checker despite KaTeX rejecting it. Earlier percent and underscore checks covered examples, not TeX grammar. The shared checker now uses bundled KaTeX to validate expressions and explicitly checks delimiters; braces and unsupported commands need no separate incident-specific patch. Tests must include accepted real math as well as literal prose, Markdown evidence exclusions, failed runtime discovery and unavailable/invalid helper output. A former fixture claimed `\ensuremath` was supported; the renderer disproved that assumption.
+
+A passing parser still cannot establish viewport fit, font appearance or model obedience. Explicit drafts cover commentary only when agents run them; a completion hook runs after a final is visible. Treat renderer unavailability as a failed check, and use a prose fallback rather than claiming a skipped renderer passed.
