@@ -192,10 +192,13 @@ test('compact layouts dismiss the details card on resize and after choosing a de
  d.querySelector('.toggle-details').click();assert.equal(card.hidden,false);card.querySelector('a').click();assert.equal(card.hidden,true);dom.window.close();
 });
 
-test('the welcome route leads through all six conversations and returns from install details',()=>{
+test('the welcome route leads through all conversations including the separator and returns from install details',()=>{
  const dom=demo(),d=dom.window.document;assert.equal(d.querySelector('.conversation.active').id,'welcome');
- assert.equal(d.querySelectorAll('.chat-list [data-chat]').length,6);
+ assert.equal(d.querySelectorAll('.chat-list [data-chat]').length,7);
  for(const link of d.querySelectorAll('.chat-list [data-chat]'))assert(d.getElementById(link.dataset.chat));
+ d.querySelector('[data-chat="separator"]').click();assert.equal(d.querySelector('.conversation.active').id,'separator');
+ assert.equal(d.querySelector('[data-chat="separator"]').getAttribute('aria-current'),'page');
+ assert.match(d.querySelector('#separator').textContent,/ordinary chat/);
  d.querySelector('[data-pane="install"]').click();assert(d.querySelector('#app').classList.contains('pane-open'));
  d.querySelector('[data-chat="setup"]').click();assert.equal(d.querySelector('.conversation.active').id,'setup');assert(!d.querySelector('#app').classList.contains('pane-open'));
  assert.equal(d.querySelectorAll('.glossary .mk').length,20);assert.match(d.querySelector('#markers-h').textContent,/Twenty/);dom.window.close();
