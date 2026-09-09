@@ -29,3 +29,11 @@ Ethan's completion-notification adapter can opt in through the local `~/.codex/h
 The initial food-clarification reply loaded 11,814 tokens through a 5,000-token tool-output limit, omitted required styling and skipped the checker. Its plain skill announcement and missing final finger/underlines are representative regression fixtures, with private user wording excluded from this public repository.
 
 Run the guard tests, existing checker tests, generator round-trip checks and website checks. Test first failure, valid correction, failed correction without looping, empty/structured replies and unchanged notification routing. Validate an actual installed hook invocation separately from pure unit tests. An agent can still ignore a continuation, so report that boundary honestly.
+
+## When a checked draft still produces red commands
+
+Compare three distinct artifacts: the draft that passed, the exact final stored by the client, and any subsequent correction. Run the checker on the stored final and diff it against the draft. A passing draft does not cover braces or other text the model adds while emitting the answer. Reuse the validated text unchanged; if it changes, validate again.
+
+A local `style_repair_required` receipt proves the adapter detected an error and reached its request branch. It does not prove the client accepted the output, started a continuation, or displayed a valid correction. Inspect actual task history for that correction, check hook exit/output and synchronous configuration, and check whether another Stop hook returned `continue: false`. If no correction appears, report the continuation failure independently from the model's malformed output; do not call the parser ineffective when it rejected the actual final.
+
+Preserve the old response as historical evidence. When authorized, request one formatting-only resend in its original task, retaining the factual time boundary, then check the stored resend. Do not restart domain work, repeatedly wake tasks, or claim a pre-send guarantee: this integration sees the final after it has streamed.

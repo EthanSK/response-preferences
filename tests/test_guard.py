@@ -18,6 +18,24 @@ class GuardTests(unittest.TestCase):
         self.assertTrue(any('delimiter' in e for e in guard.errors_for(GOOD[:-2])))
         self.assertEqual([], guard.errors_for(GOOD.replace('export keeps every final frame', r'C\# project')))
 
+    def test_valid_draft_mutated_in_two_about_expressions_needs_repair(self):
+        draft = GOOD + ' ' + r'\(\color{#b8a4d9}{\textsf{Checks passed; release remains pending.}}\)'
+        self.assertEqual([], guard.errors_for(draft))
+        sent = draft.replace(r'export fix.}}\)', r'export fix.}}}\)').replace(
+            r'remains pending.}}\)', r'remains pending.}}}\)')
+        # The guard deduplicates identical errors on the same line.
+        self.assertTrue(any('KaTeX' in e for e in guard.errors_for(sent)))
+        for clean, broken in [(r'export fix.}}\)', r'export fix.}}}\)'),
+                              (r'remains pending.}}\)', r'remains pending.}}}\)')]:
+            self.assertTrue(any('KaTeX' in e for e in guard.errors_for(draft.replace(clean, broken))))
+        for active in (False, True):
+            result = subprocess.run([sys.executable, str(ROOT/'scripts/guard-reply.py')],
+                input=json.dumps({'last_assistant_message': sent, 'stop_hook_active': active}),
+                text=True, capture_output=True, check=True)
+            output = json.loads(result.stdout)
+            self.assertEqual(output.get('decision'), None if active else 'block')
+            self.assertTrue(any('KaTeX' in e for e in output['errors']))
+
     def test_completion_guard_catches_percent_renderer_failure(self):
         broken = GOOD.replace('export keeps every final frame','matching list covers about 54%')
         self.assertTrue(any('percent' in e for e in guard.errors_for(broken)))
