@@ -80,6 +80,18 @@ Keep colours outside Markdown links: follow a coloured skill name or file-relate
 
 ## Colours and scanning cues
 
+### Copy these exact LaTeX patterns
+
+Use these working examples as templates. Replace only the words inside the innermost text argument; preserve the commands, delimiters and closing braces. Change a colour value only to another approved colour.
+
+```latex
+\(\underline{\textsf{The upload is still pending}}\)
+\(\color{#ef4444}{\textsf{\underline{Example error: the upload failed.}}}\)
+\(\color{#b8a4d9}{\textsf{About: Checking the upload.}}\)
+```
+
+The underline-only and About patterns end with **two** closing braces before `\)`. The coloured-and-underlined pattern ends with **three**, because it has one additional nested command. Do not copy the three-brace ending into the two-brace patterns. For literal text inside a text argument, use `C\#`, `54\%`, `sample\_tool`, `A \& B` and `\{name\}`; ordinary Markdown is simpler for these names and values. The `#` in a colour value stays unchanged.
+
 Use normal-size sans-serif `\(\color{#67e8f9}{\textsf{This viewer is a snapshot.}}\)` for colour highlights. Skill names alone are the magenta `\textrm` exception.
 
 - **Red `#ef4444`:** critical, must-read information.
