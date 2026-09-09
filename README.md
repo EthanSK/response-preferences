@@ -191,3 +191,5 @@ Closing outstanding-item recommendations include a hover-only ↗ whose destinat
 Prefer Codex’s native `:codex-annotation{index="N"}` reference for an actual attached response annotation. It shows the selected text and the user’s comment on hover, so no fake file-path link is needed for that annotation. Its index must point to an annotation supplied with the message; it cannot be used to attach arbitrary message text. The ordinary-message fallback below remains useful when there is no supported native reference.
 
 The quoted question can use `[↗](</Original user text here>)` to show the original text in Codex’s destination popup. This user-confirmed short-text technique includes a leading slash and is hover-only: clicking does not open a file. Keep a separate real context-viewer link for attached images or clickable context. Long messages, line breaks and special characters are not yet verified.
+
+The example sidebar includes a [numbered separator chat](https://ethansk.github.io/response-preferences/#separator), showing how Ethan uses a pinned task with a dashed name to visually separate groups of chats.

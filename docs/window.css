@@ -28,3 +28,7 @@ body{padding:12px;height:100dvh;overflow:hidden}.app{position:relative;height:10
 @container(max-width:480px){.title-tools .share-demo,.title-tools .about-demo{display:none}.title-tools{gap:2px}.chat-bar{padding:7px 8px;gap:4px}.title-tools .install-shortcut{padding:5px 8px;font-size:11px}}
 
 .js .app.sidebar-collapsed.pane-open{grid-template-columns:minmax(0,1fr) minmax(320px,36%)}
+
+/* A pinned-task separator stays a normal navigable chat row. */
+.chat-list a.chat-separator{color:#9c9ca1;white-space:nowrap;letter-spacing:.02em}
+.chat-list a.chat-separator::after{display:none}
