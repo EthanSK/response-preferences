@@ -183,8 +183,10 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('The local link destination does not exist: ' + path)
         if line.strip():
             previous = line
-    if require_topic and len(topic_lines) != 1:
-        errors.append('End every message with exactly one muted-lavender About: topic reminder.')
+    if commentary and topic_lines:
+        errors.append('Reserve the About: topic reminder for the final reply, not working commentary.')
+    elif not commentary and require_topic and len(topic_lines) != 1:
+        errors.append('End the final reply with exactly one muted-lavender About: topic reminder.')
     if require_pointer and not has_pointer:
         errors.append('Include 🫵 for a real user action, or 👉 before the main reading takeaway.')
     return errors
@@ -193,7 +195,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reply', type=Path)
-    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers; attention fingers are forbidden.')
+    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers; attention fingers and About reminders are forbidden.')
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')

@@ -131,10 +131,11 @@ test('automated results stay uncoloured and manual success uses the computer mar
  dom.window.close();
 });
 
-test('only final example replies have attention fingers',()=>{
+test('only final example replies have attention fingers and topic reminders',()=>{
  const dom=demo();
  for(const msg of dom.window.document.querySelectorAll('.msg.assistant')){
   assert.equal([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵'].includes(m.textContent)),msg.classList.contains('final'));
+  assert.equal(msg.querySelectorAll('.topic-reminder').length,msg.classList.contains('final')?1:0);
  }
  dom.window.close();
 });
@@ -211,9 +212,9 @@ test('mobile sidebar and editor isolate the background and restore it',async()=>
  d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);dom.window.close();
 });
 
-test('every assistant example closes with a distinct topic reminder after its content',()=>{
+test('every final example closes with a distinct topic reminder after its content',()=>{
  const dom=demo(),d=dom.window.document;
- for(const msg of d.querySelectorAll('.msg.assistant')){
+ for(const msg of d.querySelectorAll('.msg.assistant.final')){
   const reminders=msg.querySelectorAll('.topic-reminder');assert.equal(reminders.length,1);
   const reminder=reminders[0];assert.equal(msg.lastElementChild,reminder);
   assert.match(reminder.textContent,/^About: .+/);

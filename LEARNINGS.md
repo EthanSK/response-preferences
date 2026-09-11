@@ -90,3 +90,7 @@ A passing parser still cannot establish viewport fit, font appearance or model o
 ## Validate the emitted reply and confirm the repair separately
 
 A valid checked draft was emitted with one extra closing brace in each of two About expressions. The installed KaTeX checker rejected both errors in the stored final, and the installed adapter recorded `style_repair_required`; the available task history nevertheless ended without a correction. This distinguishes draft-to-final mutation from validator coverage and continuation delivery. A repair-request receipt alone is not proof of a visible repair. The sanitized two-expression case in `tests/test_guard.py` verifies the valid draft passes and the emitted mutation requests a bounded repair. It does not simulate or prove desktop continuation delivery.
+
+## Final-only About reminders
+
+The About reminder is required only in final replies. Commentary must omit it while retaining its other formatting rules. Keep the phase-aware draft check and public working examples aligned; quoted prior reminders and code examples remain literal. Covered by the reply checker and website message-phase tests.
