@@ -284,3 +284,19 @@ test('test information uses the test marker without implying success or hiding l
  assert.equal(d.querySelector('#backup [data-kind="problem"]:has(code) .mk').textContent,'🐞');
  dom.window.close();
 });
+
+
+test('rainbow question chunks preserve context links and exclude annotation evidence',()=>{
+ const dom=demo(),d=dom.window.document;
+ for(const quote of d.querySelectorAll('blockquote.quote:not(.annotation-context)')){
+   const rainbow=quote.querySelector('.rainbow-quote');assert(rainbow);
+   assert(!rainbow.querySelector('a,u'),'Links and underlines stay outside the rainbow');
+   assert.equal(rainbow.querySelectorAll('.rq-chunk').length>0,true);
+   assert([...rainbow.querySelectorAll('.rq-chunk')].every(x=>x.textContent.length<=24));
+   assert(quote.querySelector('a[href]'),'Keep original context navigation');
+ }
+ assert.equal(d.querySelectorAll('.annotation-context .rainbow-quote,.user .rainbow-quote,.preview .rainbow-quote,.topic-reminder .rainbow-quote').length,0);
+ const link=d.querySelector('#welcome .quote a');link.click();
+ assert.equal(link.getAttribute('href'),'#welcome-u1');
+ dom.window.close();
+});

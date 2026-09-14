@@ -98,3 +98,7 @@ A valid checked draft was emitted with one extra closing brace in each of two Ab
 ## Final-only About reminders
 
 The About reminder is required only in final replies. Commentary must omit it while retaining its other formatting rules. Keep the phase-aware draft check and public working examples aligned; quoted prior reminders and code examples remain literal. Covered by the reply checker and website message-phase tests.
+
+## Rainbow question rendering
+
+The reply checker intentionally skips blockquoted evidence, so a passing whole-reply check does not validate newly authored rainbow wrappers inside a quote. The quote helper calls the bundled renderer on its expressions directly; tests preserve words, escape literal punctuation and HTML, and keep long tokens out of unbreakable math boxes. Reuse the same chunker for public HTML examples. This does not change historical evidence exclusions or introduce a completion hook.
