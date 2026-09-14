@@ -26,7 +26,7 @@ The checker is deliberately limited. It catches common structural regressions in
 | Computer Use and automated checks | 🖥️ with explicit manual-test status; green only for successful manual tests, never automated tests/lint | Manual semantic check; website example and global/project marker tests |
 | Underlined scanning cues | Useful words in every assistant prose sentence, inside colours and ordinary prose; preserve negatives and conditions | Manual sentence-by-sentence clue review; nested-colour checker regression; website quote/link preservation and scanning examples |
 | Skill references | 🧠 announcement, each skill name magenta upright serif with a real adjacent ↗; preference skill used silently | Historical failure fixture; local destination check; website computed styles and links |
-| Reply context | Relevant question/excerpt, user's perspective, blockquote restored, answer outside it and self-contained | Checker for quote placement; manual perspective/coverage review |
+| Reply context | Relevant question/excerpt in fixed rainbow chunks, user's perspective, answer outside it and self-contained | Quote helper validates its authored KaTeX directly; general checker still excludes evidence; manual wording/wrapping review |
 | Original message | Exact source text, heading Your message, images preserved best effort, actual file link | Context helper and image-preservation tests |
 | Markdown/code links | Generated HTML by default, specific verified line when relevant, source retained | Generator, parser source maps, target-line and editor tests |
 | Viewer | Preview/edit/split, syntax highlighting, search/replace, undo/redo, downloadable copy; explicit picked-file saving only | Viewer tests; browser interaction and screenshots |
