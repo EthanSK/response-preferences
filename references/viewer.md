@@ -19,6 +19,7 @@ Generated files default to `$CODEX_HOME/outputs/viewers/YYYY-MM-DD/` (or `~/.cod
 ## What the viewer does
 
 - Preview Markdown; edit source; use split view. CodeMirror provides line numbers, search/replace, undo/redo, bracket matching and syntax highlighting.
+- Compact chrome for a side panel: file name, snapshot note and save state in the header; a Preview / Edit / Split control, a line field and icon actions (Search, Open file, Save, Download copy, Light / dark) with tooltips and accessible names; live messages in the bottom status bar. Each pane scrolls on its own. The theme starts from the system appearance and the toggle flips it.
 - Highlight Markdown, JavaScript/TypeScript/JSX, Python, JSON, HTML, CSS, SQL, YAML, shell, Rust and Go. Other UTF-8 text opens as plain text. Fenced Markdown code also has syntax colours.
 - Jump to a one-based line using the control or `#L45`. The smallest mapped Markdown passage receives an animated and persistent highlight. Source mode highlights the exact line. Reduced-motion preferences disable the animation.
 - Open a different file using the browser picker. Download copy exports edits. Save writes only to a file explicitly opened through the browser's File System Access API, when supported. A generated snapshot never silently gains write access to its original path.
