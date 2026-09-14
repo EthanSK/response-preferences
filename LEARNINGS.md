@@ -14,6 +14,10 @@ CodeMirror's Markdown language needs a `codeLanguages` resolver to colour fenced
 
 Keep the saved baseline separate from the current editor revision during asynchronous writes. Check the picked file against its previous raw contents before creating a writer, and abort failed writes. Conflict and failure cases are covered by `tests/files.test.mjs`. A browser download is an exported copy, not a saved source; keep the unsaved indicator until a real write or undo restores the baseline.
 
+## Viewer chrome and theming
+
+Define the CodeMirror `HighlightStyle` with class names rather than inline colours so `viewer.css` can theme editor tokens and highlight.js fences from the same light/dark variables; inline colours cannot follow a runtime theme toggle. The compact shell is a fixed-height column (header, workspace, status bar) where each pane scrolls on its own, so passage centring depends on the preview's bottom padding and `scrollPastEnd()` rather than document scrolling. `tests/editor.test.mjs` boots the built template and covers accessible action names, the system-preference theme start, save tooltip state and status messages; visual placement still needs screenshot inspection.
+
 ## Public and private artifacts
 
 The generated HTML includes source text and embedded images. Keep real message context and private viewers outside this repository. Public demos use synthetic text. Validate source round-tripping and script-termination escaping in `tests/test_generator.py`.

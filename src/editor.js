@@ -1,6 +1,6 @@
 import {basicSetup} from 'codemirror';
 import {EditorState, StateField, StateEffect, Compartment} from '@codemirror/state';
-import {EditorView, Decoration, keymap} from '@codemirror/view';
+import {EditorView, Decoration, keymap, scrollPastEnd} from '@codemirror/view';
 import {indentWithTab} from '@codemirror/commands';
 import {openSearchPanel} from '@codemirror/search';
 import {HighlightStyle, syntaxHighlighting, StreamLanguage} from '@codemirror/language';
@@ -32,12 +32,17 @@ const selectedLine = StateField.define({
   },
   provide: field => EditorView.decorations.from(field)
 });
+// Class-based so viewer.css can theme tokens per light/dark palette alongside highlight.js fences.
 const colours = HighlightStyle.define([
-  {tag: tags.keyword, color: '#b18cdb'}, {tag: [tags.string, tags.attributeValue], color: '#589d76'},
-  {tag: [tags.number, tags.bool, tags.null], color: '#bd854d'}, {tag: tags.comment, color: '#8a90a3', fontStyle: 'italic'},
-  {tag: [tags.function(tags.variableName), tags.typeName], color: '#6c9cd5'},
-  {tag: tags.heading, color: '#ae88d4', fontWeight: 'bold'}, {tag: tags.link, color: '#719fd1'},
-  {tag: tags.strong, fontWeight: 'bold'}, {tag: tags.emphasis, fontStyle: 'italic'}
+  {tag: [tags.keyword, tags.tagName, tags.modifier, tags.operatorKeyword], class: 'tok-keyword'},
+  {tag: [tags.string, tags.special(tags.string), tags.attributeValue, tags.regexp], class: 'tok-string'},
+  {tag: [tags.number, tags.bool, tags.null, tags.atom], class: 'tok-number'},
+  {tag: tags.comment, class: 'tok-comment'},
+  {tag: [tags.function(tags.variableName), tags.function(tags.propertyName), tags.definition(tags.variableName), tags.typeName, tags.className, tags.propertyName, tags.attributeName], class: 'tok-function'},
+  {tag: tags.heading, class: 'tok-heading'}, {tag: [tags.link, tags.url], class: 'tok-link'},
+  {tag: tags.strong, class: 'tok-strong'}, {tag: tags.emphasis, class: 'tok-emphasis'},
+  {tag: [tags.meta, tags.processingInstruction, tags.list, tags.contentSeparator], class: 'tok-meta'},
+  {tag: tags.quote, class: 'tok-quote'}, {tag: tags.monospace, class: 'tok-code'}, {tag: tags.invalid, class: 'tok-invalid'}
 ]);
 function modeFor(name) {
   const ext = name.split('.').pop().toLowerCase();
@@ -62,13 +67,15 @@ function isDirty() {return editor.state.doc.toString() !== baseline;}
 function updateDirty() {
   const dirty = isDirty(); $('dirty').textContent = dirty ? 'Unsaved changes' : fileHandle ? 'File opened' : 'Snapshot';
   $('dirty').classList.toggle('unsaved', dirty); $('save').disabled = !fileHandle || busy || !dirty;
+  $('save').title = !fileHandle ? 'Open a file with browser saving support first' : busy ? 'Saving…' : dirty ? 'Save changes to the opened file' : 'No unsaved changes';
 }
-const editor = new EditorView({parent:$('editor'), state:EditorState.create({doc:baseline, extensions:[
+const extensions = () => [
   basicSetup, keymap.of([indentWithTab, {key:'Mod-s', run:() => {fileHandle ? saveFile() : downloadFile(); return true;}}]),
-  language.of(modeFor(name)), syntaxHighlighting(colours), selectedLine,
+  language.of(modeFor(name)), syntaxHighlighting(colours), selectedLine, scrollPastEnd(),
   EditorView.contentAttributes.of({'aria-label':'Document source'}),
   EditorView.updateListener.of(update => {if (update.docChanged) {updateDirty();clearTimeout(renderTimer);renderTimer=setTimeout(render,180);}})
-]})});
+];
+const editor = new EditorView({parent:$('editor'), state:EditorState.create({doc:baseline, extensions:extensions()})});
 function render() {
   if (/\.(md|markdown)$/i.test(name)) $('preview').innerHTML = renderMarkdown(editor.state.doc.toString(), {images,links});
   else {const pre=document.createElement('pre');pre.textContent=editor.state.doc.toString();$('preview').replaceChildren(pre);}
@@ -97,8 +104,8 @@ async function loadFile(file, handle=null) {
   const text=decodeText(await file.arrayBuffer());
   name=file.name;rawBaseline=text;baseline=normalise(text);sourceEol=text.includes('\r\n')?'\r\n':'\n';sourceBom=text.startsWith('\ufeff');
   fileHandle=handle;images={};links={};
-  editor.setState(EditorState.create({doc:baseline,extensions:[basicSetup,keymap.of([indentWithTab,{key:'Mod-s',run:()=>{fileHandle?saveFile():downloadFile();return true;}}]),language.of(modeFor(name)),syntaxHighlighting(colours),selectedLine,EditorView.contentAttributes.of({'aria-label':'Document source'}),EditorView.updateListener.of(update=>{if(update.docChanged){updateDirty();clearTimeout(renderTimer);renderTimer=setTimeout(render,180);}})]}));
-  $('filename').textContent=name;$('file-note').textContent='Opened from disk · does not update automatically';
+  editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
+  $('filename').textContent=name;$('filename').title=name;$('file-note').textContent='Opened from disk · does not update automatically';
   $('snapshot-note').textContent=handle?'Save writes to the file you picked. Download copy creates a separate file.':'Download copy to keep your edits. The file you opened is unchanged.';
   targetLine=1;setMode(/\.(md|markdown)$/i.test(name)?'preview':'edit');updateDirty();
 }
@@ -125,13 +132,16 @@ function downloadFile() {
   const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
   say('Download started. The file you opened is unchanged.');
 }
-$('filename').textContent=name;$('file-note').textContent=data.generated?`Snapshot · ${data.generated}`:'Local document';
+$('filename').textContent=name;$('filename').title=name;$('file-note').textContent=data.generated?`Snapshot · ${data.generated}`:'Local document';
 document.querySelectorAll('button[data-mode]').forEach(button=>button.onclick=()=>setMode(button.dataset.mode));
 $('jump-form').onsubmit=event=>{event.preventDefault();jump($('line').value);};
 $('search').onclick=()=>{if(currentMode==='preview')setMode('edit');openSearchPanel(editor);editor.focus();};
 $('open').onclick=openFile;$('save').onclick=saveFile;$('download').onclick=downloadFile;
 $('file-input').onchange=async()=>{const file=$('file-input').files[0];if(file)try{await loadFile(file);}catch(error){say('Could not open this file. '+error.message);}finally{$('file-input').value='';}};
-$('theme').onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='light'?'dark':'light';};
+// Start from the system appearance; the toggle then flips the explicit theme.
+const root=document.documentElement;
+if(!root.dataset.theme) root.dataset.theme=typeof matchMedia==='function' && matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+$('theme').onclick=()=>{root.dataset.theme=root.dataset.theme==='light'?'dark':'light';};
 $('preview').onclick=event=>{const unavailable=event.target.closest('[data-unavailable]');if(unavailable){event.preventDefault();say('Open the linked file from disk. It is not included in this viewer.');}};
 addEventListener('beforeunload',event=>{if(isDirty()){event.preventDefault();event.returnValue='';}});
 addEventListener('hashchange',()=>{const match=location.hash.match(/^#L(\d+)$/);if(match)jump(+match[1],true);});
