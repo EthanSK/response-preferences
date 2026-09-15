@@ -64,6 +64,38 @@ def prose_length(expression):
     return len(re.sub(r'\s+', ' ', visible.replace('{', '').replace('}', '')).strip())
 
 
+def has_unwrapped_underline(expression):
+    """Reject prose underlines that KaTeX would render as space-free maths."""
+    def group_end(opening):
+        depth = 1
+        index = opening + 1
+        while index < len(expression):
+            if expression[index] == '\\':
+                index += 2
+                continue
+            if expression[index] == '{':
+                depth += 1
+            elif expression[index] == '}':
+                depth -= 1
+                if depth == 0:
+                    return index
+            index += 1
+        return len(expression)
+
+    text_ranges = []
+    for match in re.finditer(r'\\(?:textsf|textrm|text)\{', expression):
+        opening = match.end() - 1
+        text_ranges.append((opening, group_end(opening)))
+    for match in re.finditer(r'\\underline\{', expression):
+        argument = match.end()
+        if re.match(r'\\(?:textsf|textrm|text)\{', expression[argument:]):
+            continue
+        if any(start < match.start() < end for start, end in text_ranges):
+            continue
+        return True
+    return False
+
+
 def leading_marker(line):
     return MARKER.match(line) or PLAIN_MARKER.match(line)
 
@@ -100,6 +132,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail(r'Escape literal percent signs inside LaTeX as \%; bare % starts a TeX comment and can break rendering. Leave ordinary Markdown percentages unchanged.')
             if has_text_underscore(expression.group(1)):
                 fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
+            if has_unwrapped_underline(expression.group(1)):
+                fail(r'Wrap underlined prose in \textsf: use \underline{\textsf{Words}} or place \underline{Words} inside an existing \textsf group. A bare \underline{Words} renders as maths, removing spaces and italicising letters.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
                 fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
         if '<!--' in line:
