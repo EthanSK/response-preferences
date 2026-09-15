@@ -12,6 +12,19 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_bare_prose_underlines_are_rejected_before_spaces_disappear(self):
+        bad = [r'\(\underline{All 110 repository tests passed}\)',
+               r'\(\color{#67e8f9}{\underline{Each rainbow block gets a different start}}\)']
+        for draft in bad:
+            with self.subTest(draft=draft):
+                errors = check_fragment(draft)
+                self.assertTrue(any(r'Wrap underlined prose in \textsf' in error for error in errors), errors)
+        good = [r'\(\underline{\textsf{All 110 repository tests passed}}\)',
+                r'\(\color{#67e8f9}{\textsf{Each \underline{rainbow block} gets a different start}}\)']
+        for draft in good:
+            with self.subTest(draft=draft):
+                self.assertEqual([], check_fragment(draft))
+
     def test_literal_identifier_underscores_in_text_are_rejected(self):
         for wrapper in [r'\underline{\textsf{%s}}', r'\color{#67e8f9}{\textsf{\underline{%s}}}', r'\underline{\text{%s}}']:
             bad = r'\(' + wrapper % 'sample_tool instructions' + r'\)'

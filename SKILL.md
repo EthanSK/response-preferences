@@ -86,6 +86,8 @@ Keep colours outside Markdown links: follow a coloured skill name or file-relate
 
 Use these working examples as templates. Replace only the words inside the innermost text argument; preserve the commands, delimiters and closing braces. Change a colour value only to another approved colour.
 
+Never put prose directly inside `\underline{...}` in math mode: `\(\underline{Words with spaces}\)` removes its spaces and renders the letters as maths. Use `\(\underline{\textsf{Words with spaces}}\)`, or nest `\underline{...}` inside an existing `\textsf{...}` group, exactly as below.
+
 ```latex
 \(\underline{\textsf{The upload is still pending}}\)
 \(\color{#ef4444}{\textsf{\underline{Example error: the upload failed.}}}\)
