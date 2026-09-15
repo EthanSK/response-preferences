@@ -6,13 +6,18 @@ Use these recipes when drafting question reminders or when unsure about a recurr
 
 Use rainbow only for the short quoted user-question reminder above ⮑. Preserve the user's wording and perspective. Leave the full annotation/evidence block, source viewers, code, links, answer and About footer under their existing rules. These colours identify quoted context; they do not mean success, warning or failure. The quote is the explicit exception to semantic colour meanings and self-contained highlight chunks.
 
-Use this fixed sequence, restarting for each quote:
+Use exactly one colour per word, with this fixed 24-step lookup table. Start at 1 for each new quote; after 24, repeat from 1. Continue across spaces and line wraps without resetting. Short quotes show only the beginning of the cycle; do not stretch a cycle to fill the text. Pink connects purple back to red.
 
-`#f87171` red → `#fb923c` orange → `#facc15` yellow → `#4ade80` green → `#22d3ee` cyan → `#60a5fa` blue → `#c084fc` violet.
+| Steps | Colours in order |
+| --- | --- |
+| 1–6 | `#fa7070` → `#fa9370` → `#fab570` → `#fad870` → `#fafa70` → `#d8fa70` |
+| 7–12 | `#b5fa70` → `#93fa70` → `#70fa70` → `#70fa93` → `#70fab5` → `#70fad8` |
+| 13–18 | `#70fafa` → `#70d8fa` → `#70b5fa` → `#7093fa` → `#7070fa` → `#9370fa` |
+| 19–24 | `#b570fa` → `#d870fa` → `#fa70fa` → `#fa70d8` → `#fa70b5` → `#fa7093` |
 
-Copy `\(\color{#f87171}{\textsf{Your words}}\)` for each chunk, changing only its approved colour and escaped words. It ends in **two closing braces**, with no underline or size command. Separate expressions with ordinary spaces so the quote can wrap. Never put the entire rainbow inside one math expression. Use word boundaries, no per-letter markup, animation, gradient commands, or invented words to fill the palette. A one-word quote has one colour; short quotes need not contain every colour.
+Copy `\(\color{#fa7070}{\textsf{Word}}\)` for each word, changing only the lookup colour and escaped word. It ends in **two closing braces**, with no underline or size command. Separate expressions with ordinary spaces so the quote can wrap. Do not use per-letter markup, combine words into phrases, or place the whole quote inside one math expression. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position.
 
-For consistent lengths, distribute the words as evenly as possible over seven chunks (one word per chunk if fewer than seven). Use more chunks when needed to keep each at three words or fewer. Split sooner if adding the next word would exceed 24 visible characters. Cycle the palette if needed. Keep a single longer identifier or URL in ordinary inline code rather than a wide math box. Prefer a genuinely shorter relevant excerpt to colouring a whole message.
+Keep a single word, identifier or URL longer than 24 visible characters in inline code rather than a wide math box, and still advance the palette position for it. Prefer a genuinely shorter relevant excerpt to colouring a whole message. A helper avoids reconstructing syntax, but the emitted LaTeX still consumes output tokens; keep reminders short.
 
 ### Generate without reconstructing the syntax
 
@@ -22,24 +27,24 @@ Save the relevant excerpt in a UTF-8 plain-text file, then run:
 python3 /path/to/response-preferences/scripts/rainbow-quote.py /tmp/question.txt
 ```
 
-The helper handles chunking and TeX escaping, validates the generated expressions with bundled KaTeX, and prints a Markdown blockquote to copy unchanged. No network or new integration is involved. It normalises whitespace to ordinary spaces, preserving the words and punctuation. Append any context link **outside** the colour expressions. Use `--format html` only for website examples; it escapes HTML and uses the same chunks and palette.
+The helper handles word colours and TeX escaping, validates the generated expressions with bundled KaTeX, and prints a Markdown blockquote to copy unchanged. No network or new integration is involved. It normalises whitespace to ordinary spaces, preserving the words and punctuation. Append any context link **outside** the colour expressions. Use `--format html` only for website examples; it escapes HTML and uses the same words and palette.
 
 The general reply checker excludes quoted evidence, including historical broken syntax; it therefore does **not** validate the new formatting inside a quote. Use the helper, or validate the authored expressions directly with `math-validation.py`'s `render_errors`. This does not alter literal quoted evidence or add another automatic guard.
 
 ### Different lengths
 
-These are synthetic example questions. Copy the source syntax; rendered colour still depends on the chat client.
+These synthetic questions use the same word-by-word rhythm. The long example demonstrates the repeat after word 24.
 
 ```latex
-> \(\color{#f87171}{\textsf{Can}}\) \(\color{#fb923c}{\textsf{you}}\) \(\color{#facc15}{\textsf{make}}\) \(\color{#4ade80}{\textsf{this}}\) \(\color{#22d3ee}{\textsf{easier}}\) \(\color{#60a5fa}{\textsf{to}}\) \(\color{#c084fc}{\textsf{read?}}\)
+> \(\color{#fa7070}{\textsf{Why?}}\)
 ```
 
 ```latex
-> \(\color{#f87171}{\textsf{Can you}}\) \(\color{#fb923c}{\textsf{show me}}\) \(\color{#facc15}{\textsf{how the}}\) \(\color{#4ade80}{\textsf{quoted question}}\) \(\color{#22d3ee}{\textsf{looks when}}\) \(\color{#60a5fa}{\textsf{it is}}\) \(\color{#c084fc}{\textsf{slightly longer?}}\)
+> \(\color{#fa7070}{\textsf{Can}}\) \(\color{#fa9370}{\textsf{you}}\) \(\color{#fab570}{\textsf{make}}\) \(\color{#fad870}{\textsf{this}}\) \(\color{#fafa70}{\textsf{easier}}\) \(\color{#d8fa70}{\textsf{to}}\) \(\color{#b5fa70}{\textsf{read?}}\)
 ```
 
 ```latex
-> \(\color{#f87171}{\textsf{What happens if}}\) \(\color{#fb923c}{\textsf{we supply a}}\) \(\color{#facc15}{\textsf{type that's not}}\) \(\color{#4ade80}{\textsf{compatible with the}}\) \(\color{#22d3ee}{\textsf{DTO class? Is}}\) \(\color{#60a5fa}{\textsf{it just a}}\) \(\color{#c084fc}{\textsf{runtime error?}}\)
+> \(\color{#fa7070}{\textsf{Can}}\) \(\color{#fa9370}{\textsf{you}}\) \(\color{#fab570}{\textsf{keep}}\) \(\color{#fad870}{\textsf{this}}\) \(\color{#fafa70}{\textsf{rainbow}}\) \(\color{#d8fa70}{\textsf{flowing}}\) \(\color{#b5fa70}{\textsf{through}}\) \(\color{#93fa70}{\textsf{a}}\) \(\color{#70fa70}{\textsf{longer}}\) \(\color{#70fa93}{\textsf{question,}}\) \(\color{#70fab5}{\textsf{so}}\) \(\color{#70fad8}{\textsf{I}}\) \(\color{#70fafa}{\textsf{can}}\) \(\color{#70d8fa}{\textsf{see}}\) \(\color{#70b5fa}{\textsf{how}}\) \(\color{#7093fa}{\textsf{the}}\) \(\color{#7070fa}{\textsf{colours}}\) \(\color{#9370fa}{\textsf{repeat}}\) \(\color{#b570fa}{\textsf{and}}\) \(\color{#d870fa}{\textsf{wrap}}\) \(\color{#fa70fa}{\textsf{onto}}\) \(\color{#fa70d8}{\textsf{another}}\) \(\color{#fa70b5}{\textsf{line}}\) \(\color{#fa7093}{\textsf{without}}\) \(\color{#fa7070}{\textsf{changing}}\) \(\color{#fa9370}{\textsf{their}}\) \(\color{#fab570}{\textsf{rhythm?}}\)
 ```
 
 ## Other recurring choices

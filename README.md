@@ -23,7 +23,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Sentence scanning | Underlines the most useful words in every assistant prose sentence, including ordinary and coloured text. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
 | Computer Use | 🖥️ for manual browser/app interaction, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
-| Context above answers | Shows the question being answered in a rainbow blockquote above the direct-answer arrow, preserving your wording. Short colour chunks wrap naturally; a fixed seven-colour recipe keeps agents from reinventing the format. |
+| Context above answers | Shows the question being answered in a rainbow blockquote above the direct-answer arrow, preserving your wording. One colour per word wraps naturally; a fixed 24-colour cycle keeps agents from reinventing the format. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
 | Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
@@ -197,6 +197,6 @@ The example sidebar includes a [numbered separator chat](https://ethansk.github.
 
 ## Rainbow question reminders
 
-The short quoted question above each answer uses a fixed red-to-violet sequence. These colours identify your words; status highlights in the answer retain their own meanings. Short quotes colour individual words, longer ones use phrases of up to three words and 24 characters. Separate expressions allow wrapping, and code or links keep their normal behaviour. Full annotation/evidence blocks remain unchanged.
+The short quoted question above each answer uses a fixed 24-colour cycle, including pink between violet and red. These colours identify your words; status highlights in the answer retain their own meanings. Every word advances one colour; longer quotes repeat the cycle after 24 words without restarting at line wraps. Separate expressions allow wrapping, and code or links keep their normal behaviour. Full annotation/evidence blocks remain unchanged.
 
 [Copy the exact recipes and different-length examples](references/format-recipes.md), or run `python3 scripts/rainbow-quote.py question.txt` to generate a renderer-checked blockquote from a plain-text excerpt. The recipes also settle recurring choices for success versus information, test results, final pointers, punctuation and About reminders.

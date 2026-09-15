@@ -3,11 +3,10 @@
 import argparse
 import html
 import importlib.util
-import math
 from pathlib import Path
 import re
 
-PALETTE = ('#f87171', '#fb923c', '#facc15', '#4ade80', '#22d3ee', '#60a5fa', '#c084fc')
+PALETTE = ('#fa7070', '#fa9370', '#fab570', '#fad870', '#fafa70', '#d8fa70', '#b5fa70', '#93fa70', '#70fa70', '#70fa93', '#70fab5', '#70fad8', '#70fafa', '#70d8fa', '#70b5fa', '#7093fa', '#7070fa', '#9370fa', '#b570fa', '#d870fa', '#fa70fa', '#fa70d8', '#fa70b5', '#fa7093')
 MAX_CHARS = 24
 ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
            '%': r'\%', '_': r'\_', '&': r'\&', '$': r'\$',
@@ -15,26 +14,8 @@ ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
 
 
 def chunks(text):
-    """Keep word order; short quotes change colour faster, long ones use phrases."""
-    words = text.split()
-    if not words:
-        return []
-    # Spread even a medium-length quote across the full palette without adding
-    # per-letter wrappers. Longer quotes keep the same three-word upper bound.
-    count = min(len(words), max(len(PALETTE), math.ceil(len(words) / 3)))
-    size, extra = divmod(len(words), count)
-    result, offset = [], 0
-    for group in range(count):
-        width = size + (group < extra)
-        current = []
-        for word in words[offset:offset + width]:
-            if current and len(' '.join(current + [word])) > MAX_CHARS:
-                result.append(' '.join(current))
-                current = []
-            current.append(word)
-        result.append(' '.join(current))
-        offset += width
-    return result
+    """One colour per whitespace-delimited word, continuing across line wraps."""
+    return text.split()
 
 
 def tex(text):
