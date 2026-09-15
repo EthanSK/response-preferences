@@ -6,7 +6,7 @@ Use these recipes when drafting question reminders or when unsure about a recurr
 
 Use rainbow only for the short quoted user-question reminder above ⮑. Preserve the user's wording and perspective. Leave the full annotation/evidence block, source viewers, code, links, answer and About footer under their existing rules. These colours identify quoted context; they do not mean success, warning or failure. The quote is the explicit exception to semantic colour meanings and self-contained highlight chunks.
 
-Use exactly one colour per word, with this fixed 24-step lookup table. Start at 1 for each new quote; after 24, repeat from 1. Continue across spaces and line wraps without resetting. Short quotes show only the beginning of the cycle; do not stretch a cycle to fill the text. Pink connects purple back to red.
+Use exactly one colour per word, with this fixed 24-step lookup table. For each new quote, the helper chooses a random starting index from 0–23, then uses `(start_index + word_index) % 24`. Wrap from the last colour back to the first. Continue across spaces and line wraps without resetting. Short quotes show only part of the cycle; do not stretch a cycle to fill the text. Pink connects purple back to red.
 
 | Steps | Colours in order |
 | --- | --- |
@@ -26,6 +26,8 @@ Save the relevant excerpt in a UTF-8 plain-text file, then run:
 ```sh
 python3 /path/to/response-preferences/scripts/rainbow-quote.py /tmp/question.txt
 ```
+
+Omit `--start-index` for normal use: the helper makes one random draw, with no model deliberation, network call or saved state. Consecutive quotes may legitimately start at the same colour. Reuse the generated quote unchanged on retries. Use `--start-index 0` (or another index through 23) only for reproducible examples/tests. This changes existing colour values without adding markup or another agent step.
 
 The helper handles word colours and TeX escaping, validates the generated expressions with bundled KaTeX, and prints a Markdown blockquote to copy unchanged. No network or new integration is involved. It normalises whitespace to ordinary spaces, preserving the words and punctuation. Append any context link **outside** the colour expressions. Use `--format html` only for website examples; it escapes HTML and uses the same words and palette.
 

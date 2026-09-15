@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 from html.parser import HTMLParser
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,17 +27,33 @@ class Text(HTMLParser):
 class RainbowQuotes(unittest.TestCase):
     def test_colour_rhythm_survives_wrapping_and_longer_quotes(self):
         words = ['word' + str(i) for i in range(51)]
-        _, short = quote.render(' '.join(words[:7]))
-        _, long = quote.render(' '.join(words))
-        _, wrapped = quote.render('\n'.join(words))
+        _, short = quote.render(' '.join(words[:7]), start_index=0)
+        _, long = quote.render(' '.join(words), start_index=0)
+        _, wrapped = quote.render('\n'.join(words), start_index=0)
         self.assertEqual(short, long[:7])
         self.assertEqual(long, wrapped)
         self.assertEqual(len(words), len(long))
         self.assertIn(r'\color{#fa7093}{\textsf{word23}}', long[23])
         self.assertIn(r'\color{#fa7070}{\textsf{word24}}', long[24])
         self.assertIn(r'\color{#fa9370}{\textsf{word25}}', long[25])
-        _, fallback = quote.render(' '.join(words[:23] + ['x' * 25, 'next']))
+        _, fallback = quote.render(' '.join(words[:23] + ['x' * 25, 'next']), start_index=0)
         self.assertIn(r'\color{#fa7070}{\textsf{next}}', fallback[-1])
+
+    def test_random_start_chosen_once_per_quote_and_all_offsets_wrap(self):
+        for start in range(24):
+            with patch.object(quote.random, 'randrange', return_value=start) as rng:
+                _, expressions = quote.render(' '.join(['word'] * 27))
+                rng.assert_called_once_with(24)
+            for i, expression in enumerate(expressions):
+                self.assertIn(quote.PALETTE[(start + i) % 24], expression)
+        with patch.object(quote.random, 'randrange') as rng:
+            a = quote.render('Same question', start_index=23)
+            b = quote.render('Same question', start_index=23)
+            self.assertEqual(a, b)
+            rng.assert_not_called()
+        for bad in [-1, 24]:
+            with self.assertRaises(ValueError):
+                quote.render('Question', start_index=bad)
 
     def test_wording_survives_short_long_and_multilingual_quotes(self):
         samples = ['Why?', 'Can you make this easier to read?',
