@@ -16,8 +16,10 @@ ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
            '^': r'\textasciicircum{}', '~': r'\textasciitilde{}'}
 
 
-def next_start_index():
-    """Reserve one offset across tasks; keep runtime state outside the skill."""
+def reserve_start_indices(count):
+    """Reserve consecutive offsets in one locked counter update."""
+    if not isinstance(count, int) or count < 1:
+        raise ValueError('count must be a positive integer.')
     home = Path(os.environ.get('CODEX_HOME', str(Path.home() / '.codex')))
     state = home / 'state' / 'response-preferences' / 'rainbow-next-index.txt'
     state.parent.mkdir(parents=True, exist_ok=True)
@@ -32,14 +34,19 @@ def next_start_index():
         fd, temporary = tempfile.mkstemp(dir=state.parent, prefix='.rainbow-')
         try:
             with os.fdopen(fd, 'w') as stream:
-                stream.write(str((index + 1) % len(PALETTE)) + '\n')
+                stream.write(str((index + count) % len(PALETTE)) + '\n')
                 stream.flush()
                 os.fsync(stream.fileno())
             os.replace(temporary, state)
         finally:
             if os.path.exists(temporary):
                 os.unlink(temporary)
-        return index
+        return [(index + offset) % len(PALETTE) for offset in range(count)]
+
+
+def next_start_index():
+    """Reserve one offset across tasks; keep runtime state outside the skill."""
+    return reserve_start_indices(1)[0]
 
 
 def chunks(text):
@@ -80,19 +87,26 @@ def render(text, format='markdown', start_index=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('source', type=Path, help='UTF-8 plain-text question file; never a shell-interpolated message.')
+    parser.add_argument('source', type=Path, nargs='+', help='One or more UTF-8 plain-text question files; never shell-interpolated messages.')
     parser.add_argument('--format', choices=['markdown', 'html'], default='markdown')
     parser.add_argument('--start-index', type=int, choices=range(len(PALETTE)), help='Pin the offset without advancing the counter, for reproducible examples/tests.')
     args = parser.parse_args()
     try:
-        output, expressions = render(args.source.read_text(encoding='utf-8'), args.format, args.start_index)
+        texts = [source.read_text(encoding='utf-8') for source in args.source]
+        if any(not text.strip() for text in texts):
+            raise ValueError('Provide each relevant question or excerpt as plain text.')
+        starts = ([((args.start_index + offset) % len(PALETTE)) for offset in range(len(texts))]
+                  if args.start_index is not None else reserve_start_indices(len(texts)))
+        rendered = [render(text, args.format, start) for text, start in zip(texts, starts)]
+        outputs = [item[0] for item in rendered]
+        expressions = [expression for item in rendered for expression in item[1]]
         spec = importlib.util.spec_from_file_location('quote_math', Path(__file__).with_name('math-validation.py'))
         validator = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(validator)
         errors = [error for error in validator.render_errors(expressions) if error]
         if errors:
             parser.exit(1, '\n'.join(errors) + '\n')
-        print(output)
+        print('\n\n'.join(outputs))
     except (OSError, ValueError) as error:
         parser.exit(1, str(error) + '\n')
 
