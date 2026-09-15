@@ -24,6 +24,20 @@ class Text(HTMLParser):
         self.parts.append(value)
 
 class RainbowQuotes(unittest.TestCase):
+    def test_colour_rhythm_survives_wrapping_and_longer_quotes(self):
+        words = ['word' + str(i) for i in range(51)]
+        _, short = quote.render(' '.join(words[:7]))
+        _, long = quote.render(' '.join(words))
+        _, wrapped = quote.render('\n'.join(words))
+        self.assertEqual(short, long[:7])
+        self.assertEqual(long, wrapped)
+        self.assertEqual(len(words), len(long))
+        self.assertIn(r'\color{#fa7093}{\textsf{word23}}', long[23])
+        self.assertIn(r'\color{#fa7070}{\textsf{word24}}', long[24])
+        self.assertIn(r'\color{#fa9370}{\textsf{word25}}', long[25])
+        _, fallback = quote.render(' '.join(words[:23] + ['x' * 25, 'next']))
+        self.assertIn(r'\color{#fa7070}{\textsf{next}}', fallback[-1])
+
     def test_wording_survives_short_long_and_multilingual_quotes(self):
         samples = ['Why?', 'Can you make this easier to read?',
                    "What happens if we supply a type that's not compatible with the DTO class? Is it just a runtime error?",

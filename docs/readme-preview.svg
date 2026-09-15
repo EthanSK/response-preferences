@@ -12,7 +12,7 @@
     <text x="431" y="105">What does this skill do to your replies?</text>
     <text x="33" y="159" font-size="17">🧠 Skill use: <tspan fill="#ff00ff" font-family="Georgia, Times New Roman, serif">response-preferences</tspan><tspan fill="#b8b1df"> ↗</tspan></text>
     <path d="M34 187V214" stroke="#555" stroke-width="3" stroke-linecap="round"/>
-    <text x="48" y="207"><tspan fill="#f87171">What does</tspan> <tspan fill="#fb923c">this</tspan> <tspan fill="#facc15">skill</tspan> <tspan fill="#4ade80">do</tspan> <tspan fill="#22d3ee">to</tspan> <tspan fill="#60a5fa">your</tspan> <tspan fill="#c084fc">replies?</tspan></text>
+    <text x="48" y="207"><tspan fill="#fa7070">What</tspan> <tspan fill="#fa9370">does</tspan> <tspan fill="#fab570">this</tspan> <tspan fill="#fad870">skill</tspan> <tspan fill="#fafa70">do</tspan> <tspan fill="#d8fa70">to</tspan> <tspan fill="#b5fa70">your</tspan> <tspan fill="#93fa70">replies?</tspan></text>
     <text x="32" y="259" font-size="38">⮑</text>
     <text x="78" y="254" font-size="29">👉</text>
     <text x="120" y="253"><tspan text-decoration="underline">Response Preferences</tspan> gives replies a consistent visual format:</text>
