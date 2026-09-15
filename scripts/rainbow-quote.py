@@ -5,6 +5,7 @@ import html
 import importlib.util
 from pathlib import Path
 import re
+import random
 
 PALETTE = ('#fa7070', '#fa9370', '#fab570', '#fad870', '#fafa70', '#d8fa70', '#b5fa70', '#93fa70', '#70fa70', '#70fa93', '#70fab5', '#70fad8', '#70fafa', '#70d8fa', '#70b5fa', '#7093fa', '#7070fa', '#9370fa', '#b570fa', '#d870fa', '#fa70fa', '#fa70d8', '#fa70b5', '#fa7093')
 MAX_CHARS = 24
@@ -27,16 +28,20 @@ def inline_code(text):
     return fence + ' ' + text + ' ' + fence
 
 
-def render(text, format='markdown'):
+def render(text, format='markdown', start_index=None):
     if not text.strip():
         raise ValueError('Provide the relevant question or excerpt as plain text.')
+    if start_index is None:
+        start_index = random.randrange(len(PALETTE))
+    if not isinstance(start_index, int) or not 0 <= start_index < len(PALETTE):
+        raise ValueError('start_index must be between 0 and 23.')
     parts, expressions = [], []
     for i, chunk in enumerate(chunks(text)):
         if len(chunk) > MAX_CHARS:
             # Do not turn a long URL/identifier into an unbreakable math box.
             parts.append('<code>' + html.escape(chunk) + '</code>' if format == 'html' else inline_code(chunk))
             continue
-        colour = PALETTE[i % len(PALETTE)]
+        colour = PALETTE[(start_index + i) % len(PALETTE)]
         expression = r'\color{' + colour + r'}{\textsf{' + tex(chunk) + '}}'
         expressions.append(expression)
         parts.append('<span class="rq-chunk" style="color:' + colour + '">' + html.escape(chunk) + '</span>'
@@ -49,9 +54,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path, help='UTF-8 plain-text question file; never a shell-interpolated message.')
     parser.add_argument('--format', choices=['markdown', 'html'], default='markdown')
+    parser.add_argument('--start-index', type=int, choices=range(len(PALETTE)), help='Pin the offset for reproducible examples/tests; normally omit for a random start.')
     args = parser.parse_args()
     try:
-        output, expressions = render(args.source.read_text(encoding='utf-8'), args.format)
+        output, expressions = render(args.source.read_text(encoding='utf-8'), args.format, args.start_index)
         spec = importlib.util.spec_from_file_location('quote_math', Path(__file__).with_name('math-validation.py'))
         validator = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(validator)

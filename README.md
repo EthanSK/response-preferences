@@ -197,6 +197,6 @@ The example sidebar includes a [numbered separator chat](https://ethansk.github.
 
 ## Rainbow question reminders
 
-The short quoted question above each answer uses a fixed 24-colour cycle, including pink between violet and red. These colours identify your words; status highlights in the answer retain their own meanings. Every word advances one colour; longer quotes repeat the cycle after 24 words without restarting at line wraps. Separate expressions allow wrapping, and code or links keep their normal behaviour. Full annotation/evidence blocks remain unchanged.
+The short quoted question above each answer uses a fixed 24-colour cycle, including pink between violet and red. These colours identify your words; status highlights in the answer retain their own meanings. Each new quote starts at a randomly chosen position in that fixed cycle. The helper chooses it automatically, with no saved state or extra markup; retries reuse the same generated quote. Every word advances one colour; longer quotes repeat the cycle after 24 words without restarting at line wraps. Separate expressions allow wrapping, and code or links keep their normal behaviour. Full annotation/evidence blocks remain unchanged.
 
 [Copy the exact recipes and different-length examples](references/format-recipes.md), or run `python3 scripts/rainbow-quote.py question.txt` to generate a renderer-checked blockquote from a plain-text excerpt. The recipes also settle recurring choices for success versus information, test results, final pointers, punctuation and About reminders.
