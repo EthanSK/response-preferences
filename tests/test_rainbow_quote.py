@@ -4,6 +4,8 @@ import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
+import os
+from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +27,24 @@ class Text(HTMLParser):
         self.parts.append(value)
 
 class RainbowQuotes(unittest.TestCase):
+    def setUp(self):
+        self.home = tempfile.TemporaryDirectory()
+        self.addCleanup(self.home.cleanup)
+        patcher = patch.dict(os.environ, {'CODEX_HOME': self.home.name})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_counter_persists_wraps_and_serializes_concurrent_callers(self):
+        self.assertEqual(list(range(24)) + [0, 1], [quote.next_start_index() for _ in range(26)])
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            values = list(pool.map(lambda _: quote.next_start_index(), range(24)))
+        self.assertEqual(list(range(24)), sorted(values))
+        self.assertEqual(2, quote.next_start_index())
+        state = Path(self.home.name)/'state/response-preferences/rainbow-next-index.txt'
+        state.write_text('broken')
+        with self.assertRaises(ValueError):
+            quote.next_start_index()
+
     def test_colour_rhythm_survives_wrapping_and_longer_quotes(self):
         words = ['word' + str(i) for i in range(51)]
         _, short = quote.render(' '.join(words[:7]), start_index=0)
@@ -39,14 +59,14 @@ class RainbowQuotes(unittest.TestCase):
         _, fallback = quote.render(' '.join(words[:23] + ['x' * 25, 'next']), start_index=0)
         self.assertIn(r'\color{#fa7070}{\textsf{next}}', fallback[-1])
 
-    def test_random_start_chosen_once_per_quote_and_all_offsets_wrap(self):
+    def test_counter_chosen_once_per_quote_and_all_offsets_wrap(self):
         for start in range(24):
-            with patch.object(quote.random, 'randrange', return_value=start) as rng:
+            with patch.object(quote, 'next_start_index', return_value=start) as rng:
                 _, expressions = quote.render(' '.join(['word'] * 27))
-                rng.assert_called_once_with(24)
+                rng.assert_called_once_with()
             for i, expression in enumerate(expressions):
                 self.assertIn(quote.PALETTE[(start + i) % 24], expression)
-        with patch.object(quote.random, 'randrange') as rng:
+        with patch.object(quote, 'next_start_index') as rng:
             a = quote.render('Same question', start_index=23)
             b = quote.render('Same question', start_index=23)
             self.assertEqual(a, b)
