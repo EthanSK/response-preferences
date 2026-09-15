@@ -37,9 +37,13 @@ The checker is deliberately limited. It catches common structural regressions in
 
 ## Preference changes and unresolved experiments
 
+### Formatting complaints are not exceptions
+
+Self-improved — 2026-09-09: a formatting complaint was incorrectly interpreted as a plain-text request. Check this semantic boundary before using the exact-format helper: “Why is the formatting broken?” requires repairing the styled reply and checking it; “Reply in plain text without LaTeX” explicitly permits an exception. The checker cannot infer user intent, so a quoted complaint alone is not evidence of approval.
+
 Use the latest explicit choice, not every historical experiment simultaneously. The final choices supersede the old smiley/default-tick pattern, original ⏎ glyph, spinner, grey highlight, short whole-message summary, removed quote borders, always-standalone markers, coloured LaTeX inside links and word-labelled opening links. Preserve current notifications rather than restoring their earlier title/body arrangement.
 
-Do not silently adopt unconfirmed experiments. Using a deliberately invalid link destination as a hover-only original message was proposed and sampled, but no successful adoption was confirmed; actual context-file links remain the supported default. This is distinct from the website's own explanatory hover preview.
+Ethan confirmed and adopted the original-text-as-destination hover control on 2026-09-07. A short single-line question appeared in the native Codex popup with a leading slash. This is a hover-only exception, not a working file link. Keep real context viewers for attachments and clickable context. Long text, line breaks and special characters remain unverified; distinguish these limits from the successful short-text trial. The website preview is a simulation, not evidence of native rendering.
 
 Native notification banner duration is outside this public package. Doubling it was requested, but no supported measured implementation was established. Do not claim that wording changes or a successful send doubled its duration.
 
