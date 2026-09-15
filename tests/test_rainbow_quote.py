@@ -45,6 +45,15 @@ class RainbowQuotes(unittest.TestCase):
         with self.assertRaises(ValueError):
             quote.next_start_index()
 
+    def test_batch_reserves_consecutive_offsets_with_one_counter_update(self):
+        self.assertEqual([0, 1, 2], quote.reserve_start_indices(3))
+        self.assertEqual(3, quote.next_start_index())
+        self.assertEqual(list(range(4, 24)) + [0, 1], quote.reserve_start_indices(22))
+        self.assertEqual(2, quote.next_start_index())
+        for bad in [0, -1, 1.5]:
+            with self.assertRaises(ValueError):
+                quote.reserve_start_indices(bad)
+
     def test_colour_rhythm_survives_wrapping_and_longer_quotes(self):
         words = ['word' + str(i) for i in range(51)]
         _, short = quote.render(' '.join(words[:7]), start_index=0)
@@ -111,6 +120,32 @@ class RainbowQuotes(unittest.TestCase):
             result = subprocess.run(['python3', str(ROOT/'scripts/rainbow-quote.py'), str(path)], text=True, capture_output=True)
             self.assertNotEqual(0, result.returncode)
             self.assertEqual('', result.stdout)
+
+    def test_cli_batches_multiple_quotes_with_one_reservation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / 'first.txt'
+            second = Path(directory) / 'second.txt'
+            first.write_text('First question?')
+            second.write_text('Second question?')
+            result = subprocess.run(
+                ['python3', str(ROOT/'scripts/rainbow-quote.py'), str(first), str(second)],
+                text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
+            self.assertEqual(0, result.returncode, result.stderr)
+            blocks = result.stdout.strip().split('\n\n')
+            self.assertEqual(2, len(blocks))
+            self.assertIn(quote.PALETTE[0], blocks[0])
+            self.assertIn(quote.PALETTE[1], blocks[1])
+            state = Path(self.home.name)/'state/response-preferences/rainbow-next-index.txt'
+            self.assertEqual('2', state.read_text().strip())
+
+            result = subprocess.run(
+                ['python3', str(ROOT/'scripts/rainbow-quote.py'), '--start-index', '23', str(first), str(second)],
+                text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
+            self.assertEqual(0, result.returncode, result.stderr)
+            blocks = result.stdout.strip().split('\n\n')
+            self.assertIn(quote.PALETTE[23], blocks[0])
+            self.assertIn(quote.PALETTE[0], blocks[1])
+            self.assertEqual('2', state.read_text().strip())
 
 if __name__ == '__main__':
     unittest.main()
