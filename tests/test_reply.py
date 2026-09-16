@@ -99,6 +99,12 @@ class ReplyChecks(unittest.TestCase):
         for draft in ['<!-- codex-notification {} -->','[↗](/tmp/SKILL.md)','[open](/tmp/skill.html)']:
             self.assertTrue(check_fragment(draft,False))
 
+    def test_html_underline_tags_are_rejected_outside_literal_contexts(self):
+        for draft in ['<u>Broken underline</u>', '<U class="cue">Broken underline</U>']:
+            self.assertTrue(any('HTML <u> tags' in error for error in check_fragment(draft)))
+        for literal in ['> <u>Quoted source</u>', '`<u>Inline example</u>`', '```html\n<u>Code example</u>\n```']:
+            self.assertEqual([], check_fragment(literal))
+
     def test_standalone_caret_does_not_leak_to_inline_markers(self):
         self.assertTrue(check_fragment(r'\(\huge\text{ⓘ}\)'+'\n\nDetails below.'))
         self.assertEqual([],check_fragment(r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nDetails below.'))
