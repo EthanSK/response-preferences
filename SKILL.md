@@ -111,7 +111,7 @@ The shared draft checker parses/renders explicit `\(...\)`, `\[...\]` and `$$...
 
 **Underline useful clues in every assistant-authored prose sentence**, in working and final replies. Use normal-size `\(\underline{\textsf{useful words}}\)` or nest `\underline{...}` inside a coloured `\textsf` span. The first cue in each paragraph/section must establish its concrete subject; later cues can give method, result, quantity or qualification. Read the cues alone in order and as first-plus-later pairs. Preserve `not`, `only`, conditions and uncertainty. Avoid detached opening cues like “agent-based” without saying what is agent-based. Do not underline whole sentences mechanically or filler words. Keep spans short enough to wrap sensibly.
 
-Underlines are scanning cues, not importance/status/link markers. Preserve literal quotations, reminders, source text, code, paths, URLs and link labels. Labels/headings/marker-only lines and compact table values need no underline; prose sentences in tables/lists do. These rules style assistant replies, not ordinary product UI or documentation; website example replies demonstrate them with `<u>`.
+Underlines are scanning cues, not importance/status/link markers. Preserve literal quotations, reminders, source text, code, paths, URLs and link labels. Labels/headings/marker-only lines and compact table values need no underline; prose sentences in tables/lists do. These rules style assistant replies, not ordinary product UI or documentation. Website examples may use styled HTML internally, but never emit `<u>` or `</u>` in an assistant reply: Codex can display those tags literally. Use only the approved LaTeX underline patterns above. User correction — 2026-09-16.
 
 ## Closing reminder and notification
 

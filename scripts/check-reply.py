@@ -138,6 +138,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
+        if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):
+            fail(r'Never use HTML <u> tags in a reply; Codex can display them literally. Use \(\underline{\textsf{Words}}\) instead.')
         matches = list(MARKER.finditer(line))
         plain = PLAIN_MARKER.match(line, len(line) - len(line.lstrip()))
         if plain:
