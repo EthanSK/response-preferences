@@ -61,7 +61,7 @@ These synthetic questions use the same word-by-word rhythm. The long example dem
 | Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step; split into short lavender expressions. |
 
-For ordinary underlined prose, always keep the words in text mode: copy `\(\underline{\textsf{Words with spaces}}\)`. Do not use `\(\underline{Words with spaces}\)`; KaTeX treats those words as maths, removes the spaces and italicises the letters.
+For ordinary underlined prose, always keep the words in text mode: copy `\(\underline{\textsf{Words with spaces}}\)`. Keep the entire command between that one opening and one closing delimiter; the ending is exactly `}}\)`, with no extra backslash. Do not use `\(\underline{Words with spaces}\)`; KaTeX treats those words as maths, removes the spaces and italicises the letters.
 
 ```latex
 \(\huge\text{✅}\) \(\color{#22c55e}{\textsf{\underline{The change is saved.}}}\)

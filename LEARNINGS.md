@@ -1,5 +1,9 @@
 # Verified project lessons
 
+## Treat broken closing delimiters as syntax failures, not colour failures
+
+A live Codex reply emitted `}}\\):` where the valid underline ends `}}\):`. The opening `\(` was present, but the extra backslash escaped the closing delimiter, so Codex displayed the inner underline command as raw red text. The validator must reject both unmatched delimiters and response-formatting commands written outside explicit math delimiters. A narrow completion-hook syntax check can enforce this independently of the optional broad response-style guard.
+
 ## Standalone bundling
 
 Use replacement functions when injecting bundled JavaScript into the HTML shell. JavaScript `String.replace` replacement strings interpret `$&`, `$\`` and `$'`; dependency code can contain them. Passing the bundle as a replacement string duplicated HTML fragments and prevented the editor from starting. `scripts/build.mjs` uses literal-returning replacement functions. `tests/editor.test.mjs` boots the actual built template, and the static-site validator checks duplicate IDs.
