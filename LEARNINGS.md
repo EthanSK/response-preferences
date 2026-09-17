@@ -1,5 +1,9 @@
 # Verified project lessons
 
+## Split underline boxes at real wrap points
+
+Codex renders inline LaTeX as an unbroken box. A visually continuous underline across a long clause can therefore run past the pane even when the surrounding Markdown would wrap. Limit each underline group to five words and split longer cues into separate math expressions with ordinary spaces or prose between them; multiple underline commands inside one outer expression still share one unbreakable box.
+
 ## Treat broken closing delimiters as syntax failures, not colour failures
 
 A live Codex reply emitted `}}\\):` where the valid underline ends `}}\):`. The opening `\(` was present, but the extra backslash escaped the closing delimiter, so Codex displayed the inner underline command as raw red text. The validator must reject both unmatched delimiters and response-formatting commands written outside explicit math delimiters. A narrow completion-hook syntax check can enforce this independently of the optional broad response-style guard.

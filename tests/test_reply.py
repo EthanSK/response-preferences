@@ -25,6 +25,24 @@ class ReplyChecks(unittest.TestCase):
             with self.subTest(draft=draft):
                 self.assertEqual([], check_fragment(draft))
 
+    def test_long_underline_segments_are_split_at_wrappable_boundaries(self):
+        bad = [
+            r'\(\underline{\textsf{This continuous underline contains far too many words}}\)',
+            r'\(\color{#67e8f9}{\textsf{A \underline{continuous coloured underline also contains too many words}.}}\)',
+        ]
+        for draft in bad:
+            with self.subTest(draft=draft):
+                errors = check_fragment(draft)
+                self.assertTrue(any('use at most 5' in error and 'line can wrap' in error for error in errors), errors)
+        split = r'\(\underline{\textsf{This underline stays short}}\) \(\underline{\textsf{and this can wrap}}\)'
+        self.assertEqual([], check_fragment(split))
+        self.assertEqual([], check_fragment(split, commentary=True))
+        self.assertEqual([], check_fragment('> '+bad[0]+'\n\n`'+bad[0]+'`'))
+
+    def test_underline_word_counter_handles_nested_text_and_escapes(self):
+        self.assertEqual([5], reply.underline_word_counts(r'\underline{\textsf{All 110 repository tests passed}}'))
+        self.assertEqual([4], reply.underline_word_counts(r'\textsf{A \underline{short A \& B} cue}'))
+
     def test_literal_identifier_underscores_in_text_are_rejected(self):
         for wrapper in [r'\underline{\textsf{%s}}', r'\color{#67e8f9}{\textsf{\underline{%s}}}', r'\underline{\text{%s}}']:
             bad = r'\(' + wrapper % 'sample_tool instructions' + r'\)'

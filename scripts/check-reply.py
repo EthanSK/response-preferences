@@ -23,6 +23,7 @@ CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 WORKING_CARET = '⌄'
 # Authoring guardrail only: glyph widths and the available pane still vary.
 MAX_PROSE_CHARACTERS = 80
+MAX_UNDERLINE_WORDS = 5
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
@@ -64,28 +65,32 @@ def prose_length(expression):
     return len(re.sub(r'\s+', ' ', visible.replace('{', '').replace('}', '')).strip())
 
 
+def group_end(expression, opening):
+    """Return the matching closing brace, respecting TeX commands and escapes."""
+    depth = 1
+    index = opening + 1
+    while index < len(expression):
+        if expression[index] == '\\':
+            command = re.match(r'\\[A-Za-z]+', expression[index:])
+            index += len(command.group(0)) if command else 2
+            continue
+        if expression[index] == '{':
+            depth += 1
+        elif expression[index] == '}':
+            depth -= 1
+            if depth == 0:
+                return index
+        index += 1
+    return len(expression)
+
+
 def has_unwrapped_underline(expression):
     """Reject prose underlines that KaTeX would render as space-free maths."""
-    def group_end(opening):
-        depth = 1
-        index = opening + 1
-        while index < len(expression):
-            if expression[index] == '\\':
-                index += 2
-                continue
-            if expression[index] == '{':
-                depth += 1
-            elif expression[index] == '}':
-                depth -= 1
-                if depth == 0:
-                    return index
-            index += 1
-        return len(expression)
 
     text_ranges = []
     for match in re.finditer(r'\\(?:textsf|textrm|text)\{', expression):
         opening = match.end() - 1
-        text_ranges.append((opening, group_end(opening)))
+        text_ranges.append((opening, group_end(expression, opening)))
     for match in re.finditer(r'\\underline\{', expression):
         argument = match.end()
         if re.match(r'\\(?:textsf|textrm|text)\{', expression[argument:]):
@@ -94,6 +99,19 @@ def has_unwrapped_underline(expression):
             continue
         return True
     return False
+
+
+def underline_word_counts(expression):
+    """Return visible whitespace-delimited word counts for underline groups."""
+    counts = []
+    for match in re.finditer(r'\\underline\{', expression):
+        opening = match.end() - 1
+        argument = expression[opening + 1:group_end(expression, opening)]
+        visible = re.sub(r'\\[A-Za-z]+\s*', '', argument)
+        visible = re.sub(r'\\([^A-Za-z])', r'\1', visible)
+        visible = visible.replace('{', '').replace('}', '')
+        counts.append(len(re.findall(r'\S+', visible)))
+    return counts
 
 
 def leading_marker(line):
@@ -134,6 +152,9 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
             if has_unwrapped_underline(expression.group(1)):
                 fail(r'Wrap underlined prose in \textsf: use \underline{\textsf{Words}} or place \underline{Words} inside an existing \textsf group. A bare \underline{Words} renders as maths, removing spaces and italicising letters.')
+            for words in underline_word_counts(expression.group(1)):
+                if words > MAX_UNDERLINE_WORDS:
+                    fail(f'An underline segment contains {words} words; use at most {MAX_UNDERLINE_WORDS}. Split a longer cue into separate \\(...\\) expressions with ordinary spaces or prose between them so the line can wrap.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
                 fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
         if '<!--' in line:
