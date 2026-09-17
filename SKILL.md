@@ -84,7 +84,7 @@ Keep colours outside Markdown links: follow a coloured skill name or file-relate
 
 ### Copy these exact LaTeX patterns
 
-Use these working examples as templates. Replace only the words inside the innermost text argument; preserve the commands, delimiters and closing braces. Change a colour value only to another approved colour. The whole command must stay between exactly one opening `\(` and one closing `\)`; never add another backslash before the closing delimiter.
+Use these working examples as templates. Replace only the words inside the innermost text argument; preserve the commands, delimiters and closing braces. Change a colour value only to another approved colour. The whole command must keep exactly one `\(...\)` wrapper; never add another backslash before the closing delimiter.
 
 Never put prose directly inside `\underline{...}` in math mode: `\(\underline{Words with spaces}\)` removes its spaces and renders the letters as maths. Use `\(\underline{\textsf{Words with spaces}}\)`, or nest `\underline{...}` inside an existing `\textsf{...}` group, exactly as below.
 
