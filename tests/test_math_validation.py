@@ -26,10 +26,19 @@ class RendererChecks(unittest.TestCase):
         self.assertEqual([], math.check_math('$$x_i$$'))
         self.assertTrue(math.check_math('\\(\\textsf{C#\n task}\\)'))
 
+    def test_response_formatting_requires_intact_explicit_delimiters(self):
+        broken_close = r'But \(\underline{\textsf{different shapes still have current callers}}\\):'
+        bare = r'But \underline{\textsf{different shapes still have current callers}}:'
+        correct = r'But \(\underline{\textsf{different shapes still have current callers}}\):'
+        self.assertIn('opening delimiter has no closing delimiter', ' '.join(math.check_math(broken_close)))
+        self.assertIn('outside explicit math delimiters', ' '.join(math.check_math(bare)))
+        self.assertEqual([], math.check_math(correct))
+
     def test_quoted_and_code_evidence_is_not_authored_math(self):
         text = '> \\(\\textsf{C#}\\)\n\n`\\(broken`\n\n```tex\n\\(broken\n```\n\nOrdinary C#, 54%, sample_tool and $5.'
         self.assertEqual([], math.check_math(text))
         self.assertEqual([], math.check_math(r'\\(literal escaped delimiters\\)'))
+        self.assertEqual([], math.check_math('> \\underline{\\textsf{quoted}}\n\n`\\underline{\\textsf{inline code}}`'))
 
     def test_missing_runtime_and_bad_helper_fail_closed(self):
         with patch.dict(math.os.environ, {}, clear=True), patch.object(math.shutil, 'which', return_value=None):
