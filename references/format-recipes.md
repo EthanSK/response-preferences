@@ -61,7 +61,7 @@ These synthetic questions use the same word-by-word rhythm. The long example dem
 | Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step; split into short lavender expressions. |
 
-For ordinary underlined prose, always keep the words in text mode: copy `\(\underline{\textsf{Words with spaces}}\)`. Keep the entire command between that one opening and one closing delimiter; the ending is exactly `}}\)`, with no extra backslash. Use no more than five words in one underline. For a longer cue, close the expression and start another after an ordinary space or prose so Codex has a real wrap point. Do not use `\(\underline{Words with spaces}\)`; KaTeX treats those words as maths, removes the spaces and italicises the letters.
+For ordinary underlined prose, always keep the words in text mode: copy `\(\underline{\textsf{Words with spaces}}\)`. Keep the entire command between that one opening and one closing delimiter; the ending is exactly `}}\)`, with no extra backslash. Use no more than five words in any text-bearing LaTeX expression, whether underlined, coloured or plain. For longer formatted prose, close the expression and start another after an ordinary space or prose so Codex has a real wrap point. Do not use `\(\underline{Words with spaces}\)`; KaTeX treats those words as maths, removes the spaces and italicises the letters.
 
 ```latex
 \(\huge\text{✅}\) \(\color{#22c55e}{\textsf{\underline{The change is saved.}}}\)
@@ -72,7 +72,7 @@ For ordinary underlined prose, always keep the words in text mode: copy `\(\unde
 
 \(\huge\text{👉}\) \(\underline{\textsf{The quote keeps your wording}}\); its colours identify the question being answered.
 
-\(\color{#b8a4d9}{\textsf{About: Rainbow question reminders.}}\) \(\color{#b8a4d9}{\textsf{Fixed chunks keep longer quotes readable.}}\)
+\(\color{#b8a4d9}{\textsf{About: Rainbow question reminders.}}\) \(\color{#b8a4d9}{\textsf{Fixed chunks keep longer}}\) \(\color{#b8a4d9}{\textsf{quotes readable.}}\)
 ```
 
 For a working update, replace the enlarged marker with its plain Unicode symbol, omit the finger and omit About. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is **still pending**” must not become a success cue merely because other work finished.

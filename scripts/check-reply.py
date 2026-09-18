@@ -23,7 +23,7 @@ CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 WORKING_CARET = '⌄'
 # Authoring guardrail only: glyph widths and the available pane still vary.
 MAX_PROSE_CHARACTERS = 80
-MAX_UNDERLINE_WORDS = 5
+MAX_FORMATTED_WORDS = 5
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
@@ -101,12 +101,17 @@ def has_unwrapped_underline(expression):
     return False
 
 
-def underline_word_counts(expression):
-    """Return visible whitespace-delimited word counts for underline groups."""
+def formatted_text_word_counts(expression):
+    """Return word counts for outer text wrappers: each is one browser box."""
     counts = []
-    for match in re.finditer(r'\\underline\{', expression):
+    consumed_until = -1
+    for match in re.finditer(r'\\(?:textsf|textrm|text)\{', expression):
+        if match.start() < consumed_until:
+            continue
         opening = match.end() - 1
-        argument = expression[opening + 1:group_end(expression, opening)]
+        closing = group_end(expression, opening)
+        consumed_until = closing
+        argument = expression[opening + 1:closing]
         visible = re.sub(r'\\[A-Za-z]+\s*', '', argument)
         visible = re.sub(r'\\([^A-Za-z])', r'\1', visible)
         visible = visible.replace('{', '').replace('}', '')
@@ -152,9 +157,9 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
             if has_unwrapped_underline(expression.group(1)):
                 fail(r'Wrap underlined prose in \textsf: use \underline{\textsf{Words}} or place \underline{Words} inside an existing \textsf group. A bare \underline{Words} renders as maths, removing spaces and italicising letters.')
-            for words in underline_word_counts(expression.group(1)):
-                if words > MAX_UNDERLINE_WORDS:
-                    fail(f'An underline segment contains {words} words; use at most {MAX_UNDERLINE_WORDS}. Split a longer cue into separate \\(...\\) expressions with ordinary spaces or prose between them so the line can wrap.')
+            for words in formatted_text_word_counts(expression.group(1)):
+                if words > MAX_FORMATTED_WORDS:
+                    fail(f'A LaTeX text segment contains {words} words; use at most {MAX_FORMATTED_WORDS}. Split longer formatted prose into separate \\(...\\) expressions with ordinary spaces or prose between them so the line can wrap.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
                 fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
         if '<!--' in line:

@@ -4,7 +4,8 @@ import tempfile
 import unittest
 spec=importlib.util.spec_from_file_location('reply',Path(__file__).resolve().parents[1]/'scripts/check-reply.py')
 reply=importlib.util.module_from_spec(spec);spec.loader.exec_module(reply)
-TOPIC = r'\(\color{#b8a4d9}{\textsf{About: the requested file change and its current status.}}\)'
+TOPIC = (r'\(\color{#b8a4d9}{\textsf{About: requested file change.}}\) '
+         r'\(\color{#b8a4d9}{\textsf{Its current status is covered.}}\)')
 def check_message(text, **kwargs):
     return reply.check(text if kwargs.get('commentary') else text+'\n\n'+TOPIC, **kwargs)
 
@@ -20,28 +21,31 @@ class ReplyChecks(unittest.TestCase):
                 errors = check_fragment(draft)
                 self.assertTrue(any(r'Wrap underlined prose in \textsf' in error for error in errors), errors)
         good = [r'\(\underline{\textsf{All 110 repository tests passed}}\)',
-                r'\(\color{#67e8f9}{\textsf{Each \underline{rainbow block} gets a different start}}\)']
+                r'\(\color{#67e8f9}{\textsf{Each \underline{rainbow block} differs.}}\)']
         for draft in good:
             with self.subTest(draft=draft):
                 self.assertEqual([], check_fragment(draft))
 
-    def test_long_underline_segments_are_split_at_wrappable_boundaries(self):
+    def test_all_long_latex_text_segments_are_split_at_wrappable_boundaries(self):
         bad = [
             r'\(\underline{\textsf{This continuous underline contains far too many words}}\)',
             r'\(\color{#67e8f9}{\textsf{A \underline{continuous coloured underline also contains too many words}.}}\)',
+            r'\(\color{#67e8f9}{\textsf{Long coloured prose without underlining can still overflow the pane.}}\)',
+            r'\(\textsf{Plain formatted prose can also become one unbreakable browser box.}\)',
         ]
         for draft in bad:
             with self.subTest(draft=draft):
                 errors = check_fragment(draft)
-                self.assertTrue(any('use at most 5' in error and 'line can wrap' in error for error in errors), errors)
-        split = r'\(\underline{\textsf{This underline stays short}}\) \(\underline{\textsf{and this can wrap}}\)'
+                self.assertTrue(any('LaTeX text segment' in error and 'use at most 5' in error and 'line can wrap' in error for error in errors), errors)
+        split = r'\(\color{#67e8f9}{\textsf{This formatted segment stays short.}}\) \(\color{#67e8f9}{\textsf{This one can wrap separately.}}\)'
         self.assertEqual([], check_fragment(split))
         self.assertEqual([], check_fragment(split, commentary=True))
         self.assertEqual([], check_fragment('> '+bad[0]+'\n\n`'+bad[0]+'`'))
 
-    def test_underline_word_counter_handles_nested_text_and_escapes(self):
-        self.assertEqual([5], reply.underline_word_counts(r'\underline{\textsf{All 110 repository tests passed}}'))
-        self.assertEqual([4], reply.underline_word_counts(r'\textsf{A \underline{short A \& B} cue}'))
+    def test_formatted_word_counter_handles_nested_commands_and_escapes(self):
+        self.assertEqual([5], reply.formatted_text_word_counts(r'\underline{\textsf{All 110 repository tests passed}}'))
+        self.assertEqual([6], reply.formatted_text_word_counts(r'\textsf{A \underline{short A \& B} cue}'))
+        self.assertEqual([1], reply.formatted_text_word_counts(r'\huge\text{✅}'))
 
     def test_literal_identifier_underscores_in_text_are_rejected(self):
         for wrapper in [r'\underline{\textsf{%s}}', r'\color{#67e8f9}{\textsf{\underline{%s}}}', r'\underline{\text{%s}}']:
@@ -138,7 +142,7 @@ class ReplyChecks(unittest.TestCase):
                 self.assertTrue(check_fragment(prefix+' '+reply.CARET+'\n\nThe copy finished.\n\n'+block))
 
     def test_nested_underlines_keep_colour_and_skill_link_validation(self):
-        good=r'\(\color{#67e8f9}{\textsf{The viewer is a \underline{snapshot} of the file.}}\)'
+        good=r'\(\color{#67e8f9}{\textsf{The viewer is a \underline{snapshot}.}}\)'
         self.assertEqual([],check_fragment(good))
         self.assertTrue(check_fragment(good.replace('#67e8f9','gray')))
         self.assertTrue(check_fragment(good.replace('textsf','textrm')))
@@ -229,13 +233,14 @@ class ReplyChecks(unittest.TestCase):
 
     def test_topic_reminder_can_wrap_between_short_lavender_expressions(self):
         overview = r'\(\color{#b8a4d9}{\textsf{About: fixing the video export.}}\)'
-        detail = r'\(\color{#b8a4d9}{\textsf{Restart the app, then retry the clip.}}\)'
+        detail = (r'\(\color{#b8a4d9}{\textsf{Restart the app.}}\) '
+                  r'\(\color{#b8a4d9}{\textsf{Then retry the clip.}}\)')
         for body, options in [(r'\(\huge\text{👉}\) Restart to use the export fix.', {})]:
             self.assertEqual([], reply.check(body+'\n\n'+overview+' '+detail, **options))
             for bad in [overview+' '+overview, overview+' stray text '+detail,
                         overview+' '+detail.replace('#b8a4d9', '#67e8f9'),
                         overview+' '+detail.replace('textsf', 'textrm'),
-                        overview+' '+detail.replace('Restart the app, then retry the clip.', '')]:
+                        overview+' '+detail.replace('Restart the app.', '')]:
                 self.assertTrue(reply.check(body+'\n\n'+bad, **options), bad)
 
     def test_oversized_inline_prose_is_rejected_without_hiding_nested_underlines(self):
