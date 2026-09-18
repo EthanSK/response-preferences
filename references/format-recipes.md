@@ -15,7 +15,7 @@ Use exactly one colour per word, with this fixed 24-step lookup table. For each 
 | 13–18 | `#70fafa` → `#70d8fa` → `#70b5fa` → `#7093fa` → `#7070fa` → `#9370fa` |
 | 19–24 | `#b570fa` → `#d870fa` → `#fa70fa` → `#fa70d8` → `#fa70b5` → `#fa7093` |
 
-Use one outer `\(\textsf{...}\)` expression for the whole short quote, then copy `\color{#fa7070}{Word}` for each word inside it, changing only the lookup colour and escaped word. This makes the quote selectable as one element. Do not use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position. Keep the excerpt concise because the outer expression does not wrap.
+Use consecutive outer `\(\textsf{...}\)` expressions of at most 64 visible characters for the short quote, then copy `\color{#fa7070}{Word}` for each word inside it, changing only the lookup colour and escaped word. Each chunk stays selectable and the ordinary spaces between chunks provide wrap points. Do not use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position. Keep every chunk concise because each outer expression does not wrap.
 
 Keep a single word, identifier or URL longer than 24 visible characters in inline code rather than a wide math box, and still advance the palette position for it. Prefer a genuinely shorter relevant excerpt to colouring a whole message. A helper avoids reconstructing syntax, but the emitted LaTeX still consumes output tokens; keep reminders short.
 
@@ -35,7 +35,7 @@ The general reply checker excludes quoted evidence, including historical broken 
 
 ### Different lengths
 
-These synthetic questions use the same word-by-word rhythm inside one selectable outer expression. Keep real reminders short enough for the 120-character guardrail.
+These synthetic questions use the same word-by-word rhythm inside short selectable chunks. Keep each chunk within the 64-character guardrail.
 
 ```latex
 > \(\textsf{\color{#fa7070}{Why?}}\)
@@ -59,9 +59,9 @@ These synthetic questions use the same word-by-word rhythm inside one selectable
 | Needs the user's next action / mainly a takeaway | Favour 🫵 / 👉 respectively, normally once and only in the final reply. |
 | One statement / several blocks | Inline marker / standalone marker plus the existing raised chevron. Keep ⮑ beside its answer in either case. |
 | Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
-| Returning after hours | Final-only About: concrete subject, then one useful result or next step in one short lavender expression. |
+| Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
-For ordinary prose, open one `\(\textsf{...}\)` expression for the paragraph and put `\underline{Words with spaces}` inside it. Keep all paragraph prose and additional cues in that same outer expression so selection stays continuous. Split writing into a new paragraph before the 120-character guardrail. Do not use `\(\underline{Words with spaces}\)`; KaTeX treats those words as maths, removes the spaces and italicises the letters.
+For ordinary prose, use consecutive `\(\textsf{...}\)` chunks and put `\underline{Words with spaces}` inside the relevant chunk. Keep each chunk selectable and under 64 visible characters, with ordinary spaces between expressions so the paragraph can wrap. Do not use `\(\underline{Words with spaces}\)`; KaTeX treats those words as maths, removes the spaces and italicises the letters.
 
 ```latex
 \(\huge\text{✅}\) \(\textsf{\color{#22c55e}{\underline{The change is saved.}}}\)
@@ -70,9 +70,9 @@ For ordinary prose, open one `\(\textsf{...}\)` expression for the paragraph and
 
 \(\huge\text{🧪}\) \(\textsf{The \underline{formatter checks passed}, including}\) `C#`, `54%` and `sample_tool`.
 
-\(\huge\text{👉}\) \(\textsf{\underline{The quote keeps your wording}; its colours identify the question being answered.}\)
+\(\huge\text{👉}\) \(\textsf{\underline{The quote keeps your wording}.}\) \(\textsf{Its colours identify the question being answered.}\)
 
-\(\color{#b8a4d9}{\textsf{About: Rainbow question reminders. One wrapper keeps each short quote selectable.}}\)
+\(\color{#b8a4d9}{\textsf{About: Rainbow question reminders.}}\) \(\color{#b8a4d9}{\textsf{Short chunks stay selectable and can wrap.}}\)
 ```
 
 For a working update, replace the enlarged marker with its plain Unicode symbol, omit the finger and omit About. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is **still pending**” must not become a success cue merely because other work finished.

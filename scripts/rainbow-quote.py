@@ -11,6 +11,7 @@ import tempfile
 
 PALETTE = ('#fa7070', '#fa9370', '#fab570', '#fad870', '#fafa70', '#d8fa70', '#b5fa70', '#93fa70', '#70fa70', '#70fa93', '#70fab5', '#70fad8', '#70fafa', '#70d8fa', '#70b5fa', '#7093fa', '#7070fa', '#9370fa', '#b570fa', '#d870fa', '#fa70fa', '#fa70d8', '#fa70b5', '#fa7093')
 MAX_CHARS = 24
+MAX_GROUP_CHARS = 64
 ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
            '%': r'\%', '_': r'\_', '&': r'\&', '$': r'\$',
            '^': r'\textasciicircum{}', '~': r'\textasciitilde{}'}
@@ -71,13 +72,16 @@ def render(text, format='markdown', start_index=None):
     if not isinstance(start_index, int) or not 0 <= start_index < len(PALETTE):
         raise ValueError('start_index must be between 0 and 23.')
     parts, expressions, group = [], [], []
+    group_chars = 0
     def flush_group():
+        nonlocal group_chars
         if not group:
             return
         expression = r'\textsf{' + ' '.join(group) + '}'
         expressions.append(expression)
         parts.append(r'\(' + expression + r'\)')
         group.clear()
+        group_chars = 0
     for i, chunk in enumerate(chunks(text)):
         if len(chunk) > MAX_CHARS:
             # Do not turn a long URL/identifier into an unbreakable math box.
@@ -89,7 +93,11 @@ def render(text, format='markdown', start_index=None):
         if format == 'html':
             parts.append('<span class="rq-chunk" style="color:' + colour + '">' + html.escape(chunk) + '</span>')
         else:
+            needed = len(chunk) + (1 if group else 0)
+            if group and group_chars + needed > MAX_GROUP_CHARS:
+                flush_group()
             group.append(r'\color{' + colour + '}{' + tex(chunk) + '}')
+            group_chars += len(chunk) + (1 if group_chars else 0)
     if format == 'markdown':
         flush_group()
     return ('<span class="rainbow-quote">' + ' '.join(parts) + '</span>' if format == 'html'

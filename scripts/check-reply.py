@@ -23,9 +23,9 @@ PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 TOPIC_COLOUR = '#b8a4d9'
 CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 WORKING_CARET = '⌄'
-# User-tested selection grouping uses one outer expression per paragraph.
-# This length cap reduces overflow risk; glyph widths and pane widths still vary.
-MAX_PROSE_CHARACTERS = 120
+# Each expression is selectable but unbreakable. Short chunks give the browser
+# real spaces between expressions where it can wrap.
+MAX_PROSE_CHARACTERS = 64
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
@@ -160,12 +160,10 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             if has_unwrapped_underline(expression.group(1)):
                 fail(r'Wrap underlined prose in \textsf: use \underline{\textsf{Words}} or place \underline{Words} inside an existing \textsf group. A bare \underline{Words} renders as maths, removing spaces and italicising letters.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
-                fail('A selectable LaTeX paragraph exceeds 120 approximate visible characters and may overflow. Split the writing into shorter paragraphs, each with one outer \\textsf expression.')
+                fail('A selectable LaTeX chunk exceeds 64 approximate visible characters and may overflow. Split the paragraph into consecutive short \\textsf expressions with ordinary spaces between them.')
         prose_expressions = [m for m in INLINE_MATH.finditer(line)
                              if prose_length(m.group(1)) > 1 and not MARKER.fullmatch(m.group(0))]
-        if len(prose_expressions) > 1 and 'Skill use:' not in line:
-            fail('Use one outer LaTeX text expression per prose paragraph so native selection can cover the paragraph continuously.')
-        if len(prose_expressions) == 1 and 'Skill use:' not in line:
+        if prose_expressions and 'Skill use:' not in line:
             remainder = line
             for match in reversed(list(INLINE_MATH.finditer(line))):
                 remainder = remainder[:match.start()] + remainder[match.end():]
@@ -173,7 +171,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             remainder = INLINE_CODE.sub('', remainder)
             remainder = re.sub(r'^[\s>*#\-+\d.)]+', '', remainder)
             if re.search(r'[A-Za-z0-9]', remainder):
-                fail('Put the paragraph prose inside its one outer LaTeX text expression; keep only markers, links, code or punctuation outside.')
+                fail('Put paragraph prose inside consecutive short LaTeX text chunks; keep only markers, links, code or punctuation outside.')
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):
@@ -225,7 +223,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                          and all(p.group(1) == TOPIC_COLOUR and p.group(2) == 'textsf' for p in parts)
                          and all(p.group(0).split(r'\textsf{', 1)[1].removesuffix(r'}}\)').removeprefix('About: ').strip() for p in parts))
                 if not valid:
-                    fail('Use muted lavender only for one closing About: reminder in one normal-size \\textsf expression.')
+                    fail('Use muted lavender only for one closing About: reminder, split into short normal-size \\textsf chunks when needed.')
                 if number not in topic_lines:
                     topic_lines.append(number)
                 if number != last_line:
@@ -235,7 +233,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         for expression in INLINE_MATH.finditer(line):
             for colour in COLOUR_COMMAND.findall(expression.group(1)):
                 if colour not in PALETTE | {TOPIC_COLOUR, 'magenta'}:
-                    fail('Use an approved highlight colour inside the paragraph wrapper.')
+                    fail('Use an approved highlight colour inside the short paragraph chunk.')
         if re.search(r'(?:\*\*)?Skill use:', line):
             current_marker = leading_marker(line)
             prior = previous.strip().removesuffix(' ' + caret)
