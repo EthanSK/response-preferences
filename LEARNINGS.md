@@ -1,8 +1,8 @@
 # Verified project lessons
 
-## Split underline boxes at real wrap points
+## Split every prose box at real wrap points
 
-Codex renders inline LaTeX as an unbroken box. A visually continuous underline across a long clause can therefore run past the pane even when the surrounding Markdown would wrap. Limit each underline group to five words and split longer cues into separate math expressions with ordinary spaces or prose between them; multiple underline commands inside one outer expression still share one unbreakable box.
+Codex renders each inline LaTeX expression as an unbroken box. Colour alone can therefore run past the pane; underline is not required. Limit every text-bearing LaTeX expression to five words and split longer formatted prose into separate math expressions with ordinary spaces or prose between them. Splitting inner commands inside one outer expression still leaves one unbreakable box.
 
 ## Treat broken closing delimiters as syntax failures, not colour failures
 
