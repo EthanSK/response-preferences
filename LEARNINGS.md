@@ -2,7 +2,7 @@
 
 ## Group selectable prose by paragraph
 
-Ethan verified in the Codex desktop client that a sentence inside one outer `\textsf` expression can be selected continuously, including a nested coloured span. Separate expressions remain selection boundaries. Prefer one outer expression per concise prose paragraph and nest colours and underlines inside it. Because the outer expression remains unbreakable, cap it at 120 approximate visible characters and split longer writing into separate paragraphs. Links, code, paths and other content unsafe in KaTeX remain explicit exceptions. User-verified behavior — 2026-09-18.
+Ethan verified in the Codex desktop client that a sentence inside one outer `\textsf` expression can be selected continuously, including a nested coloured span. Separate expressions remain selection boundaries. Nest colours and underlines inside selectable outer expressions, but do not wrap a whole paragraph. Because each expression is unbreakable, cap chunks at 64 approximate visible characters and leave ordinary spaces between consecutive expressions so the browser can wrap. Links, code, paths and other content unsafe in KaTeX remain explicit exceptions. User-verified behavior — 2026-09-18.
 
 ## Treat broken closing delimiters as syntax failures, not colour failures
 
@@ -68,7 +68,7 @@ Copy buttons need explicit foreground and background styles at the same specific
 
 A long single coloured `\textsf` expression with nested underlines was visibly clipped in Codex desktop 26.901.51231 (8109). The bundled `.katex .base` uses `white-space: nowrap` and inline-block layout. A synthetic reproduction using that client's KaTeX JS/CSS measured 1069px of content in 700px and 316px paragraphs; a short complete coloured statement plus ordinary supporting prose fit both widths. This is an authoring workaround, not an app-renderer fix. The public website uses HTML/CSS and cannot establish native rendering.
 
-The draft checker now rejects selectable prose paragraphs above 120 approximate visible characters, including nested underlines and long topic labels. This preserves the exact 115-character selection example Ethan verified while still catching substantially wider paragraphs. It does not measure glyph widths. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.
+The 115-character selection example proved continuous selection but later visibly overflowed. The draft checker now rejects selectable prose chunks above 64 approximate visible characters, including nested underlines and topic labels. It does not measure glyph widths. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.
 
 ## Personal desktop wrapper
 

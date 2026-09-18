@@ -25,23 +25,25 @@ class ReplyChecks(unittest.TestCase):
             with self.subTest(draft=draft):
                 self.assertEqual([], check_fragment(draft))
 
-    def test_one_outer_expression_groups_each_selectable_paragraph(self):
-        grouped = r'\(\textsf{This whole paragraph is selectable, including \color{#67e8f9}{this colour} and \underline{this cue}.}\)'
+    def test_short_outer_expressions_make_selectable_wrappable_chunks(self):
+        grouped = r'\(\textsf{This short chunk keeps \color{#67e8f9}{colour} and \underline{selection} together.}\)'
         self.assertEqual([], check_fragment(grouped))
         self.assertEqual([], check_fragment(grouped, commentary=True))
-        split = r'\(\textsf{This paragraph is split.}\) \(\textsf{Selection stops here.}\)'
-        self.assertTrue(any('one outer LaTeX' in error for error in check_fragment(split)))
+        split = r'\(\textsf{This paragraph uses a short selectable chunk.}\) \(\textsf{This second chunk gives the browser a wrap point.}\)'
+        self.assertEqual([], check_fragment(split))
         mixed = r'Ordinary beginning \(\textsf{formatted middle}\) ordinary ending.'
-        self.assertTrue(any('Put the paragraph prose inside' in error for error in check_fragment(mixed)))
+        self.assertTrue(any('Put paragraph prose inside' in error for error in check_fragment(mixed)))
         exception = r'\(\textsf{The \underline{review needs a project} written in}\) `C#`.'
         self.assertEqual([], check_fragment(exception))
         self.assertEqual([], check_fragment('> '+split+'\n\n`'+split+'`'))
 
-    def test_selectable_paragraph_length_guardrail(self):
+    def test_selectable_chunk_length_guardrail(self):
         proven = r'\(\textsf{This entire sentence lives inside one outer LaTeX element, including \color{#67e8f9}{this coloured section} and the remaining words.}\)'
-        self.assertEqual([], check_fragment(proven))
+        self.assertTrue(any('exceeds 64' in error for error in check_fragment(proven)))
+        fixed = r'\(\textsf{This sentence uses a short selectable outer element.}\) \(\textsf{Its remaining words can wrap as a second chunk.}\)'
+        self.assertEqual([], check_fragment(fixed))
         oversized = r'\(\textsf{' + ('word ' * 30) + r'}\)'
-        self.assertTrue(any('exceeds 120' in error for error in check_fragment(oversized)))
+        self.assertTrue(any('exceeds 64' in error for error in check_fragment(oversized)))
 
     def test_formatted_word_counter_handles_nested_commands_and_escapes(self):
         self.assertEqual([5], reply.formatted_text_word_counts(r'\underline{\textsf{All 110 repository tests passed}}'))
@@ -235,8 +237,9 @@ class ReplyChecks(unittest.TestCase):
             self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.'+'\n\n'+invalid))
 
 
-    def test_topic_reminder_is_one_selectable_lavender_expression(self):
-        overview = r'\(\color{#b8a4d9}{\textsf{About: fixing the video export. Restart the app, then retry the clip.}}\)'
+    def test_topic_reminder_uses_short_selectable_lavender_chunks(self):
+        overview = (r'\(\color{#b8a4d9}{\textsf{About: fixing the video export.}}\) '
+                    r'\(\color{#b8a4d9}{\textsf{Restart the app, then retry the clip.}}\)')
         for body, options in [(r'\(\huge\text{👉}\) Restart to use the export fix.', {})]:
             self.assertEqual([], reply.check(body+'\n\n'+overview, **options))
             for bad in [overview+' '+overview, 'stray text '+overview,
@@ -247,7 +250,8 @@ class ReplyChecks(unittest.TestCase):
     def test_oversized_inline_prose_is_rejected_without_hiding_nested_underlines(self):
         long_warning = r'\(\color{#fb923c}{\textsf{The \underline{release is still pending}: its working copy has \underline{many outstanding changes}, needs \underline{another review before publication}, and its last recorded task run was interrupted.}}\)'
         self.assertTrue(any('may overflow' in e for e in check_fragment(long_warning)))
-        short = r'\(\textsf{\color{#fb923c}{The \underline{release is still pending}.} The dependency needs another review.}\)'
+        short = (r'\(\textsf{\color{#fb923c}{The \underline{release is still pending}.}}\) '
+                 r'\(\textsf{The dependency needs another review.}\)')
         self.assertEqual([], check_fragment(short))
         self.assertEqual([], check_fragment(short, commentary=True))
         for prefix in [r'\underline{\textsf{', r'\color{#67e8f9}{\textsf{', r'\color{#b8a4d9}{\textsf{About: ']:
@@ -258,5 +262,5 @@ class ReplyChecks(unittest.TestCase):
     def test_prose_length_counts_visible_words_not_wrapper_names(self):
         self.assertEqual(len('The release is still pending.'), reply.prose_length(r'\color{#fb923c}{\textsf{The \underline{release is still pending}.}}'))
         self.assertEqual(5, reply.prose_length(r'\textsf{A \& B}'))
-        self.assertEqual([], check_fragment(r'\(\textsf{'+'x'*120+r'}\)'))
-        self.assertTrue(any('may overflow' in e for e in check_fragment(r'\(\textsf{'+'x'*121+r'}\)')))
+        self.assertEqual([], check_fragment(r'\(\textsf{'+'x'*64+r'}\)'))
+        self.assertTrue(any('may overflow' in e for e in check_fragment(r'\(\textsf{'+'x'*65+r'}\)')))
