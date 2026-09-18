@@ -26,7 +26,7 @@ The checker is deliberately limited. It catches common structural regressions in
 | Computer Use and automated checks | 🖥️ with explicit manual-test status; green only for successful manual tests, never automated tests/lint | Manual semantic check; website example and global/project marker tests |
 | Underlined scanning cues | Useful words in every assistant prose sentence, inside colours and ordinary prose; preserve negatives and conditions | Manual sentence-by-sentence clue review; nested-colour checker regression; website quote/link preservation and scanning examples |
 | Skill references | 🧠 announcement, each skill name magenta upright serif with a real adjacent ↗; preference skill used silently | Historical failure fixture; local destination check; website computed styles and links |
-| Reply context | Relevant question/excerpt in a repeating 24-colour per-word rainbow, user's perspective, answer outside it and self-contained | Quote helper validates its authored KaTeX directly; general checker still excludes evidence; manual wording/wrapping review |
+| Reply context | Relevant question/excerpt in one selectable outer expression, with a repeating 24-colour per-word rainbow, user's perspective, answer outside it and self-contained | Quote helper validates its authored KaTeX directly; general checker still excludes evidence; manual wording and width review |
 | Original message | Exact source text, heading Your message, images preserved best effort, actual file link | Context helper and image-preservation tests |
 | Markdown/code links | Generated HTML by default, specific verified line when relevant, source retained | Generator, parser source maps, target-line and editor tests |
 | Viewer | Preview/edit/split, syntax highlighting, search/replace, undo/redo, downloadable copy; explicit picked-file saving only | Viewer tests; browser interaction and screenshots |
@@ -58,7 +58,7 @@ The table below does not move the return arrow onto its own line:
 ```markdown
 > How about now?
 
-\(\huge\text{⮑}\) The \(\underline{\textsf{sample copy}}\) \(\underline{\textsf{finished}}\); the upload is \(\underline{\textsf{still waiting}}\).
+\(\huge\text{⮑}\) \(\textsf{The \underline{sample copy} \underline{finished}; the upload is \underline{still waiting}.}\)
 
 | Item | Status |
 |---|---|
@@ -79,7 +79,7 @@ The full annotation context and short reminder are both required. Keep them as d
 
 > Can I still see my short question below the full annotation? [↗](absolute-context-viewer.html)
 
-\(\huge\text{⮑}\) The \(\underline{\textsf{short question}}\) stays \(\underline{\textsf{below the full context}}\), directly above the answer.
+\(\huge\text{⮑}\) \(\textsf{The \underline{short question} stays \underline{below the full context}, directly above the answer.}\)
 ```
 
 The opening link must point to the real original-message viewer; the path above is illustrative. Include each real annotation’s required inline directive with its answer. Do not underline or paraphrase the exact earlier-response and annotation quotations.
@@ -96,4 +96,4 @@ Pick a later underlined cue in each paragraph, then read it with the first under
 
 A long single coloured `\textsf` expression with nested underlines was visibly clipped in Codex desktop 26.901.51231 (8109). The bundled `.katex .base` uses `white-space: nowrap` and inline-block layout. A synthetic reproduction using that client's KaTeX JS/CSS measured 1069px of content in 700px and 316px paragraphs; a short complete coloured statement plus ordinary supporting prose fit both widths. This is an authoring workaround, not an app-renderer fix. The public website uses HTML/CSS and cannot establish native rendering.
 
-The draft checker now rejects inline prose expressions above 80 approximate visible characters, including nested underlines and long topic labels. This catches the observed failure pattern but does not measure glyph widths. Keep spans substantially shorter where possible and preserve negations and qualifications. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.
+The draft checker now requires one outer text expression when a formatted prose paragraph is present, rejects prose left outside that wrapper, and rejects selectable paragraphs above 120 approximate visible characters. It does not measure glyph widths. Links, code, paths, literal quotes and mathematical expressions without prose text commands remain explicit exceptions.

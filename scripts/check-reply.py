@@ -16,14 +16,16 @@ MARKER = re.compile(r'\\\((?:\\([a-zA-Z]+))?\\text\{([^{}]+)\}\\\)')
 PLAIN_MARKER = re.compile(r'()(➕➕|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕⚖❓][\ufe0f]?)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
+COLOUR_COMMAND = re.compile(r'\\color\{([^{}]+)\}')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
+INLINE_CODE = re.compile(r'(?<!`)`[^`\n]+`(?!`)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 TOPIC_COLOUR = '#b8a4d9'
 CARET = r'\(\raisebox{0.3em}{\Large\text{⌄}}\)'
 WORKING_CARET = '⌄'
-# Authoring guardrail only: glyph widths and the available pane still vary.
-MAX_PROSE_CHARACTERS = 80
-MAX_FORMATTED_WORDS = 5
+# User-tested selection grouping uses one outer expression per paragraph.
+# This length cap reduces overflow risk; glyph widths and pane widths still vary.
+MAX_PROSE_CHARACTERS = 120
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
@@ -157,11 +159,21 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
             if has_unwrapped_underline(expression.group(1)):
                 fail(r'Wrap underlined prose in \textsf: use \underline{\textsf{Words}} or place \underline{Words} inside an existing \textsf group. A bare \underline{Words} renders as maths, removing spaces and italicising letters.')
-            for words in formatted_text_word_counts(expression.group(1)):
-                if words > MAX_FORMATTED_WORDS:
-                    fail(f'A LaTeX text segment contains {words} words; use at most {MAX_FORMATTED_WORDS}. Split longer formatted prose into separate \\(...\\) expressions with ordinary spaces or prose between them so the line can wrap.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
-                fail('Inline LaTeX prose exceeds 80 approximate visible characters and may overflow. Use a shorter self-contained highlight and ordinary wrapping details; keep underline cues short too.')
+                fail('A selectable LaTeX paragraph exceeds 120 approximate visible characters and may overflow. Split the writing into shorter paragraphs, each with one outer \\textsf expression.')
+        prose_expressions = [m for m in INLINE_MATH.finditer(line)
+                             if prose_length(m.group(1)) > 1 and not MARKER.fullmatch(m.group(0))]
+        if len(prose_expressions) > 1 and 'Skill use:' not in line:
+            fail('Use one outer LaTeX text expression per prose paragraph so native selection can cover the paragraph continuously.')
+        if len(prose_expressions) == 1 and 'Skill use:' not in line:
+            remainder = line
+            for match in reversed(list(INLINE_MATH.finditer(line))):
+                remainder = remainder[:match.start()] + remainder[match.end():]
+            remainder = LINK.sub('', remainder)
+            remainder = INLINE_CODE.sub('', remainder)
+            remainder = re.sub(r'^[\s>*#\-+\d.)]+', '', remainder)
+            if re.search(r'[A-Za-z0-9]', remainder):
+                fail('Put the paragraph prose inside its one outer LaTeX text expression; keep only markers, links, code or punctuation outside.')
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):
@@ -204,7 +216,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 if not re.match(r'\s*\[↗\]\(', line[match.end():]):
                     fail('Follow each magenta skill name with its own clickable ↗.')
             elif colour == TOPIC_COLOUR:
-                # A single closing reminder may use several short boxes to wrap.
+                # The closing reminder is one selectable lavender expression.
                 parts = list(COLOUR.finditer(line))
                 prefix = r'\(\color{#b8a4d9}{\textsf{About: '
                 valid = (line.strip().startswith(prefix)
@@ -213,13 +225,17 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                          and all(p.group(1) == TOPIC_COLOUR and p.group(2) == 'textsf' for p in parts)
                          and all(p.group(0).split(r'\textsf{', 1)[1].removesuffix(r'}}\)').removeprefix('About: ').strip() for p in parts))
                 if not valid:
-                    fail('Use muted lavender only for one closing About: reminder in normal-size \\textsf, optionally split into short colour expressions.')
+                    fail('Use muted lavender only for one closing About: reminder in one normal-size \\textsf expression.')
                 if number not in topic_lines:
                     topic_lines.append(number)
                 if number != last_line:
                     fail('Put the topic reminder at the very end, after all other message content.')
             elif colour not in PALETTE or font != 'textsf':
                 fail('Use an approved highlight colour with normal-size \\textsf.')
+        for expression in INLINE_MATH.finditer(line):
+            for colour in COLOUR_COMMAND.findall(expression.group(1)):
+                if colour not in PALETTE | {TOPIC_COLOUR, 'magenta'}:
+                    fail('Use an approved highlight colour inside the paragraph wrapper.')
         if re.search(r'(?:\*\*)?Skill use:', line):
             current_marker = leading_marker(line)
             prior = previous.strip().removesuffix(' ' + caret)

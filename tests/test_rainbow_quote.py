@@ -59,22 +59,23 @@ class RainbowQuotes(unittest.TestCase):
         _, short = quote.render(' '.join(words[:7]), start_index=0)
         _, long = quote.render(' '.join(words), start_index=0)
         _, wrapped = quote.render('\n'.join(words), start_index=0)
-        self.assertEqual(short, long[:7])
+        self.assertIn(short[0].removeprefix(r'\textsf{').removesuffix('}'), long[0])
         self.assertEqual(long, wrapped)
-        self.assertEqual(len(words), len(long))
-        self.assertIn(r'\color{#fa7093}{\textsf{word23}}', long[23])
-        self.assertIn(r'\color{#fa7070}{\textsf{word24}}', long[24])
-        self.assertIn(r'\color{#fa9370}{\textsf{word25}}', long[25])
+        self.assertEqual(1, len(long))
+        self.assertIn(r'\color{#fa7093}{word23}', long[0])
+        self.assertIn(r'\color{#fa7070}{word24}', long[0])
+        self.assertIn(r'\color{#fa9370}{word25}', long[0])
         _, fallback = quote.render(' '.join(words[:23] + ['x' * 25, 'next']), start_index=0)
-        self.assertIn(r'\color{#fa7070}{\textsf{next}}', fallback[-1])
+        self.assertIn(r'\color{#fa7070}{next}', fallback[-1])
 
     def test_counter_chosen_once_per_quote_and_all_offsets_wrap(self):
         for start in range(24):
             with patch.object(quote, 'next_start_index', return_value=start) as rng:
                 _, expressions = quote.render(' '.join(['word'] * 27))
                 rng.assert_called_once_with()
-            for i, expression in enumerate(expressions):
-                self.assertIn(quote.PALETTE[(start + i) % 24], expression)
+            self.assertEqual(1, len(expressions))
+            for i in range(27):
+                self.assertIn(quote.PALETTE[(start + i) % 24], expressions[0])
         with patch.object(quote, 'next_start_index') as rng:
             a = quote.render('Same question', start_index=23)
             b = quote.render('Same question', start_index=23)
