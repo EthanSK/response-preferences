@@ -9,7 +9,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('guard', ROOT/'scripts/guard-reply.py')
 guard = importlib.util.module_from_spec(spec); spec.loader.exec_module(guard)
-GOOD = r'\(\huge\text{👉}\) The \(\underline{\textsf{export keeps every final frame}}\).' + '\n\n' + r'\(\color{#b8a4d9}{\textsf{About: the export fix.}}\)'
+GOOD = r'\(\huge\text{👉}\) \(\textsf{The \underline{export keeps every final frame}.}\)' + '\n\n' + r'\(\color{#b8a4d9}{\textsf{About: the export fix.}}\)'
 
 class GuardTests(unittest.TestCase):
     def test_completion_guard_uses_renderer_and_delimiter_validation(self):
@@ -18,14 +18,14 @@ class GuardTests(unittest.TestCase):
         self.assertTrue(any('delimiter' in e for e in guard.errors_for(GOOD[:-2])))
         self.assertEqual([], guard.errors_for(GOOD.replace('export keeps every final frame', r'C\# project')))
 
-    def test_valid_draft_mutated_in_two_about_expressions_needs_repair(self):
-        draft = GOOD + ' ' + r'\(\color{#b8a4d9}{\textsf{Checks passed; release remains pending.}}\)'
+    def test_valid_draft_mutated_in_main_and_about_expressions_needs_repair(self):
+        draft = GOOD.replace('About: the export fix.', 'About: the export fix. Checks passed; release remains pending.')
         self.assertEqual([], guard.errors_for(draft))
-        sent = draft.replace(r'export fix.}}\)', r'export fix.}}}\)').replace(
+        sent = draft.replace(r'export keeps every final frame}.}\)', r'export keeps every final frame}.}}\)').replace(
             r'remains pending.}}\)', r'remains pending.}}}\)')
         # The guard deduplicates identical errors on the same line.
         self.assertTrue(any('KaTeX' in e for e in guard.errors_for(sent)))
-        for clean, broken in [(r'export fix.}}\)', r'export fix.}}}\)'),
+        for clean, broken in [(r'export keeps every final frame}.}\)', r'export keeps every final frame}.}}\)'),
                               (r'remains pending.}}\)', r'remains pending.}}}\)')]:
             self.assertTrue(any('KaTeX' in e for e in guard.errors_for(draft.replace(clean, broken))))
         for active in (False, True):
@@ -77,9 +77,9 @@ class GuardTests(unittest.TestCase):
     def test_code_fence_with_prose_still_checks_prose(self):
         self.assertTrue(guard.errors_for('Here is the requested configuration.\n```json\n{}\n```'))
     def test_real_paths_and_project_extensions_are_not_guessed_by_hook(self):
-        project = r'\(\huge\text{🧬}\) '+r'\(\huge\text{👉}\) The \(\underline{\textsf{sample is ready}}\).'+'\n\n'+GOOD.split('\n\n')[1]
+        project = r'\(\huge\text{🧬}\) '+r'\(\huge\text{👉}\) \(\textsf{The \underline{sample is ready}.}\)'+'\n\n'+GOOD.split('\n\n')[1]
         self.assertEqual([],guard.errors_for(project))
-        self.assertEqual([],guard.errors_for(GOOD.replace('The ', 'The [sample](/missing-file.html) ',1)))
+        self.assertEqual([],guard.errors_for(GOOD.replace(r'.}\)', r'.}\) [sample](/missing-file.html)',1)))
     def test_cli_requests_one_repair_and_never_loops(self):
         for active in [False, True]:
             p=subprocess.run([sys.executable,str(ROOT/'scripts/guard-reply.py')],input=json.dumps({'last_assistant_message':'Which file did you mean?', 'stop_hook_active':active}),text=True,capture_output=True,check=True)

@@ -70,17 +70,28 @@ def render(text, format='markdown', start_index=None):
         start_index = next_start_index()
     if not isinstance(start_index, int) or not 0 <= start_index < len(PALETTE):
         raise ValueError('start_index must be between 0 and 23.')
-    parts, expressions = [], []
+    parts, expressions, group = [], [], []
+    def flush_group():
+        if not group:
+            return
+        expression = r'\textsf{' + ' '.join(group) + '}'
+        expressions.append(expression)
+        parts.append(r'\(' + expression + r'\)')
+        group.clear()
     for i, chunk in enumerate(chunks(text)):
         if len(chunk) > MAX_CHARS:
             # Do not turn a long URL/identifier into an unbreakable math box.
+            if format == 'markdown':
+                flush_group()
             parts.append('<code>' + html.escape(chunk) + '</code>' if format == 'html' else inline_code(chunk))
             continue
         colour = PALETTE[(start_index + i) % len(PALETTE)]
-        expression = r'\color{' + colour + r'}{\textsf{' + tex(chunk) + '}}'
-        expressions.append(expression)
-        parts.append('<span class="rq-chunk" style="color:' + colour + '">' + html.escape(chunk) + '</span>'
-                     if format == 'html' else r'\(' + expression + r'\)')
+        if format == 'html':
+            parts.append('<span class="rq-chunk" style="color:' + colour + '">' + html.escape(chunk) + '</span>')
+        else:
+            group.append(r'\color{' + colour + '}{' + tex(chunk) + '}')
+    if format == 'markdown':
+        flush_group()
     return ('<span class="rainbow-quote">' + ' '.join(parts) + '</span>' if format == 'html'
             else '> ' + ' '.join(parts)), expressions
 
