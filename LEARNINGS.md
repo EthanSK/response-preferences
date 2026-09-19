@@ -1,8 +1,8 @@
 # Verified project lessons
 
-## Group selectable prose by paragraph
+## LaTeX selection and wrapping limits
 
-Ethan verified in the Codex desktop client that a sentence inside one outer `\textsf` expression can be selected continuously, including a nested coloured span. Separate expressions remain selection boundaries. Nest colours and underlines inside selectable outer expressions, but do not wrap a whole paragraph. Because each expression is unbreakable, cap chunks at 64 approximate visible characters and leave ordinary spaces between consecutive expressions so the browser can wrap. Links, code, paths and other content unsafe in KaTeX remain explicit exceptions. User-verified behavior — 2026-09-18.
+Ethan verified continuous selection inside one outer `\textsf` expression with a nested coloured span. A later whole-paragraph expression visibly overflowed. A subsequent single-expression trial containing both an underline and an emoji did not give Ethan the desired whole-line triple-click selection; that trial does not isolate which element caused the selection behavior. Do not claim that underlined LaTeX fixes triple-click or that selection crosses expression boundaries. Cap each unbreakable expression at 64 approximate visible characters and leave ordinary spaces between expressions for wrapping. Links, code and paths remain outside when unsafe in KaTeX. User-verified behavior — 2026-09-18 and 2026-09-19.
 
 ## Treat broken closing delimiters as syntax failures, not colour failures
 

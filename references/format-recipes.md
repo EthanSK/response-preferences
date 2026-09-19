@@ -15,7 +15,7 @@ Use exactly one colour per word, with this fixed 24-step lookup table. For each 
 | 13–18 | `#70fafa` → `#70d8fa` → `#70b5fa` → `#7093fa` → `#7070fa` → `#9370fa` |
 | 19–24 | `#b570fa` → `#d870fa` → `#fa70fa` → `#fa70d8` → `#fa70b5` → `#fa7093` |
 
-Use consecutive outer `\(\textsf{...}\)` expressions of at most 64 visible characters for the short quote, then copy `\color{#fa7070}{Word}` for each word inside it, changing only the lookup colour and escaped word. Each chunk stays selectable and the ordinary spaces between chunks provide wrap points. Do not use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position. Keep every chunk concise because each outer expression does not wrap.
+Use consecutive outer `\(\textsf{...}\)` expressions of at most 64 visible characters for the short quote, then copy `\color{#fa7070}{Word}` for each word inside it, changing only the lookup colour and escaped word. Ordinary spaces between chunks provide wrap points; this format does not promise whole-line triple-click selection. Do not use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position. Keep every chunk concise because each outer expression does not wrap.
 
 Keep a single word, identifier or URL longer than 24 visible characters in inline code rather than a wide math box, and still advance the palette position for it. Prefer a genuinely shorter relevant excerpt to colouring a whole message. A helper avoids reconstructing syntax, but the emitted LaTeX still consumes output tokens; keep reminders short.
 
