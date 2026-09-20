@@ -54,6 +54,11 @@ def prose_lines(text):
     return '\n'.join(lines)
 
 
+def annotation_errors_for(text):
+    """Expose the narrow annotation check to adapters with broad style checks off."""
+    return checker.annotation_errors(visible_reply(text)) if isinstance(text, str) else []
+
+
 def errors_for(text):
     if not isinstance(text, str):
         return []

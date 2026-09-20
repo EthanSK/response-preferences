@@ -127,11 +127,54 @@ def leading_marker(line):
     return MARKER.match(line) or PLAIN_MARKER.match(line)
 
 
+def annotation_errors(text):
+    """Check full annotation context without enabling unrelated styling checks."""
+    errors = []
+    counts = dict.fromkeys(ANNOTATION_CONTEXT_LABELS, 0)
+    seen = set()
+    fence = None
+    pending_label = None
+    for number, raw in enumerate(text.splitlines(), 1):
+        line = raw.lstrip()
+        opening = re.match(r'(`{3,}|~{3,})', line)
+        if opening:
+            pending_label = None
+            token = opening.group(1)
+            if fence is None:
+                fence = token
+            elif token[0] == fence[0] and len(token) >= len(fence):
+                fence = None
+            continue
+        if fence is not None:
+            continue
+        if line.startswith('>'):
+            context = line[1:].strip().replace('**', '')
+            label = next((label for label in ANNOTATION_CONTEXT_LABELS if context.startswith(label + ':')), None)
+            if label is not None:
+                pending_label = label
+                context = context[len(label) + 1:].strip()
+            if pending_label is not None and context:
+                counts[pending_label] += 1
+                pending_label = None
+            continue
+        pending_label = None
+        line = INLINE_CODE.sub('', line)
+        for annotation in ANNOTATION.finditer(line):
+            index = annotation.group(1)
+            if index in seen:
+                continue
+            seen.add(index)
+            for label in ANNOTATION_CONTEXT_LABELS:
+                if counts[label] < len(seen):
+                    errors.append(f'Line {number}: Annotation {index} needs its own quoted {label}: context before the answer/reference. The short rainbow question and native popup do not replace it.')
+    return errors
+
+
 def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True):
     errors = math_validation.check_math(text)
+    if not commentary:
+        errors.extend(annotation_errors(text))
     topic_lines = []
-    annotation_context_counts = dict.fromkeys(ANNOTATION_CONTEXT_LABELS, 0)
-    seen_annotation_indexes = set()
     last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
     has_pointer = False
@@ -151,24 +194,11 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             continue
         # Quoted user/earlier-assistant context is evidence, not a new reply.
         if stripped.startswith('>'):
-            context_line = stripped[1:].strip().replace('**', '')
-            for label in ANNOTATION_CONTEXT_LABELS:
-                if context_line.startswith(label + ':') and context_line[len(label) + 1:].strip():
-                    annotation_context_counts[label] += 1
             previous = raw
             continue
         line = re.sub(r'(`+).*?\1', '', raw)
         def fail(message):
             errors.append(f'Line {number}: {message}')
-        if not commentary:
-            for annotation in ANNOTATION.finditer(line):
-                index = annotation.group(1)
-                if index in seen_annotation_indexes:
-                    continue
-                seen_annotation_indexes.add(index)
-                for label in ANNOTATION_CONTEXT_LABELS:
-                    if annotation_context_counts[label] < len(seen_annotation_indexes):
-                        fail(f'Annotation {index} needs its own quoted {label}: context before the answer/reference. The short rainbow question and native popup do not replace it.')
         for expression in INLINE_MATH.finditer(line):
             if UNESCAPED_PERCENT.search(expression.group(1)):
                 fail(r'Escape literal percent signs inside LaTeX as \%; bare % starts a TeX comment and can break rendering. Leave ordinary Markdown percentages unchanged.')
