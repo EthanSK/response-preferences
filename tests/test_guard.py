@@ -12,6 +12,29 @@ guard = importlib.util.module_from_spec(spec); spec.loader.exec_module(guard)
 GOOD = r'\(\huge\text{👉}\) \(\textsf{The \underline{export keeps every final frame}.}\)' + '\n\n' + r'\(\color{#b8a4d9}{\textsf{About: the export fix.}}\)'
 
 class GuardTests(unittest.TestCase):
+    def test_narrow_annotation_check_does_not_require_broad_style_or_renderer(self):
+        from unittest.mock import patch
+        missing = 'The old page cannot change the current URL. :codex-annotation{index="1"}'
+        complete = ('> **Problem at hand:** An old page edited the current URL.\n'
+                    '> **Earlier response:** The old request finishes after navigation.\n'
+                    '> **Your annotation:** Why does that affect the other page?\n\n' + missing)
+        with patch.object(guard.checker.math_validation, 'check_math', side_effect=AssertionError('Unexpected renderer call')):
+            self.assertEqual(3, len(guard.annotation_errors_for(missing)))
+            self.assertEqual([], guard.annotation_errors_for(complete))
+            self.assertEqual([], guard.annotation_errors_for('Ordinary reply with no annotations.'))
+            self.assertEqual([], guard.annotation_errors_for('> ' + missing))
+            self.assertEqual([], guard.annotation_errors_for('```text\n' + missing + '\n```'))
+            self.assertEqual([], guard.annotation_errors_for(None))
+
+    def test_annotation_context_accepts_quoted_multiline_fields_but_not_empty_ones(self):
+        complete = ('> **Problem at hand:**\n> An old page edited the current URL.\n>\n'
+                    '> **Earlier response:**\n> The old request finishes after navigation.\n>\n'
+                    '> **Your annotation:**\n> Why does that affect the other page?\n\n'
+                    'The URL is shared. :codex-annotation{index="1"}')
+        self.assertEqual([], guard.annotation_errors_for(complete))
+        for content in ['An old page edited the current URL.', 'The old request finishes after navigation.', 'Why does that affect the other page?']:
+            self.assertEqual(1, len(guard.annotation_errors_for(complete.replace(content, ''))))
+
     def test_completion_guard_uses_renderer_and_delimiter_validation(self):
         for value in ['C# project', 'A & B', r'\unknowncommand', 'extra}brace']:
             self.assertTrue(any('KaTeX' in e for e in guard.errors_for(GOOD.replace('export keeps every final frame', value))))
