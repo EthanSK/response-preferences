@@ -12,6 +12,27 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_annotation_context_and_rainbow_question_are_both_required(self):
+        context = '> **Problem at hand:** A hidden page changes the visible URL.\n> **Earlier response:** The callback clears the selector.\n> **Your annotation:** Why can another page change it?\n\n'
+        answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
+        self.assertEqual([], check_fragment(context + answer))
+        for label in reply.ANNOTATION_CONTEXT_LABELS:
+            broken = '\n'.join(line for line in context.splitlines() if label not in line) + '\n\n' + answer
+            self.assertTrue(any(label in error for error in check_fragment(broken)))
+        self.assertTrue(any('Problem at hand' in error for error in check_fragment(answer)))
+
+    def test_grouped_annotations_keep_one_context_per_distinct_annotation(self):
+        context = '> Problem at hand: A route callback.\n> Earlier response: It edits the URL.\n> Your annotation: Why?\n\n'
+        answer = '> Why?\n\n' + r'\(\huge\text{⮑}\) \(\textsf{One Router serves both pages.}\) :codex-annotation{index="1"} :codex-annotation{index="2"}'
+        self.assertEqual([], check_fragment(context + context + answer))
+        self.assertTrue(any('Annotation 2' in error for error in check_fragment(context + answer)))
+        self.assertEqual([], check_fragment(context + answer.replace('index="2"', 'index="1"')))
+
+    def test_quoted_and_fenced_annotations_do_not_require_new_context(self):
+        self.assertEqual([], check_fragment('> :codex-annotation{index="1"}'))
+        self.assertEqual([], check_fragment('```text\n:codex-annotation{index="1"}\n```'))
+        self.assertEqual([], check_fragment('An ordinary answer.'))
+
     def test_bare_prose_underlines_are_rejected_before_spaces_disappear(self):
         bad = [r'\(\underline{All 110 repository tests passed}\)',
                r'\(\color{#67e8f9}{\underline{Each rainbow block gets a different start}}\)']
