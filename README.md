@@ -29,7 +29,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
 | Code editor | CodeMirror provides syntax highlighting, line numbers, search/replace, undo/redo and bracket matching. Preview, edit and split views. |
 | Table grouping | Uses approved markers beside category/status labels when helpful, keeping related rows together. |
-| Annotation context | Preserves the full annotation context, then the short question in your wording underneath, then the answer. Groups related answers without dropping either context layer. |
+| Annotation context | Keeps **Problem at hand**, **Earlier response** and **Your annotation**, then the short rainbow question and answer. These layers work together even in follow-up clarifications; native popups do not replace them. The checker rejects missing labelled context. |
 | Notification wording | Defines short, complete notification summaries. Native notification delivery is an optional **separate** integration. |
 
 The response-preference skill itself is used silently. Other skill announcements use 🧠 with a magenta skill name and an adjacent opening link.

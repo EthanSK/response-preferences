@@ -18,6 +18,8 @@ PLAIN_MARKER = re.compile(r'()(➕➕|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔�
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 COLOUR_COMMAND = re.compile(r'\\color\{([^{}]+)\}')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
+ANNOTATION = re.compile(r':codex-annotation\{index="([0-9]+)"\}')
+ANNOTATION_CONTEXT_LABELS = ('Problem at hand', 'Earlier response', 'Your annotation')
 INLINE_CODE = re.compile(r'(?<!`)`[^`\n]+`(?!`)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 TOPIC_COLOUR = '#b8a4d9'
@@ -128,6 +130,8 @@ def leading_marker(line):
 def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True):
     errors = math_validation.check_math(text)
     topic_lines = []
+    annotation_context_counts = dict.fromkeys(ANNOTATION_CONTEXT_LABELS, 0)
+    seen_annotation_indexes = set()
     last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
     has_pointer = False
@@ -147,11 +151,24 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             continue
         # Quoted user/earlier-assistant context is evidence, not a new reply.
         if stripped.startswith('>'):
+            context_line = stripped[1:].strip().replace('**', '')
+            for label in ANNOTATION_CONTEXT_LABELS:
+                if context_line.startswith(label + ':') and context_line[len(label) + 1:].strip():
+                    annotation_context_counts[label] += 1
             previous = raw
             continue
         line = re.sub(r'(`+).*?\1', '', raw)
         def fail(message):
             errors.append(f'Line {number}: {message}')
+        if not commentary:
+            for annotation in ANNOTATION.finditer(line):
+                index = annotation.group(1)
+                if index in seen_annotation_indexes:
+                    continue
+                seen_annotation_indexes.add(index)
+                for label in ANNOTATION_CONTEXT_LABELS:
+                    if annotation_context_counts[label] < len(seen_annotation_indexes):
+                        fail(f'Annotation {index} needs its own quoted {label}: context before the answer/reference. The short rainbow question and native popup do not replace it.')
         for expression in INLINE_MATH.finditer(line):
             if UNESCAPED_PERCENT.search(expression.group(1)):
                 fail(r'Escape literal percent signs inside LaTeX as \%; bare % starts a TeX comment and can break rendering. Leave ordinary Markdown percentages unchanged.')
@@ -167,6 +184,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             remainder = line
             for match in reversed(list(INLINE_MATH.finditer(line))):
                 remainder = remainder[:match.start()] + remainder[match.end():]
+            remainder = ANNOTATION.sub('', remainder)
             remainder = LINK.sub('', remainder)
             remainder = INLINE_CODE.sub('', remainder)
             remainder = re.sub(r'^[\s>*#\-+\d.)]+', '', remainder)
