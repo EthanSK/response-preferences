@@ -16,6 +16,7 @@ MARKER = re.compile(r'\\\((?:\\([a-zA-Z]+))?\\text\{([^{}]+)\}\\\)')
 PLAIN_MARKER = re.compile(r'()(➕➕|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕⚖❓][\ufe0f]?)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
+COLOUR_SWITCH = re.compile(r'\\\(\\(textsf|textrm)\{\\color\{([^{}]+)\}(?:[^{}]|\{[^{}]*\})*\}\\\)')
 COLOUR_COMMAND = re.compile(r'\\color\{([^{}]+)\}')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 ANNOTATION = re.compile(r':codex-annotation\{index="([0-9]+)"\}')
@@ -31,6 +32,21 @@ MAX_PROSE_CHARACTERS = 64
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
+
+
+def colour_spans(line):
+    """Return legacy braced and simpler switch-style highlights alike."""
+    spans = [(m, m.group(1), m.group(2)) for m in COLOUR.finditer(line)]
+    spans.extend((m, m.group(2), m.group(1)) for m in COLOUR_SWITCH.finditer(line))
+    return sorted(spans, key=lambda item: item[0].start())
+
+
+def coloured_visible_text(match):
+    """Extract visible words from one supported colour expression."""
+    expression = match.group(0)
+    expression = re.sub(r'\\(?:textsf|textrm)\{|\\color\{[^}]*\}', '', expression)
+    expression = expression.replace(r'\(', '').replace(r'\)', '')
+    return expression.replace('{', '').replace('}', '').strip()
 
 
 def has_text_underscore(expression):
@@ -205,25 +221,16 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             if has_text_underscore(expression.group(1)):
                 fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
             if has_unwrapped_underline(expression.group(1)):
-                fail(r'Wrap underlined prose in \textsf: use \underline{\textsf{Words}} or place \underline{Words} inside an existing \textsf group. A bare \underline{Words} renders as maths, removing spaces and italicising letters.')
+                fail(r'Put the short underline inside \textsf, for example \(\textsf{\underline{Not uploaded}.}\). A bare \underline{Words} renders as maths, removing spaces and italicising letters.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
-                fail('A selectable LaTeX chunk exceeds 64 approximate visible characters and may overflow. Split the paragraph into consecutive short \\textsf expressions with ordinary spaces between them.')
-        prose_expressions = [m for m in INLINE_MATH.finditer(line)
-                             if prose_length(m.group(1)) > 1 and not MARKER.fullmatch(m.group(0))]
-        if prose_expressions and 'Skill use:' not in line:
-            remainder = line
-            for match in reversed(list(INLINE_MATH.finditer(line))):
-                remainder = remainder[:match.start()] + remainder[match.end():]
-            remainder = ANNOTATION.sub('', remainder)
-            remainder = LINK.sub('', remainder)
-            remainder = INLINE_CODE.sub('', remainder)
-            remainder = re.sub(r'^[\s>*#\-+\d.)]+', '', remainder)
-            if re.search(r'[A-Za-z0-9]', remainder):
-                fail('Put paragraph prose inside consecutive short LaTeX text chunks; keep only markers, links, code or punctuation outside.')
+                fail('A LaTeX expression exceeds 64 approximate visible characters and may overflow. Shorten the styled cue and leave supporting prose in ordinary Markdown.')
+        # Ordinary Markdown prose is the preferred companion to short styled
+        # cues. Keep checking the expressions themselves, not the surrounding
+        # sentence for LaTeX coverage.
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):
-            fail(r'Never use HTML <u> tags in a reply; Codex can display them literally. Use \(\underline{\textsf{Words}}\) instead.')
+            fail(r'Never use HTML <u> tags in a reply; Codex can display them literally. Use a short \(\textsf{\underline{useful} clue}\) instead.')
         matches = list(MARKER.finditer(line))
         plain = PLAIN_MARKER.match(line, len(line) - len(line.lstrip()))
         if plain:
@@ -254,8 +261,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail('Keep the return arrow beside the opening answer, even when a table or list follows.')
             if match.group(2) == '⮑' and not previous.lstrip().startswith('>'):
                 fail('Put the relevant question/excerpt in a blockquote just above the answer.')
-        for match in COLOUR.finditer(line):
-            colour, font = match.group(1, 2)
+        spans = colour_spans(line)
+        for match, colour, font in spans:
             if colour == 'magenta':
                 if font != 'textrm':
                     fail('Skill names use upright serif \\textrm in magenta.')
@@ -263,13 +270,19 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('Follow each magenta skill name with its own clickable ↗.')
             elif colour == TOPIC_COLOUR:
                 # The closing reminder is one selectable lavender expression.
-                parts = list(COLOUR.finditer(line))
-                prefix = r'\(\color{#b8a4d9}{\textsf{About: '
-                valid = (line.strip().startswith(prefix)
-                         and line.count(r'\textsf{About: ') == 1
-                         and not COLOUR.sub('', line).strip()
-                         and all(p.group(1) == TOPIC_COLOUR and p.group(2) == 'textsf' for p in parts)
-                         and all(p.group(0).split(r'\textsf{', 1)[1].removesuffix(r'}}\)').removeprefix('About: ').strip() for p in parts))
+                parts = colour_spans(line)
+                prefix_old = r'\(\color{#b8a4d9}{\textsf{About: '
+                prefix_new = r'\(\textsf{\color{#b8a4d9}About: '
+                remainder = line
+                for p, _, _ in reversed(parts):
+                    remainder = remainder[:p.start()] + remainder[p.end():]
+                visible_parts = [coloured_visible_text(p) for p, _, _ in parts]
+                valid = (line.strip().startswith((prefix_old, prefix_new))
+                         and line.count('About: ') == 1
+                         and not remainder.strip()
+                         and all(c == TOPIC_COLOUR and f == 'textsf' for _, c, f in parts)
+                         and all(visible_parts)
+                         and visible_parts[0].removeprefix('About:').strip())
                 if not valid:
                     fail('Use muted lavender only for one closing About: reminder, split into short normal-size \\textsf chunks when needed.')
                 if number not in topic_lines:
@@ -290,7 +303,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 prior_marker = None
             if not any(m and m.group(2) == '🧠' for m in [current_marker, prior_marker]):
                 fail('Start skill announcements with 🧠.')
-            if not any(m.group(1) == 'magenta' and m.group(2) == 'textrm' for m in COLOUR.finditer(line)):
+            if not any(c == 'magenta' and f == 'textrm' for _, c, f in colour_spans(line)):
                 fail('Skill announcements need magenta upright-serif skill names and adjacent ↗ links.')
         for match in LINK.finditer(line):
             label, target = match.groups()
