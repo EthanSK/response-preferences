@@ -33,6 +33,15 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([], check_fragment('```text\n:codex-annotation{index="1"}\n```'))
         self.assertEqual([], check_fragment('An ordinary answer.'))
 
+
+    def test_navigation_reply_missing_outer_brace_in_both_phases(self):
+        broken = r'\(\textsf{\color{#67e8f9}{\underline{Every dialog open when navigation begins now closes}}\)'
+        fixed = broken.replace(r'}}\)', r'}}}\)')
+        for commentary in (False, True):
+            with self.subTest(commentary=commentary):
+                errors = check_fragment(broken, commentary=commentary)
+                self.assertTrue(any('KaTeX parse error' in e for e in errors), errors)
+                self.assertEqual([], check_fragment(fixed, commentary=commentary))
     def test_bare_prose_underlines_are_rejected_before_spaces_disappear(self):
         bad = [r'\(\underline{All 110 repository tests passed}\)',
                r'\(\color{#67e8f9}{\underline{Each rainbow block gets a different start}}\)']
