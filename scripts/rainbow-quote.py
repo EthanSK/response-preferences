@@ -77,7 +77,7 @@ def render(text, format='markdown', start_index=None):
         nonlocal group_chars
         if not group:
             return
-        expression = r'\textsf{' + ' '.join(group) + '}'
+        expression = r'\text{' + ' '.join(group) + '}'
         expressions.append(expression)
         parts.append(r'\(' + expression + r'\)')
         group.clear()

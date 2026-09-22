@@ -83,23 +83,27 @@ test('working markers use text size while final markers stay enlarged',()=>{
  assert(working.some(el=>el.textContent==='🧠'),'Show the small skill announcement too');
  for(const marker of working){assert.equal(style(marker).fontSize,style(marker.parentElement).fontSize);assert.equal(style(marker).verticalAlign,'baseline');}
  for(const marker of d.querySelectorAll('.msg.assistant.final .mk'))assert.equal(style(marker).fontSize,'32px');
- assert(d.querySelector('#format').textContent.includes('Working messages use small markers'));
+ assert(d.querySelector('#format').textContent.includes('Working messages use plain text and small markers'));
  dom.window.close();
 });
 
-test('scanning cues preserve qualifications, colours, quotations and real links',()=>{
+test('final bold cues preserve qualifications, colours, quotations and real links',()=>{
  const dom=demo(),d=dom.window.document;
- assert.equal(d.querySelectorAll('.quote u,.user u,code u,a u,u a,u code').length,0);
- for(const colour of ['c-cyan','c-green','c-orange','c-red'])assert(d.querySelector('.conversation .'+colour+' u'),'Each colour also demonstrates scanning cues');
- const cues=[...d.querySelectorAll('.conversation .assistant u')].map(x=>x.textContent);
+ assert.equal(d.querySelectorAll('.quote .c-cyan,.user strong,code strong,a strong,strong a,strong code').length,0);
+ for(const colour of ['c-cyan','c-green','c-orange','c-red'])assert(d.querySelector('.conversation .'+colour+' strong'),'Each colour also demonstrates scanning cues');
+ const cues=[...d.querySelectorAll('.conversation .assistant.final strong')].map(x=>x.textContent);
  for(const clue of ['packed but not uploaded','no off-site copy from tonight','after restarting the app','cannot guarantee that a model always follows them'])assert(cues.includes(clue),'Retain decisive qualification: '+clue);
- for(const p of d.querySelectorAll('.conversation .assistant p')){
+ for(const p of d.querySelectorAll('.conversation .assistant.final p')){
   if(p.closest('blockquote')||p.matches('.topic-reminder')||p.textContent==='Added beyond your request')continue;
-  assert(p.querySelector('u'),'Assistant prose has scanning cues: '+p.textContent);
+  assert(p.querySelector('strong'),'Final prose has scanning cues: '+p.textContent);
  }
- const u=d.querySelector('.conversation .assistant u');
- assert.equal(dom.window.getComputedStyle(u).textDecorationLine,'underline');
- assert.equal(u.closest('a'),null,'Underlines do not invent links');
+ for(const p of d.querySelectorAll('.conversation .assistant:not(.final) p')){
+  assert.equal(p.querySelectorAll('u').length,0,'Working prose stays plain');
+  for(const strong of p.querySelectorAll('strong'))assert.equal(strong.textContent,'Skill use:');
+ }
+ const clue=d.querySelector('.conversation .assistant.final strong');
+ assert.equal(dom.window.getComputedStyle(clue).fontWeight,'650');
+ assert.equal(clue.closest('a'),null,'Cues do not invent links');
  dom.window.close();
 });
 
@@ -119,7 +123,7 @@ test('automated results stay uncoloured and manual success uses the computer mar
  const dom=demo(),d=dom.window.document;
  const answer=d.querySelector('#export .final p[data-kind="answer"]');
  assert.equal(answer.firstElementChild.textContent,'⮑');
- assert(answer.querySelector('.c-cyan u').textContent.includes('export keeps every final frame'));
+ assert(answer.querySelector('.c-cyan strong').textContent.includes('export keeps every final frame'));
  assert(!answer.querySelector('.c-green'));
  assert(!answer.querySelector('.c-cyan').textContent.includes('restart'));
  const automated=d.querySelector('#export p[data-kind="test"]');
@@ -229,7 +233,7 @@ test('every final example closes with a distinct topic reminder after its conten
 
 test('the first home reply previews the range and its marker controls open real explanations',()=>{
  const dom=demo(),d=dom.window.document,home=d.querySelector('#welcome'),first=home.querySelector('.final');
- for(const c of ['c-green','c-cyan','c-orange','c-red'])assert(first.querySelector('.'+c+' u'));
+ for(const c of ['c-green','c-cyan','c-orange','c-red'])assert(first.querySelector('.'+c+' strong'));
  assert.equal(first.querySelectorAll('.welcome-marker-range .mk').length,20);
  assert(home.querySelector('.assistant:not(.final) .skill'));
  assert(first.querySelector('.sec > .mk'));assert(first.querySelector('table'));

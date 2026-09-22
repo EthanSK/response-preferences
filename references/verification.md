@@ -6,10 +6,10 @@ Read this when changing the skill, auditing prior requests, or testing the respo
 
 1. Read the current installed skill when beginning a task, and reread it after a response-style correction. Old replies, screenshots and earlier in-memory skill text can contain superseded rules.
 2. Check the actual draft. Skill announcements need 🧠, magenta upright-serif names and a separate working ↗ for each name. Apply the response-preferences silent-use exception.
-3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour selectively to self-contained clauses or sentences. Read every coloured bit from its first word, without its surrounding prose; check it still names the subject and makes sense. Read only the underlined words in each prose sentence in order: check they carry its useful clues and retain crucial negations, uncertainty and conditions. Exact quotations, code and links stay untouched. Keep markers inline for short statements and above sections with multiple paragraphs/blocks, followed by a `⌄` chevron. Working commentary uses plain normal-size markers and `ⓘ ⌄`; final replies use lowercase `\huge` with the caret rendered as `\(\raisebox{0.3em}{\Large\text{⌄}}\)`. Keep the return arrow beside the opening answer even when a table, list or code block follows. Tables use ordinary-sized markers and category text.
+3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour selectively to self-contained clauses or sentences. Read every coloured bit from its first word, without its surrounding prose; check it still names the subject and makes sense. In final prose, read only the bold clues in order: check they retain crucial negations, uncertainty and conditions. Working commentary uses plain Markdown prose and normal-size markers. Exact quotations, code and links stay untouched. Keep markers inline for short statements and above sections with multiple paragraphs/blocks, followed by a `⌄` chevron. Final replies use lowercase `\huge` with the caret rendered as `\(\raisebox{0.3em}{\Large\text{⌄}}\)`. Keep the return arrow beside the opening answer even when a table, list or code block follows. Tables use ordinary-sized markers and category text.
 4. Use the complete short patterns in the core skill. For a tricky expression or skill maintenance, `scripts/check-reply.py /absolute/reply.md` is an optional syntax diagnostic. It does not need to run for every outgoing reply. Prior check results never prove a new reply is correct. User-requested simplification — 2026-09-22.
 
-The checker is deliberately limited. It catches common structural regressions in conventional Markdown/LaTeX replies, including the missing-magenta announcement that prompted it. It does not parse every Markdown or LaTeX construct, decide what is important, choose useful underlined words or guarantee sentence coverage, prove a link supports a claim, detect every omitted marker, inspect the Codex renderer, or force another model to obey instructions. A passing result is not a guarantee of perfect formatting.
+The checker is deliberately limited. It catches common structural regressions in conventional Markdown/LaTeX replies, including the missing-magenta announcement that prompted it. It does not parse every Markdown or LaTeX construct, decide what is important, choose useful bold words or guarantee sentence coverage, prove a link supports a claim, detect every omitted marker, inspect the Codex renderer, or force another model to obey instructions. A passing result is not a guarantee of perfect formatting.
 
 ## Coverage map
 
@@ -22,9 +22,9 @@ The checker is deliberately limited. It catches common structural regressions in
 | Other meanings | 🫵 user action, 🤨 unusual, ⚠️ caution, ❓ uncertainty, 💡 recommendation, ⚖️ trade-offs, ⛔ external blocker, 🧠 skill use, ➕➕ extra scope, ⮑ answer | Closed vocabulary and website meaning controls |
 | Marker placement | Left aligned, before content; inline for a short statement, standalone with a visible ⌄ chevron for multi-block sections; the return arrow stays beside its opening answer | Reply checker; website structure test; desktop/mobile inspection |
 | Marker size | Plain normal-size markers in commentary, including 🧠; lowercase `\huge` in final replies; normal-size table labels | Phase-specific checker fixtures; website marker size and screenshots |
-| Highlighting | Selected self-contained red/green/orange/cyan clauses or sentences in normal-size sans serif; no new colour meanings | Checker; website computed styles; manual reading of each highlight in isolation |
+| Highlighting | Selected self-contained red/green/orange/cyan clauses or sentences in normal-size text; no new colour meanings | Checker; website computed styles; manual reading of each highlight in isolation |
 | Computer Use and automated checks | 🖥️ with explicit manual-test status; green only for successful manual tests, never automated tests/lint | Manual semantic check; website example and global/project marker tests |
-| Underlined scanning cues | Prefer a short cue in prose sentences; self-contained colour can carry the cue; preserve negatives and conditions | Manual sentence-by-sentence clue review; nested-colour checker regression; website quote/link preservation and scanning examples |
+| Bold scanning cues | Prefer a short cue in final prose sentences; working updates stay plain; self-contained colour can carry the cue; preserve negatives and conditions | Manual sentence-by-sentence clue review; website quote/link preservation and scanning examples |
 | Skill references | 🧠 announcement, each skill name magenta upright serif with a real adjacent ↗; preference skill used silently | Historical failure fixture; local destination check; website computed styles and links |
 | Reply context | Relevant question/excerpt in selectable chunks of at most 64 visible characters, with a repeating 24-colour per-word rainbow, user's perspective, answer outside it and self-contained | Quote helper validates its authored KaTeX directly; general checker still excludes evidence; manual wording and width review |
 | Original message | Exact source text, heading Your message, images preserved best effort, actual file link | Context helper and image-preservation tests |
@@ -58,7 +58,7 @@ The table below does not move the return arrow onto its own line:
 ```markdown
 > How about now?
 
-\(\huge\text{⮑}\) \(\textsf{The \underline{sample copy} \underline{finished}; the upload is \underline{still waiting}.}\)
+\(\huge\text{⮑}\) The **sample copy finished**; the upload is **still waiting**.
 
 | Item | Status |
 |---|---|
@@ -79,7 +79,7 @@ The full annotation context and short reminder are both required. Keep them as d
 
 > Can I still see my short question below the full annotation? [↗](absolute-context-viewer.html)
 
-\(\huge\text{⮑}\) \(\textsf{The \underline{short question} stays \underline{below the full context}, directly above the answer.}\)
+\(\huge\text{⮑}\) The **short question stays below the full context**, directly above the answer.
 ```
 
 The opening link must point to the real original-message viewer; the path above is illustrative. Include each real annotation’s required inline directive with its answer. Do not underline or paraphrase the exact earlier-response and annotation quotations.
@@ -90,7 +90,7 @@ Check that working commentary has no attention fingers. The final reply normally
 
 ## Context when scanning backwards
 
-Pick a later underlined cue in each paragraph, then read it with the first underline. The first cue should name the concrete topic so the pair makes sense without searching other paragraphs. Use `skill-update decisions` followed by `agent-based`, not an isolated `agent-based`. Re-establish the subject when the topic changes; do not expand every cue into a whole sentence. This is a semantic review, not something the structural checker can prove.
+In final prose, pick a later bold cue in each paragraph, then read it with the first bold cue. The first should name the concrete topic so the pair makes sense without searching other paragraphs. Use `skill-update decisions` followed by `agent-based`, not an isolated `agent-based`. Re-establish the subject when the topic changes; do not expand every cue into a whole sentence. This is a semantic review, not something the structural checker can prove.
 
 ## Inline prose overflow
 

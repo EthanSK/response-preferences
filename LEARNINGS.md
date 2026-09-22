@@ -114,3 +114,7 @@ The About reminder is required only in final replies. Commentary must omit it wh
 ## Rainbow question rendering
 
 The reply checker intentionally skips blockquoted evidence, so a passing whole-reply check does not validate newly authored rainbow wrappers inside a quote. The quote helper calls the bundled renderer on its expressions directly; tests preserve words, escape literal punctuation and HTML, and keep long tokens out of unbreakable math boxes. Reuse the same chunker for public HTML examples. This does not change historical evidence exclusions or introduce a completion hook.
+
+## Remove hand-written text font and underline wrappers
+
+The live Compare Zap and Deliveroo task had read the installed skill but still emitted red raw `\textsf{\underline{...` in three commentary updates. Each example closed the inner underline and math delimiter but omitted the closing brace for `\textsf`. Earlier copyable examples and optional diagnostics did not prevent that authoring mistake. The current rule therefore supersedes the older advice above to hand-write separate underline expressions: working commentary uses plain Markdown, final scanning cues use Markdown bold, and selected colour highlights use a short complete `\(\color{#hex}\text{...}\)` expression. Keep the quote generator and the skill-name announcement as their own controlled exceptions. Do not add an automatic repair turn or per-message checker. User correction — 2026-09-23.
