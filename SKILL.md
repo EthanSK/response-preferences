@@ -26,6 +26,7 @@ Keep label, conjunctions and explanation ordinary. Respect other explicit silent
 - Before **every** message, check meaning, phase, markers, colour and short scanning cues. Short answers and clarification questions still follow the style unless the user requests a conflicting exact format.
 - Before a final reply, save the exact draft and run `python3 <skill-dir>/scripts/check-reply.py <reply.md>`. Fix errors before notification preparation. For a working update containing LaTeX, save and check its exact draft with `--commentary` before sending. A passing checker proves only its mechanical checks, not correct meaning or visual rendering. If unavailable, check manually and state that limitation.
 - After validation, emit the saved draft unchanged; even one added brace invalidates its result. If red commands still appear, compare the stored final with that draft and check the actual final before blaming stale rules or the renderer.
+- Treat each outgoing reply as a new pre-send check: a pass for an earlier reply, a quoted example, or repository tests does not cover this message. Save the complete current draft, require exit code 0, then send that exact text without reconstructing it. Any edit requires another check. If a reply failed despite this rule, inspect whether its exact draft was actually checked before changing the parser. User-requested hardening — 2026-09-22.
 - Recheck the actual draft: opening answer stands alone; underline trail preserves subject and negatives; colours have complete meaning; outcomes are qualified; the final finger points to useful content; About covers the whole message.
 - Do not add or enable automatic reply repair, Stop-hook continuations, background enforcement, or cross-chat wakeups for these preferences. Harden the rules and check the draft before sending; formatting problems must not trigger another model turn. Existing notifications remain notification-only. Ethan explicitly rejected automatic repair as over-engineered; do not reintroduce it. User correction — 2026-09-20.
 - Explicit exact-format requests override styling. A complaint about broken formatting is not permission to drop the style: identify the actual conflicting output instruction before making an exception. No hook exemption record is needed.
@@ -87,7 +88,7 @@ Keep colours outside Markdown links: follow a coloured skill name or file-relate
 
 Use these working examples as templates. Replace only the words inside the innermost text argument; preserve the commands, delimiters and closing braces. Change a colour value only to another approved colour. The whole command must keep exactly one `\(...\)` wrapper; never add another backslash before the closing delimiter.
 
-Never put prose directly inside `\underline{...}` in math mode: `\(\underline{Words with spaces}\)` removes its spaces and renders the letters as maths. Put the whole paragraph inside one `\textsf{...}` wrapper and nest `\underline{...}` or `\color{...}{...}` within it, exactly as below.
+Never put prose directly inside `\underline{...}` in math mode: `\(\underline{Words with spaces}\)` removes its spaces and renders the letters as maths. Put each short prose chunk inside one `\textsf{...}` wrapper and nest `\underline{...}` or `\color{...}{...}` within it, exactly as below.
 
 ```latex
 \(\textsf{The \underline{upload is still pending}.}\)
