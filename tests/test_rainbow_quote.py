@@ -59,7 +59,7 @@ class RainbowQuotes(unittest.TestCase):
         _, short = quote.render(' '.join(words[:7]), start_index=0)
         _, long = quote.render(' '.join(words), start_index=0)
         _, wrapped = quote.render('\n'.join(words), start_index=0)
-        self.assertIn(short[0].removeprefix(r'\textsf{').removesuffix('}'), long[0])
+        self.assertIn(short[0].removeprefix(r'\text{').removesuffix('}'), long[0])
         self.assertEqual(long, wrapped)
         self.assertGreater(len(long), 1)
         joined = ' '.join(long)

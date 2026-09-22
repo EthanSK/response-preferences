@@ -15,7 +15,7 @@ Use exactly one colour per word, with this fixed 24-step lookup table. For each 
 | 13–18 | `#70fafa` → `#70d8fa` → `#70b5fa` → `#7093fa` → `#7070fa` → `#9370fa` |
 | 19–24 | `#b570fa` → `#d870fa` → `#fa70fa` → `#fa70d8` → `#fa70b5` → `#fa7093` |
 
-Use consecutive outer `\(\textsf{...}\)` expressions of at most 64 visible characters for the short quote, then copy `\color{#fa7070}{Word}` for each word inside it, changing only the lookup colour and escaped word. Ordinary spaces between chunks provide wrap points; this format does not promise whole-line triple-click selection. Do not use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position. Keep every chunk concise because each outer expression does not wrap.
+Use the helper to generate consecutive outer `\(\text{...}\)` expressions of at most 64 visible characters for the short quote, with one `\color{#fa7070}{Word}` for each word. Ordinary spaces between chunks provide wrap points; this format does not promise whole-line triple-click selection. Do not hand-write these expressions, use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position. Keep every chunk concise because each outer expression does not wrap.
 
 Keep a single word, identifier or URL longer than 24 visible characters in inline code rather than a wide math box, and still advance the palette position for it. Prefer a genuinely shorter relevant excerpt to colouring a whole message. A helper avoids reconstructing syntax, but the emitted LaTeX still consumes output tokens; keep reminders short.
 
@@ -38,15 +38,15 @@ The general reply checker excludes quoted evidence, including historical broken 
 These synthetic questions use the same word-by-word rhythm inside short selectable chunks. Keep each chunk within the 64-character guardrail.
 
 ```latex
-> \(\textsf{\color{#fa7070}{Why?}}\)
+> \(\text{\color{#fa7070}{Why?}}\)
 ```
 
 ```latex
-> \(\textsf{\color{#fa7070}{Can} \color{#fa9370}{you} \color{#fab570}{make} \color{#fad870}{this} \color{#fafa70}{easier} \color{#d8fa70}{to} \color{#b5fa70}{read?}}\)
+> \(\text{\color{#fa7070}{Can} \color{#fa9370}{you} \color{#fab570}{make} \color{#fad870}{this} \color{#fafa70}{easier} \color{#d8fa70}{to} \color{#b5fa70}{read?}}\)
 ```
 
 ```latex
-> \(\textsf{\color{#fa7070}{Can} \color{#fa9370}{you} \color{#fab570}{keep} \color{#fad870}{this} \color{#fafa70}{rainbow} \color{#d8fa70}{easy} \color{#b5fa70}{to} \color{#93fa70}{select?}}\)
+> \(\text{\color{#fa7070}{Can} \color{#fa9370}{you} \color{#fab570}{keep} \color{#fad870}{this} \color{#fafa70}{rainbow} \color{#d8fa70}{easy} \color{#b5fa70}{to} \color{#93fa70}{select?}}\)
 ```
 
 ## Other recurring choices
@@ -58,22 +58,22 @@ These synthetic questions use the same word-by-word rhythm inside short selectab
 | Automated test result | 🧪 and ordinary text, with an explicit passed/failed/unverified status. |
 | Needs the user's next action / mainly a takeaway | Favour 🫵 / 👉 respectively, normally once and only in the final reply. |
 | One statement / several blocks | Inline marker / standalone marker plus the existing raised chevron. Keep ⮑ beside its answer in either case. |
-| Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
+| Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; bold the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
-For ordinary prose, write Markdown and insert only a short complete underline cue where useful. Keep a normal word or punctuation after the underline closes, inside `\textsf`, so every hand-written expression ends with exactly `}\)`. A colour uses `\color{#hex}` as a switch within its own short `\textsf` expression. Avoid hand-nesting colour and underline. Keep each expression below 64 visible characters; the surrounding prose wraps normally. User-requested simplification — 2026-09-22.
+For working updates, use plain Markdown prose and normal-size markers. In final replies, use Markdown **bold** for short scanning cues. A selected colour uses the complete `\(\color{#hex}\text{Short fact.}\)` pattern; keep it below 64 visible characters and let surrounding Markdown wrap. Do not hand-write `\textsf` or `\underline` in prose. User correction — 2026-09-23.
 
 ```latex
-\(\huge\text{✅}\) \(\textsf{\color{#22c55e}The change is saved.}\)
+\(\huge\text{✅}\) \(\color{#22c55e}\text{The change is saved.}\)
 
-\(\huge\text{ⓘ}\) \(\textsf{\color{#67e8f9}The quote shows your question.}\)
+\(\huge\text{ⓘ}\) \(\color{#67e8f9}\text{The quote shows your question.}\)
 
-\(\huge\text{🧪}\) The \(\textsf{\underline{formatter checks} passed}\), including `C#`, `54%` and `sample_tool`.
+\(\huge\text{🧪}\) The **formatter checks passed**, including `C#`, `54%` and `sample_tool`.
 
-\(\huge\text{👉}\) The \(\textsf{\underline{quote keeps} your wording}\). Its colours identify the question being answered.
+\(\huge\text{👉}\) The **quote keeps your wording**. Its colours identify the question being answered.
 
-\(\textsf{\color{#b8a4d9}About: Rainbow question reminders.}\) \(\textsf{\color{#b8a4d9}Short highlights wrap around ordinary prose.}\)
+\(\color{#b8a4d9}\text{About: Rainbow question reminders.}\) \(\color{#b8a4d9}\text{Short highlights wrap around ordinary prose.}\)
 ```
 
 
-For a working update, replace the enlarged marker with its plain Unicode symbol, omit the finger and omit About. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is **still pending**” must not become a success cue merely because other work finished.
+For a working update, replace the enlarged marker with its plain Unicode symbol, omit the finger and About, and write the prose plainly. These are alternative snippets, not a requirement to include every category in one message. In final replies, bold the subject first and preserve negatives: “The upload is **still pending**” must not become a success cue merely because other work finished.
