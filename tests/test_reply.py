@@ -12,6 +12,29 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_simple_authoring_patterns_and_missing_outer_brace(self):
+        good = [
+            r'The upload is \(\textsf{\underline{still pending}.}\)',
+            r'\(\textsf{\color{#ef4444}The upload failed.}\)',
+            r'\(\textsf{\color{#67e8f9}Every dialog closes.}\)',
+        ]
+        for draft in good:
+            with self.subTest(draft=draft):
+                self.assertEqual([], check_fragment(draft))
+        broken = good[-1].replace(r'.}\)', r'.\)')
+        self.assertTrue(any('KaTeX parse error' in e for e in check_fragment(broken)))
+
+    def test_simple_topic_and_skill_name_patterns(self):
+        topic = r'\(\textsf{\color{#b8a4d9}About: fixing the export.}\) \(\textsf{\color{#b8a4d9}Restart the app, then retry.}\)'
+        self.assertEqual([], reply.check(r'\(\huge\text{👉}\) The export fix is ready.\n\n'.replace(r'\n', '\n') + topic))
+        empty = r'\(\textsf{\color{#b8a4d9}About: }\)'
+        self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.\n\n'.replace(r'\n', '\n') + empty))
+        with tempfile.TemporaryDirectory() as directory:
+            viewer = Path(directory) / 'skill.html'
+            viewer.write_text('example')
+            skill = rf'\(\huge\text{{🧠}}\) **Skill use:** \(\textrm{{\color{{magenta}}skill-creator}}\) [↗]({viewer}) — update the skill.'
+            self.assertEqual([], check_fragment(skill))
+
     def test_annotation_context_and_rainbow_question_are_both_required(self):
         context = '> **Problem at hand:** A hidden page changes the visible URL.\n> **Earlier response:** The callback clears the selector.\n> **Your annotation:** Why can another page change it?\n\n'
         answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
@@ -48,7 +71,7 @@ class ReplyChecks(unittest.TestCase):
         for draft in bad:
             with self.subTest(draft=draft):
                 errors = check_fragment(draft)
-                self.assertTrue(any(r'Wrap underlined prose in \textsf' in error for error in errors), errors)
+                self.assertTrue(any(r'Put the short underline inside \textsf' in error for error in errors), errors)
         good = [r'\(\underline{\textsf{All 110 repository tests passed}}\)',
                 r'\(\color{#67e8f9}{\textsf{Each \underline{rainbow block} differs.}}\)']
         for draft in good:
@@ -61,8 +84,8 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([], check_fragment(grouped, commentary=True))
         split = r'\(\textsf{This paragraph uses a short selectable chunk.}\) \(\textsf{This second chunk gives the browser a wrap point.}\)'
         self.assertEqual([], check_fragment(split))
-        mixed = r'Ordinary beginning \(\textsf{formatted middle}\) ordinary ending.'
-        self.assertTrue(any('Put paragraph prose inside' in error for error in check_fragment(mixed)))
+        mixed = r'Ordinary beginning \(\underline{\textsf{formatted middle}}\) ordinary ending.'
+        self.assertEqual([], check_fragment(mixed))
         exception = r'\(\textsf{The \underline{review needs a project} written in}\) `C#`.'
         self.assertEqual([], check_fragment(exception))
         self.assertEqual([], check_fragment('> '+split+'\n\n`'+split+'`'))

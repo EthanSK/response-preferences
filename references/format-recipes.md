@@ -61,18 +61,19 @@ These synthetic questions use the same word-by-word rhythm inside short selectab
 | Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
-For ordinary prose, use consecutive `\(\textsf{...}\)` chunks and put `\underline{Words with spaces}` inside the relevant chunk. Keep each chunk selectable and under 64 visible characters, with ordinary spaces between expressions so the paragraph can wrap. Do not use `\(\underline{Words with spaces}\)`; KaTeX treats those words as maths, removes the spaces and italicises the letters.
+For ordinary prose, write Markdown and insert only a short complete underline cue where useful. Keep a normal word or punctuation after the underline closes, inside `\textsf`, so every hand-written expression ends with exactly `}\)`. A colour uses `\color{#hex}` as a switch within its own short `\textsf` expression. Avoid hand-nesting colour and underline. Keep each expression below 64 visible characters; the surrounding prose wraps normally. User-requested simplification — 2026-09-22.
 
 ```latex
-\(\huge\text{✅}\) \(\textsf{\color{#22c55e}{\underline{The change is saved.}}}\)
+\(\huge\text{✅}\) \(\textsf{\color{#22c55e}The change is saved.}\)
 
-\(\huge\text{ⓘ}\) \(\textsf{\color{#67e8f9}{\underline{Quotes use one selectable wrapper.}}}\)
+\(\huge\text{ⓘ}\) \(\textsf{\color{#67e8f9}The quote shows your question.}\)
 
-\(\huge\text{🧪}\) \(\textsf{The \underline{formatter checks passed}, including}\) `C#`, `54%` and `sample_tool`.
+\(\huge\text{🧪}\) The \(\textsf{\underline{formatter checks} passed}\), including `C#`, `54%` and `sample_tool`.
 
-\(\huge\text{👉}\) \(\textsf{\underline{The quote keeps your wording}.}\) \(\textsf{Its colours identify the question being answered.}\)
+\(\huge\text{👉}\) The \(\textsf{\underline{quote keeps} your wording}\). Its colours identify the question being answered.
 
-\(\color{#b8a4d9}{\textsf{About: Rainbow question reminders.}}\) \(\color{#b8a4d9}{\textsf{Short chunks stay selectable and can wrap.}}\)
+\(\textsf{\color{#b8a4d9}About: Rainbow question reminders.}\) \(\textsf{\color{#b8a4d9}Short highlights wrap around ordinary prose.}\)
 ```
+
 
 For a working update, replace the enlarged marker with its plain Unicode symbol, omit the finger and omit About. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is **still pending**” must not become a success cue merely because other work finished.
