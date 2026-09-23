@@ -293,6 +293,7 @@ test('rainbow question chunks preserve context links and exclude annotation evid
    assert(!rainbow.querySelector('a,u'),'Links and underlines stay outside the rainbow');
    assert.equal(rainbow.querySelectorAll('.rq-chunk').length>0,true);
    assert([...rainbow.querySelectorAll('.rq-chunk')].every(x=>x.textContent.length<=24));
+   assert(rainbow.textContent.length<=40,'Rainbow reminder should use a one-line excerpt');
    assert(quote.querySelector('a[href]'),'Keep original context navigation');
  }
  assert.equal(d.querySelectorAll('.annotation-context .rainbow-quote,.user .rainbow-quote,.preview .rainbow-quote,.topic-reminder .rainbow-quote').length,0);

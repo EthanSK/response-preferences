@@ -12,6 +12,7 @@ import tempfile
 PALETTE = ('#fa7070', '#fa9370', '#fab570', '#fad870', '#fafa70', '#d8fa70', '#b5fa70', '#93fa70', '#70fa70', '#70fa93', '#70fab5', '#70fad8', '#70fafa', '#70d8fa', '#70b5fa', '#7093fa', '#7070fa', '#9370fa', '#b570fa', '#d870fa', '#fa70fa', '#fa70d8', '#fa70b5', '#fa7093')
 MAX_CHARS = 24
 MAX_GROUP_CHARS = 64
+MAX_QUOTE_CHARS = 40
 ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
            '%': r'\%', '_': r'\_', '&': r'\&', '$': r'\$',
            '^': r'\textasciicircum{}', '~': r'\textasciitilde{}'}
@@ -51,8 +52,21 @@ def next_start_index():
 
 
 def chunks(text):
-    """One colour per whitespace-delimited word, continuing across line wraps."""
+    """One colour per whitespace-delimited word."""
     return text.split()
+
+
+def validate_short_quote(text):
+    """Reject long reminder excerpts before reserving any palette positions."""
+    visible = ' '.join(chunks(text))
+    if not visible:
+        raise ValueError('Provide the relevant question or excerpt as plain text.')
+    if len(visible) > MAX_QUOTE_CHARS:
+        raise ValueError(
+            f'Rainbow reminder is {len(visible)} characters; choose an exact relevant excerpt '
+            f'of {MAX_QUOTE_CHARS} characters or fewer so it usually fits on one line.'
+        )
+    return visible
 
 
 def tex(text):
@@ -114,6 +128,8 @@ def main():
         texts = [source.read_text(encoding='utf-8') for source in args.source]
         if any(not text.strip() for text in texts):
             raise ValueError('Provide each relevant question or excerpt as plain text.')
+        if args.format == 'markdown':
+            texts = [validate_short_quote(text) for text in texts]
         starts = ([((args.start_index + offset) % len(PALETTE)) for offset in range(len(texts))]
                   if args.start_index is not None else reserve_start_indices(len(texts)))
         rendered = [render(text, args.format, start) for text, start in zip(texts, starts)]
