@@ -111,7 +111,7 @@ The optional diagnostic checker parses/renders explicit `\(...\)`, `\[...\]` and
 
 ## Underlined scanning cues
 
-- Prefer one short, useful underlined clue in each assistant-authored prose sentence, including working commentary. A self-contained coloured sentence already serves as a scanning cue; do not repeat its words only to add an underline. User correction — 2026-09-23.
+- Use one short, useful underlined clue in each substantive assistant-authored prose sentence, including working commentary. Do not stop after the first sentence of a paragraph or section. A self-contained coloured sentence already serves as a scanning cue; do not repeat its words only to add an underline. Ethan asked to restore the earlier scanning density — 2026-09-23.
 - Use `\(\underline{\textsf{not uploaded}}\)` inside ordinary prose. Keep the cue short, with `not`, `only` and other conditions when omitting them would reverse its meaning. A properly closed `\underline{\textsf{...}}` preserves spaces and the preferred font. The red examples omitted a closing brace; keep the whole short pattern intact. Colour and About stay in separate expressions.
 - The first cue in a paragraph or section should identify its concrete subject. Later cues can give method, result or qualification. Read them alone in sequence before sending; do not underline filler or whole sentences mechanically.
 - A selected colour highlight is a separate complete expression such as `\(\textsf{\color{#67e8f9}The viewer is a snapshot.}\)`. Preserve exact quotations, original-message reminders, source text, code, URLs, paths and link labels. Important compact table values still follow the table scanning rule. Assistant replies must not emit raw HTML `<u>` tags.
