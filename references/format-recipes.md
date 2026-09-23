@@ -61,7 +61,7 @@ These synthetic questions use the same word-by-word rhythm inside short selectab
 | Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
-For working and final replies, use `\(\underline{\textsf{short useful clue}}\)` for a short scanning cue. Keep normal-size markers in working updates. A selected non-underlined colour uses a separate sans-serif `\(\textsf{\color{#hex}Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. Both commands are valid when the complete short expression is closed with `}}\)`; the observed red examples omitted a closing brace. User correction — 2026-09-23.
+For working and final replies, use `\(\underline{\textsf{short useful clue}}\)` for a short scanning cue. Keep normal-size markers in working updates. A selected non-underlined colour uses a separate sans-serif `\(\textsf{\color{#hex}Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. Both commands are valid when the complete short expression is closed with `}}\)`; the observed red examples omitted a closing brace when the underline was the last content in an outer `\textsf`. Prefer the complete outer-underline pattern shown here. User correction — 2026-09-23.
 
 ```latex
 \(\huge\text{✅}\) \(\textsf{\color{#22c55e}The change is saved.}\)
