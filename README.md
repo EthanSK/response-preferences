@@ -81,11 +81,11 @@ Markers stay inline for a single line or short statement. For sections spanning 
 
 Read each highlighted clause or sentence on its own: it should make sense without the uncoloured words before or after it. This applies to all four highlight colours; magenta skill names keep their separate name-only styling.
 
-Codex treats each inline LaTeX expression as an unbreakable box. Ethan verified continuous selection in one coloured expression, then showed that whole-paragraph boxes still overflow. Hand-written nested `\textsf` and `\underline` repeatedly produced missing braces and red commands, even after examples were simplified. Working and final replies keep short underlined scanning cues without the font command; separate short colour and About expressions retain the explicit sans-serif font. Keep each expression below 64 approximate visible characters. The generated rainbow question is a separate helper-produced exception.
+Codex treats each inline LaTeX expression as an unbreakable box. Ethan verified continuous selection in one coloured expression, then showed that whole-paragraph boxes still overflow. The earlier red commands came from missing closing braces or math delimiters, not from an invalid sans-serif/underline combination. In the affected task, 13 of 16 combined expressions were balanced; the three red ones omitted a closing brace. Working and final replies use one short, complete `\underline{\textsf{...}}` cue, with colour and About in separate short expressions. Keep each expression below 64 approximate visible characters. The generated rainbow question is a separate helper-produced exception.
 
 Keep literal names such as `C#` and `sample_tool` in ordinary text or inline code, with short underlined scanning cues nearby. Write percentages outside the LaTeX box too. If they must be coloured, escape the text as `C\#`, `sample\_tool`, `54\%` or `A \& B`. This applies to coloured text and About reminders.
 
-Start with the [copyable colour patterns](SKILL.md#copy-these-exact-colour-patterns): a cue uses `\(\underline{\text{short clue}}\)`, colour uses `\(\textsf{\color{#67e8f9}A complete short fact.}\)`, and About uses the same simple form in lavender. The checker remains an optional diagnostic for tricky expressions or skill maintenance. It validates syntax with bundled KaTeX but cannot guarantee agent obedience or the app’s layout. Annotation replies still require their labelled context, rainbow question and native reference. Automatic reply repair is not used.
+Start with the [copyable colour patterns](SKILL.md#copy-these-exact-colour-patterns): a cue uses `\(\underline{\textsf{short clue}}\)`, colour uses `\(\textsf{\color{#67e8f9}A complete short fact.}\)`, and About uses the same simple form in lavender. The checker remains an optional diagnostic for tricky expressions or skill maintenance. It validates syntax with bundled KaTeX but cannot guarantee agent obedience or the app’s layout. Annotation replies still require their labelled context, rainbow question and native reference. Automatic reply repair is not used.
 
 Selected final highlights use `\textsf{\color{#hex}...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
@@ -97,9 +97,9 @@ Projects can list additional user-approved emoji meanings in their existing inst
 
 ## Underlines for scanning
 
-Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\text{not uploaded}}\)` or `\(\underline{\text{after restarting}}\)`. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
+Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\textsf{not uploaded}}\)` or `\(\underline{\textsf{after restarting}}\)`. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
 
-Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\text{not uploaded}}\).` or `The \(\underline{\text{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; do not hand-nest colour and underline. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
+Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\textsf{not uploaded}}\).` or `The \(\underline{\textsf{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; keep both forms short and fully closed. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
 
 ## Generate a viewer
 
@@ -140,7 +140,7 @@ Notifications lead with a short version of your request, in your wording and per
 
 ## Keeping the format consistent
 
-The everyday pattern is deliberately small: write normal Markdown, use `\(\underline{\text{a useful clue}}\)` in working and final prose, and use `\(\textsf{\color{#67e8f9}A complete short fact.}\)` for a selected colour highlight. Leave surrounding prose, links, code and technical names in Markdown so they wrap naturally. Keep `\textsf` for short non-underlined colour and About expressions; do not put it around or inside an underline. The final `About:` reminder and generated rainbow question retain their own fixed patterns.
+The everyday pattern is deliberately small: write normal Markdown, use `\(\underline{\textsf{a useful clue}}\)` in working and final prose, and use `\(\textsf{\color{#67e8f9}A complete short fact.}\)` for a selected colour highlight. Leave surrounding prose, links, code and technical names in Markdown so they wrap naturally. Keep `\textsf` inside the short underline cue and in separate colour and About expressions. The final `About:` reminder and generated rainbow question retain their own fixed patterns.
 
 The bundled checker remains available when diagnosing a tricky expression or maintaining the skill:
 

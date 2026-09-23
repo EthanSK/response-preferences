@@ -34,6 +34,16 @@ class RendererChecks(unittest.TestCase):
         self.assertIn('outside explicit math delimiters', ' '.join(math.check_math(bare)))
         self.assertEqual([], math.check_math(correct))
 
+    def test_sans_serif_and_underline_are_valid_when_fully_closed(self):
+        valid = [r'\(\underline{\textsf{still pending}}\)',
+                 r'\(\textsf{\underline{still pending}}\)']
+        broken = [r'\(\underline{\textsf{still pending}\)',
+                  r'\(\textsf{\underline{still pending}\)']
+        for expression in valid:
+            self.assertEqual([], math.check_math(expression))
+        for expression in broken:
+            self.assertTrue(any('KaTeX parse error' in error for error in math.check_math(expression)))
+
     def test_quoted_and_code_evidence_is_not_authored_math(self):
         text = '> \\(\\textsf{C#}\\)\n\n`\\(broken`\n\n```tex\n\\(broken\n```\n\nOrdinary C#, 54%, sample_tool and $5.'
         self.assertEqual([], math.check_math(text))
