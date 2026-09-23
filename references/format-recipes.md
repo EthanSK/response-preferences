@@ -58,22 +58,22 @@ These synthetic questions use the same word-by-word rhythm inside short selectab
 | Automated test result | 🧪 and ordinary text, with an explicit passed/failed/unverified status. |
 | Needs the user's next action / mainly a takeaway | Favour 🫵 / 👉 respectively, normally once and only in the final reply. |
 | One statement / several blocks | Inline marker / standalone marker plus the existing raised chevron. Keep ⮑ beside its answer in either case. |
-| Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; bold the readable context around it. The quote helper can safely escape short literals. |
+| Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
-For working updates, use plain Markdown prose and normal-size markers. In final replies, use Markdown **bold** for short scanning cues. A selected colour uses the complete `\(\color{#hex}\text{Short fact.}\)` pattern; keep it below 64 visible characters and let surrounding Markdown wrap. Do not hand-write `\textsf` or `\underline` in prose. User correction — 2026-09-23.
+For working and final replies, use `\(\underline{\text{short useful clue}}\)` for a short scanning cue. Keep normal-size markers in working updates. A selected colour uses a separate complete `\(\color{#hex}\text{Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. Do not hand-write `\textsf` or combine underline and colour in one expression. User correction — 2026-09-23.
 
 ```latex
 \(\huge\text{✅}\) \(\color{#22c55e}\text{The change is saved.}\)
 
 \(\huge\text{ⓘ}\) \(\color{#67e8f9}\text{The quote shows your question.}\)
 
-\(\huge\text{🧪}\) The **formatter checks passed**, including `C#`, `54%` and `sample_tool`.
+\(\huge\text{🧪}\) The \(\underline{\text{formatter checks passed}}\), including `C#`, `54%` and `sample_tool`.
 
-\(\huge\text{👉}\) The **quote keeps your wording**. Its colours identify the question being answered.
+\(\huge\text{👉}\) The \(\underline{\text{quote keeps your wording}}\). Its colours identify the question being answered.
 
 \(\color{#b8a4d9}\text{About: Rainbow question reminders.}\) \(\color{#b8a4d9}\text{Short highlights wrap around ordinary prose.}\)
 ```
 
 
-For a working update, replace the enlarged marker with its plain Unicode symbol, omit the finger and About, and write the prose plainly. These are alternative snippets, not a requirement to include every category in one message. In final replies, bold the subject first and preserve negatives: “The upload is **still pending**” must not become a success cue merely because other work finished.
+For a working update, replace the enlarged marker with its plain Unicode symbol and omit the finger and About. Keep the short underline cue. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is \(\underline{\text{still pending}}\)” must not become a success cue merely because other work finished.

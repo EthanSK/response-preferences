@@ -221,9 +221,9 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             if UNESCAPED_PERCENT.search(expression.group(1)):
                 fail(r'Escape literal percent signs inside LaTeX as \%; bare % starts a TeX comment and can break rendering. Leave ordinary Markdown percentages unchanged.')
             if has_text_underscore(expression.group(1)):
-                fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and bold surrounding prose. Bare _ in text can expose red raw syntax.')
+                fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
             if has_unwrapped_underline(expression.group(1)):
-                fail(r'Do not hand-write \underline in reply prose. Use a short Markdown **bold clue** outside LaTeX instead.')
+                fail(r'Keep spaces inside an underline with \(\underline{\text{short clue}}\). Bare \underline{words with spaces} renders as space-free maths.')
             if prose_length(expression.group(1)) > MAX_PROSE_CHARACTERS:
                 fail('A LaTeX expression exceeds 64 approximate visible characters and may overflow. Shorten the styled cue and leave supporting prose in ordinary Markdown.')
         # Ordinary Markdown prose is the preferred companion to short styled
@@ -232,7 +232,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):
-            fail('Never use HTML <u> tags in a reply; Codex can display them literally. Use a short Markdown **bold clue** instead.')
+            fail(r'Never use HTML <u> tags in a reply; Codex can display them literally. Use \(\underline{\text{short clue}}\) instead.')
         matches = list(MARKER.finditer(line))
         plain = PLAIN_MARKER.match(line, len(line) - len(line.lstrip()))
         if plain:
