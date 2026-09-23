@@ -6,7 +6,7 @@ Use these recipes when drafting question reminders or when unsure about a recurr
 
 Use rainbow only for the short quoted user-question reminder above ⮑. Preserve the user's wording and perspective. Leave the full annotation/evidence block, source viewers, code, links, answer and About footer under their existing rules. These colours identify quoted context; they do not mean success, warning or failure. The quote is the explicit exception to semantic colour meanings and self-contained highlight chunks.
 
-Use exactly one colour per word, with this fixed 24-step lookup table. For each new quote, the helper reserves the next starting index from 0–23, then uses `(start_index + word_index) % 24`. Wrap from the last colour back to the first. Continue across spaces and line wraps without resetting. Short quotes show only part of the cycle; do not stretch a cycle to fill the text. Pink connects purple back to red.
+Use exactly one colour per word, with this fixed 24-step lookup table. For each new quote, the helper reserves the next starting index from 0–23, then uses `(start_index + word_index) % 24`. Wrap from the last colour back to the first. Short quotes show only part of the cycle; do not stretch a cycle to fill the text. Pink connects purple back to red.
 
 | Steps | Colours in order |
 | --- | --- |
@@ -15,7 +15,7 @@ Use exactly one colour per word, with this fixed 24-step lookup table. For each 
 | 13–18 | `#70fafa` → `#70d8fa` → `#70b5fa` → `#7093fa` → `#7070fa` → `#9370fa` |
 | 19–24 | `#b570fa` → `#d870fa` → `#fa70fa` → `#fa70d8` → `#fa70b5` → `#fa7093` |
 
-Use the helper to generate consecutive outer sans-serif `\(\textsf{...}\)` expressions of at most 64 visible characters for the short quote, with one `\color{#fa7070}{Word}` for each word. Ordinary spaces between chunks provide wrap points; this format does not promise whole-line triple-click selection. Do not hand-write these expressions, use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position. Keep every chunk concise because each outer expression does not wrap.
+Choose an exact, relevant excerpt of 40 visible characters or fewer, shorter in a narrow pane, so the rainbow reminder normally stays on one line. The helper rejects longer Markdown reminders before moving the colour counter. It produces a short sans-serif `\(\textsf{...}\)` expression with one `\color{#fa7070}{Word}` for each word. Do not force a long reminder onto one line with a no-wrap layout: that would clip in narrow panes. Do not hand-write these expressions, use per-letter markup or combine words into coloured phrases. Punctuation attached to a word stays with it; each whitespace-delimited word advances one palette position.
 
 Keep a single word, identifier or URL longer than 24 visible characters in inline code rather than a wide math box, and still advance the palette position for it. Prefer a genuinely shorter relevant excerpt to colouring a whole message. A helper avoids reconstructing syntax, but the emitted LaTeX still consumes output tokens; keep reminders short.
 
@@ -35,7 +35,7 @@ The general reply checker excludes quoted evidence, including historical broken 
 
 ### Different lengths
 
-These synthetic questions use the same word-by-word rhythm inside short selectable chunks. Keep each chunk within the 64-character guardrail.
+These synthetic questions show the word-by-word rhythm within the one-line reminder limit.
 
 ```latex
 > \(\textsf{\color{#fa7070}{Why?}}\)
@@ -46,7 +46,7 @@ These synthetic questions use the same word-by-word rhythm inside short selectab
 ```
 
 ```latex
-> \(\textsf{\color{#fa7070}{Can} \color{#fa9370}{you} \color{#fab570}{keep} \color{#fad870}{this} \color{#fafa70}{rainbow} \color{#d8fa70}{easy} \color{#b5fa70}{to} \color{#93fa70}{select?}}\)
+> \(\textsf{\color{#fa7070}{Can} \color{#fa9370}{you} \color{#fab570}{keep} \color{#fad870}{this} \color{#fafa70}{rainbow} \color{#d8fa70}{easy} \color{#b5fa70}{to} \color{#93fa70}{read?}}\)
 ```
 
 ## Other recurring choices

@@ -151,5 +151,26 @@ class RainbowQuotes(unittest.TestCase):
             self.assertIn(quote.PALETTE[0], blocks[1])
             self.assertEqual('2', state.read_text().strip())
 
+    def test_cli_rejects_long_reminder_before_reserving_batch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / 'first.txt'
+            second = Path(directory) / 'second.txt'
+            first.write_text('Can you check this?')
+            second.write_text('Could this entire long question be repeated across more than one line?')
+            state = Path(self.home.name)/'state/response-preferences/rainbow-next-index.txt'
+            result = subprocess.run(
+                ['python3', str(ROOT/'scripts/rainbow-quote.py'), str(first), str(second)],
+                text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
+            self.assertNotEqual(0, result.returncode)
+            self.assertEqual('', result.stdout)
+            self.assertIn('40 characters or fewer', result.stderr)
+            self.assertFalse(state.exists(), 'Invalid batch must not advance the palette')
+            second.write_text('Could this question wrap?')
+            result = subprocess.run(
+                ['python3', str(ROOT/'scripts/rainbow-quote.py'), str(first), str(second)],
+                text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual('2', state.read_text().strip())
+
 if __name__ == '__main__':
     unittest.main()
