@@ -24,7 +24,7 @@ Keep label, conjunctions and explanation ordinary. Respect other explicit silent
 - Read this core completely at task start, after compaction and after a style correction. If tool output is truncated, retrieve the missing ranges before writing; never treat a partial read as complete. Read it separately from large unrelated files.
 - Refresh the relevant rules before the final reply, not after an arbitrary number of messages. Older assistant replies are not the authority.
 - Before **every** message, check meaning, phase, markers, selected colours and short underlined clues. Short answers and clarification questions still follow the phase's style unless the user requests a conflicting exact format.
-- Keep underlines in working and final replies. Repeated red commands came from an unclosed outer `\textsf` font command, not from underlining itself. Do not hand-write `\textsf` in reply prose. Use the exact short `\(\underline{\text{clue with spaces}}\)` pattern below; `\text` preserves normal words and spaces without requesting a sans-serif font. Do not combine this underline expression with a colour expression. User correction — 2026-09-23.
+- Keep underlines in working and final replies. Repeated red commands came from combining an outer `\textsf` font command with an underline and missing the outer closing brace. Use `\textsf` for short non-underlined colour and About expressions, but never around or inside an underline. Use the exact short `\(\underline{\text{clue with spaces}}\)` pattern below; `\text` preserves the spaces. Ordinary Markdown prose already uses the app's sans-serif font. User clarification — 2026-09-23.
 - The bundled `scripts/check-reply.py` remains an optional diagnostic for a tricky draft or skill maintenance, not a step for every message. It detects syntax and structural mistakes but cannot make an agent use it or guarantee correct rendering. If red commands appear, inspect the exact emitted expression and compare it with the patterns below before changing the parser. User-requested simplification — 2026-09-22.
 - Recheck the actual draft: opening answer stands alone; underlined clues preserve subject and negatives; colours have complete meaning; outcomes are qualified; the final finger points to useful content; About covers the whole message.
 - Do not add or enable automatic reply repair, Stop-hook continuations, background enforcement, or cross-chat wakeups for these preferences. Harden the rules and check the draft before sending; formatting problems must not trigger another model turn. Existing notifications remain notification-only. Ethan explicitly rejected automatic repair as over-engineered; do not reintroduce it. User correction — 2026-09-20.
@@ -85,17 +85,17 @@ Keep colours outside Markdown links: follow a coloured skill name or file-relate
 
 ### Copy these exact colour patterns
 
-Use the complete short underline expression below for scanning. `\text{...}` preserves spaces; `\underline{...}` draws the line. It ends `}}\)`: one brace closes `\text`, one closes `\underline`. Do not add `\textsf`, hand-nest colour with underline, or colour whole paragraphs. User correction — 2026-09-23.
+Use the complete short underline expression below for scanning. `\text{...}` preserves spaces; `\underline{...}` draws the line. It ends `}}\)`: one brace closes `\text`, one closes `\underline`. For a separate non-underlined highlight, `\textsf{\color{#hex}...}` keeps the sans-serif font and ends `}\)`. Do not nest the two patterns or colour whole paragraphs. User clarification — 2026-09-23.
 
 ```latex
 The upload is \(\underline{\text{still pending}}\).
-\(\color{#ef4444}\text{The upload failed.}\)
-\(\color{#b8a4d9}\text{About: Checking the upload.}\) \(\color{#b8a4d9}\text{Retry after restarting.}\)
+\(\textsf{\color{#ef4444}The upload failed.}\)
+\(\textsf{\color{#b8a4d9}About: Checking the upload.}\) \(\textsf{\color{#b8a4d9}Retry after restarting.}\)
 ```
 
 Copy each complete pattern rather than assembling fragments or repairing its ending. Underline and colour stay in separate expressions. The final About expression is its own fixed pattern. Keep technical names, percentages and punctuation-heavy text in ordinary Markdown or inline code. If a short styled fragment must contain one, escape it as `C\#`, `54\%`, `sample\_tool`, `A \& B` or `\{name\}`. The `#` in a colour value stays unchanged.
 
-Use normal-size `\(\color{#67e8f9}\text{This viewer is a snapshot.}\)` for colour highlights. Skill names alone are the magenta `\textrm` exception.
+Use normal-size `\(\textsf{\color{#67e8f9}This viewer is a snapshot.}\)` for colour highlights. Skill names alone are the magenta `\textrm` exception.
 
 - **Red `#ef4444`:** critical, must-read information.
 - **Green `#22c55e`:** explicit confirmed success/status, including saved, committed, merged or deployed and successful manual tests. Colour the short outcome itself, not just its tick. Never colour automated tests, lint or equivalent routine checks green; never colour unfinished work green.
@@ -108,7 +108,7 @@ In working and final replies, keep literal technical names (`C#`, `sample_tool`)
 
 The optional diagnostic checker parses/renders explicit `\(...\)`, `\[...\]` and `$$...$$` expressions with bundled KaTeX, checks their delimiters, rejects response-formatting commands outside those delimiters, and rejects unsupported commands. This replaces reliance on isolated character rules. It requires Node.js on PATH (or an explicit `RESPONSE_PREFERENCES_NODE` executable); no npm install or network is needed in a copied skill. A missing/failed renderer is a failed diagnostic, never a pass. Correct that draft if you invoke it; ordinary Markdown remains the safe fallback. Parser success does not prove width, appearance or meaning in the client.
 
-**Write prose as ordinary Markdown around short expressions.** Use `\(\underline{\text{short useful words}}\)` for scanning and `\(\color{#67e8f9}\text{A complete short fact.}\)` when colour helps. A coloured sentence already carries the scanning message; do not repeat it solely to add an underline. Keep expressions short enough to fit, with ordinary spaces around them for wrapping. User correction — 2026-09-23.
+**Write prose as ordinary Markdown around short expressions.** Use `\(\underline{\text{short useful words}}\)` for scanning and the separate sans-serif `\(\textsf{\color{#67e8f9}A complete short fact.}\)` when colour helps. A coloured sentence already carries the scanning message; do not repeat it solely to add an underline. Keep expressions short enough to fit, with ordinary spaces around them for wrapping. User clarification — 2026-09-23.
 
 **Prefer a useful underlined clue in each assistant-authored prose sentence**, in working and final replies. A self-contained coloured sentence already supplies a scanning cue; do not duplicate it solely to satisfy this preference. The first underline in a paragraph or section names its concrete subject; later cues can give method, result, quantity or qualification. Preserve `not`, `only`, conditions and uncertainty. Do not underline whole sentences mechanically or filler words. User correction — 2026-09-23.
 
@@ -116,7 +116,7 @@ Underlines are scanning cues, not status or link markers. Preserve literal quota
 
 ## Closing reminder and notification
 
-End **only the final reply** with one lavender `#b8a4d9` **About:** reminder. Do not add About reminders to working commentary or progress updates. Split its two short sentences into `\(\color{#b8a4d9}\text{...}\)` chunks of at most 64 visible characters when needed. Use a concrete overall subject, then useful explanation/action/result/next step. Keep every expression within the 64-character guardrail and leave ordinary spaces between them. No bold, emoji, caret, link, heading or divider in this reminder. It comes after any applicable outstanding-item or environment footer and does not replace the question quote.
+End **only the final reply** with one lavender `#b8a4d9` **About:** reminder. Do not add About reminders to working commentary or progress updates. Split its two short sentences into sans-serif `\(\textsf{\color{#b8a4d9}...}\)` chunks of at most 64 visible characters when needed. Use a concrete overall subject, then useful explanation/action/result/next step. Keep every expression within the 64-character guardrail and leave ordinary spaces between them. No bold, emoji, caret, link, heading or divider in this reminder. It comes after any applicable outstanding-item or environment footer and does not replace the question quote.
 
 Native notifications are a separate optional installation. Read [notification details](references/style-reference.md#notification-summary) when preparing one. Its title condenses the user's actual request in their grammatical perspective; the body summarizes the whole response with a truthful approved status. No generic “open the task” text. Use the installed preparation helper and measured fit check; never put metadata in the reply or send duplicate manual notifications. If the integration is absent, skip preparation without installing it.
 
