@@ -12,8 +12,8 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
-    def test_short_plain_underlines_and_separate_sans_serif_colour(self):
-        good = (r'\(\huge\text{👉}\) The \(\underline{\text{Zapp app is ready}}\). '
+    def test_short_sans_serif_underlines_and_separate_colour(self):
+        good = (r'\(\huge\text{👉}\) The \(\underline{\textsf{Zapp app is ready}}\). '
                 r'\(\textsf{\color{#22c55e}The sign-in finished.}\)' + '\n\n'
                 r'\(\textsf{\color{#b8a4d9}About: Zapp setup.}\) '
                 r'\(\textsf{\color{#b8a4d9}The account is ready to use.}\)')
@@ -23,7 +23,7 @@ class ReplyChecks(unittest.TestCase):
 
     def test_simple_authoring_patterns_and_missing_outer_brace(self):
         good = [
-            r'The upload is \(\underline{\text{still pending}}\).',
+            r'The upload is \(\underline{\textsf{still pending}}\).',
             r'\(\textsf{\color{#ef4444}The upload failed.}\)',
             r'\(\textsf{\color{#67e8f9}Every dialog closes.}\)',
         ]

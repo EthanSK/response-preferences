@@ -61,19 +61,19 @@ These synthetic questions use the same word-by-word rhythm inside short selectab
 | Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
-For working and final replies, use `\(\underline{\text{short useful clue}}\)` for a short scanning cue. Do not put `\textsf` inside or around an underline; its extra nesting did not help Ethan's triple-click selection and added a brace to close. Keep normal-size markers in working updates. A selected non-underlined colour uses a separate sans-serif `\(\textsf{\color{#hex}Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. The earlier combined pattern is valid when complete, but is no longer the authoring recipe. User correction — 2026-09-23.
+For working and final replies, use `\(\underline{\textsf{short useful clue}}\)` for a short scanning cue. Keep its inner `\textsf` for the sans-serif font, but do not wrap the whole surrounding sentence or paragraph in another LaTeX expression for grouping. That extra wrapper did not give whole-line triple-click selection and can overflow. Keep normal-size markers in working updates. A selected non-underlined colour uses a separate sans-serif `\(\textsf{\color{#hex}Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. User clarification — 2026-09-23.
 
 ```latex
 \(\huge\text{✅}\) \(\textsf{\color{#22c55e}The change is saved.}\)
 
 \(\huge\text{ⓘ}\) \(\textsf{\color{#67e8f9}The quote shows your question.}\)
 
-\(\huge\text{🧪}\) The \(\underline{\text{formatter checks passed}}\), including `C#`, `54%` and `sample_tool`.
+\(\huge\text{🧪}\) The \(\underline{\textsf{formatter checks passed}}\), including `C#`, `54%` and `sample_tool`.
 
-\(\huge\text{👉}\) The \(\underline{\text{quote keeps your wording}}\). Its colours identify the question being answered.
+\(\huge\text{👉}\) The \(\underline{\textsf{quote keeps your wording}}\). Its colours identify the question being answered.
 
 \(\textsf{\color{#b8a4d9}About: Rainbow question reminders.}\) \(\textsf{\color{#b8a4d9}Short highlights wrap around ordinary prose.}\)
 ```
 
 
-For a working update, replace the enlarged marker with its plain Unicode symbol and omit the finger and About. Keep the short underline cue. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is \(\underline{\text{still pending}}\)” must not become a success cue merely because other work finished.
+For a working update, replace the enlarged marker with its plain Unicode symbol and omit the finger and About. Keep the short underline cue. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is \(\underline{\textsf{still pending}}\)” must not become a success cue merely because other work finished.
