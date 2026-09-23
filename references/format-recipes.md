@@ -61,18 +61,18 @@ These synthetic questions use the same word-by-word rhythm inside short selectab
 | Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
-For working and final replies, use `\(\underline{\text{short useful clue}}\)` for a short scanning cue. Keep normal-size markers in working updates. A selected colour uses a separate complete `\(\color{#hex}\text{Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. Do not hand-write `\textsf` or combine underline and colour in one expression. User correction — 2026-09-23.
+For working and final replies, use `\(\underline{\text{short useful clue}}\)` for a short scanning cue. Keep normal-size markers in working updates. A selected non-underlined colour uses a separate sans-serif `\(\textsf{\color{#hex}Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. Do not combine `\textsf` with an underline. User clarification — 2026-09-23.
 
 ```latex
-\(\huge\text{✅}\) \(\color{#22c55e}\text{The change is saved.}\)
+\(\huge\text{✅}\) \(\textsf{\color{#22c55e}The change is saved.}\)
 
-\(\huge\text{ⓘ}\) \(\color{#67e8f9}\text{The quote shows your question.}\)
+\(\huge\text{ⓘ}\) \(\textsf{\color{#67e8f9}The quote shows your question.}\)
 
 \(\huge\text{🧪}\) The \(\underline{\text{formatter checks passed}}\), including `C#`, `54%` and `sample_tool`.
 
 \(\huge\text{👉}\) The \(\underline{\text{quote keeps your wording}}\). Its colours identify the question being answered.
 
-\(\color{#b8a4d9}\text{About: Rainbow question reminders.}\) \(\color{#b8a4d9}\text{Short highlights wrap around ordinary prose.}\)
+\(\textsf{\color{#b8a4d9}About: Rainbow question reminders.}\) \(\textsf{\color{#b8a4d9}Short highlights wrap around ordinary prose.}\)
 ```
 
 

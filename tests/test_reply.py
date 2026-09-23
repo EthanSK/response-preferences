@@ -12,18 +12,18 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
-    def test_current_underlines_without_textsf_and_separate_colour(self):
+    def test_current_underlines_separate_from_sans_serif_colour(self):
         good = (r'\(\huge\text{👉}\) The \(\underline{\text{Zapp app is ready}}\). '
-                r'\(\color{#22c55e}\text{The sign-in finished.}\)' + '\n\n'
-                r'\(\color{#b8a4d9}\text{About: Zapp setup.}\) '
-                r'\(\color{#b8a4d9}\text{The account is ready to use.}\)')
+                r'\(\textsf{\color{#22c55e}The sign-in finished.}\)' + '\n\n'
+                r'\(\textsf{\color{#b8a4d9}About: Zapp setup.}\) '
+                r'\(\textsf{\color{#b8a4d9}The account is ready to use.}\)')
         self.assertEqual([], reply.check(good))
         broken = good.replace('Zapp app is ready}}\\)', 'Zapp app is ready}\\)')
         self.assertTrue(any('KaTeX parse error' in error for error in reply.check(broken)))
 
     def test_simple_authoring_patterns_and_missing_outer_brace(self):
         good = [
-            r'The upload is \(\textsf{\underline{still pending}.}\)',
+            r'The upload is \(\underline{\text{still pending}}\).',
             r'\(\textsf{\color{#ef4444}The upload failed.}\)',
             r'\(\textsf{\color{#67e8f9}Every dialog closes.}\)',
         ]

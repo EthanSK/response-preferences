@@ -36,7 +36,7 @@ UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
 
 
 def colour_spans(line):
-    """Return legacy highlights and the current one-brace text pattern."""
+    """Return supported highlights, including short sans-serif colour switches."""
     spans = [(m, m.group(1), m.group(2)) for m in COLOUR.finditer(line)]
     spans.extend((m, m.group(2), m.group(1)) for m in COLOUR_SWITCH.finditer(line))
     spans.extend((m, m.group(1), 'text') for m in COLOUR_TEXT.finditer(line))
