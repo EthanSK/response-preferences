@@ -12,13 +12,13 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
-    def test_current_bold_and_one_brace_colour_patterns(self):
-        good = (r'\(\huge\text{👉}\) The **Zapp app is ready**. '
+    def test_current_underlines_without_textsf_and_separate_colour(self):
+        good = (r'\(\huge\text{👉}\) The \(\underline{\text{Zapp app is ready}}\). '
                 r'\(\color{#22c55e}\text{The sign-in finished.}\)' + '\n\n'
                 r'\(\color{#b8a4d9}\text{About: Zapp setup.}\) '
                 r'\(\color{#b8a4d9}\text{The account is ready to use.}\)')
         self.assertEqual([], reply.check(good))
-        broken = good.replace('The sign-in finished.}\\)', 'The sign-in finished.\\)')
+        broken = good.replace('Zapp app is ready}}\\)', 'Zapp app is ready}\\)')
         self.assertTrue(any('KaTeX parse error' in error for error in reply.check(broken)))
 
     def test_simple_authoring_patterns_and_missing_outer_brace(self):
@@ -80,8 +80,8 @@ class ReplyChecks(unittest.TestCase):
         for draft in bad:
             with self.subTest(draft=draft):
                 errors = check_fragment(draft)
-                self.assertTrue(any(r'Do not hand-write \underline' in error for error in errors), errors)
-        good = [r'\(\underline{\textsf{All 110 repository tests passed}}\)',
+                self.assertTrue(any(r'Keep spaces inside an underline' in error for error in errors), errors)
+        good = [r'\(\underline{\text{All 110 repository tests passed}}\)',
                 r'\(\color{#67e8f9}{\textsf{Each \underline{rainbow block} differs.}}\)']
         for draft in good:
             with self.subTest(draft=draft):

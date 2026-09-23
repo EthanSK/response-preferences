@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650" role="img" aria-labelledby="title description">
   <title id="title">Response Preferences — the reply format in use</title>
-  <desc id="description">An example chat showing magenta skill names, a rainbow quoted question, a direct answer, bold scanning clues, planning and brainstorming, test results, green success, cyan information, orange caution, red critical text and a lavender closing topic reminder. The outcomes are examples, not real task results.</desc>
+  <desc id="description">An example chat showing magenta skill names, a rainbow quoted question, a direct answer, underlined scanning clues, planning and brainstorming, test results, green success, cyan information, orange caution, red critical text and a lavender closing topic reminder. The outcomes are examples, not real task results.</desc>
   <rect x="1" y="1" width="898" height="648" rx="16" fill="#101010" stroke="#363636"/>
   <path d="M1 51H899" stroke="#303030"/>
   <circle cx="25" cy="26" r="6" fill="#ff5f57"/>
@@ -15,22 +15,22 @@
     <text x="48" y="207"><tspan fill="#fa7070">What</tspan> <tspan fill="#fa9370">does</tspan> <tspan fill="#fab570">this</tspan> <tspan fill="#fad870">skill</tspan> <tspan fill="#fafa70">do</tspan> <tspan fill="#d8fa70">to</tspan> <tspan fill="#b5fa70">your</tspan> <tspan fill="#93fa70">replies?</tspan></text>
     <text x="32" y="259" font-size="38">⮑</text>
     <text x="78" y="254" font-size="29">👉</text>
-    <text x="120" y="253"><tspan font-weight="bold">Response Preferences</tspan> gives replies a consistent visual format:</text>
-    <text x="33" y="285">markers, colours, <tspan font-weight="bold">bold clues</tspan> and a closing topic line.</text>
+    <text x="120" y="253"><tspan text-decoration="underline">Response Preferences</tspan> gives replies a consistent visual format:</text>
+    <text x="33" y="285">markers, colours, <tspan text-decoration="underline">underlined clues</tspan> and a closing topic line.</text>
     <text x="33" y="331" font-size="27">✅</text>
-    <text x="76" y="328" fill="#22c55e"><tspan font-weight="bold">The example export</tspan> <tspan font-weight="bold">finished with no errors.</tspan></text>
+    <text x="76" y="328" fill="#22c55e"><tspan text-decoration="underline">The example export</tspan> <tspan text-decoration="underline">finished with no errors.</tspan></text>
     <text x="33" y="370" font-size="30">ⓘ</text>
-    <text x="76" y="367" fill="#67e8f9"><tspan font-weight="bold">This viewer</tspan> is a <tspan font-weight="bold">snapshot</tspan> of the file.</text>
+    <text x="76" y="367" fill="#67e8f9"><tspan text-decoration="underline">This viewer</tspan> is a <tspan text-decoration="underline">snapshot</tspan> of the file.</text>
     <text x="33" y="409" font-size="27">⚠️</text>
-    <text x="76" y="406" fill="#fb923c"><tspan font-weight="bold">The sample build</tspan> is <tspan font-weight="bold">still pending review.</tspan></text>
+    <text x="76" y="406" fill="#fb923c"><tspan text-decoration="underline">The sample build</tspan> is <tspan text-decoration="underline">still pending review.</tspan></text>
     <text x="33" y="448" font-size="27">⚠️</text>
-    <text x="76" y="445" fill="#ef4444"><tspan font-weight="bold">Save the project</tspan> before restarting.</text>
+    <text x="76" y="445" fill="#ef4444"><tspan text-decoration="underline">Save the project</tspan> before restarting.</text>
     <text x="33" y="487" font-size="27">🛠️</text>
-    <text x="76" y="484"><tspan font-weight="bold">Install the skill</tspan>, try a reply, then adjust the markers.</text>
+    <text x="76" y="484"><tspan text-decoration="underline">Install the skill</tspan>, try a reply, then adjust the markers.</text>
     <text x="33" y="526" font-size="27">🧪</text>
-    <text x="76" y="523"><tspan font-weight="bold">27 unit tests passed</tspan>, but <tspan font-weight="bold">marker sizing is not covered.</tspan></text>
+    <text x="76" y="523"><tspan text-decoration="underline">27 unit tests passed</tspan>, but <tspan text-decoration="underline">marker sizing is not covered.</tspan></text>
     <text x="33" y="562" font-size="15" fill="#8d8d8d">Example sentences only, not real results. Click this preview to explore the full format.</text>
     <text x="33" y="593" fill="#b8a4d9">About: the response format.</text>
-    <text x="33" y="624" fill="#b8a4d9">Markers, colours and bold cues help you scan the reply.</text>
+    <text x="33" y="624" fill="#b8a4d9">Markers, colours and underlines help you scan the reply.</text>
   </g>
 </svg>

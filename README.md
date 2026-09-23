@@ -1,14 +1,14 @@
 # Response Preferences<br>⮑ 🛠️ 🧪 🖥️ ✅ ❌ 👀 🐌 🐞 ⓘ 👉 🫵 🤨 ⚠️ ❓ 💡 ⚖️ ⛔ 🧠 ➕➕
 
-[![Example Codex reply: magenta skill names, planning, test results, green success, cyan information, orange caution, red critical text, bold scanning clues and a lavender topic reminder.](docs/readme-preview.svg)](https://ethansk.github.io/response-preferences/)
+[![Example Codex reply: magenta skill names, planning, test results, green success, cyan information, orange caution, red critical text, underlined scanning clues and a lavender topic reminder.](docs/readme-preview.svg)](https://ethansk.github.io/response-preferences/)
 
-A personal Codex skill for **how replies are written**. Fixed emoji meanings, coloured highlights, bold scanning cues, original-message context, and a local Markdown/code editor.
+A personal Codex skill for **how replies are written**. Fixed emoji meanings, coloured highlights, underlined scanning cues, original-message context, and a local Markdown/code editor.
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
 Created from Ethan's preferences, shared so you can use or adapt them. The website presents the examples inside a smaller Codex-style window on a macOS desktop: a task sidebar, compact title bar, centered conversation, source/details panel and bottom composer. It is an independent, interactive demonstration—not the Codex app—and does not run an AI.
 
-Six example conversations introduce the skill, guide installation and customisation, explain the response format, demonstrate file/context links, and show successful and failed tasks. Together they demonstrate all 20 global markers, the full colour palette, bold scanning clues, quoted questions and closing topic reminders. The home chat previews the full range straight away: working and final markers, all 20 meanings, colours, bold cues, section carets, tables, file and message links, annotations and optional notification summaries. The guide sits on a macOS Tahoe desktop with Ethan’s app icons and menu-bar apps recovered from his ultrawide reference. Dock icons open each app’s public website; menu-bar app icons open Menu Bar Dock, which supplies the app strip. Hover or focus an icon to see its destination. The **Apps in this setup** directory keeps every app reachable on small screens and links the wallpaper. Personal folders and the local-only media-key helper are omitted. The window has standard macOS traffic lights, reversible preview controls and keyboard-accessible navigation. Click a marker for a compact explanation that keeps the chat in place, or open a file in the working Markdown/code editor. Copy an installation prompt, manual commands or a question for your own agent; this website does not contact a model or install anything itself.
+Six example conversations introduce the skill, guide installation and customisation, explain the response format, demonstrate file/context links, and show successful and failed tasks. Together they demonstrate all 20 global markers, the full colour palette, underlined scanning clues, quoted questions and closing topic reminders. The home chat previews the full range straight away: working and final markers, all 20 meanings, colours, underlines, section carets, tables, file and message links, annotations and optional notification summaries. The guide sits on a macOS Tahoe desktop with Ethan’s app icons and menu-bar apps recovered from his ultrawide reference. Dock icons open each app’s public website; menu-bar app icons open Menu Bar Dock, which supplies the app strip. Hover or focus an icon to see its destination. The **Apps in this setup** directory keeps every app reachable on small screens and links the wallpaper. Personal folders and the local-only media-key helper are omitted. The window has standard macOS traffic lights, reversible preview controls and keyboard-accessible navigation. Click a marker for a compact explanation that keeps the chat in place, or open a file in the working Markdown/code editor. Copy an installation prompt, manual commands or a question for your own agent; this website does not contact a model or install anything itself.
 
 This is a set of agent instructions with helper scripts, not a modification of the Codex app. It cannot guarantee that a model always follows the format.
 
@@ -16,11 +16,11 @@ This is a set of agent instructions with helper scripts, not a modification of t
 
 | Feature | Behaviour |
 | --- | --- |
-| Working versus final replies | Working updates use plain Markdown prose and normal-size markers, including 🧠. Final replies use enlarged markers, selected colour and bold scanning cues. |
+| Working versus final replies | Working updates use normal-size markers, including 🧠, and short underlined cues. Final replies use enlarged markers, selected colour and underlined scanning cues. |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. Only user-approved project mappings may extend it; no arbitrary emoji additions. |
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
 | Closing topic reminder | Only the final assistant reply ends with a muted-lavender (`#b8a4d9`) `About:` reminder: a brief overall summary, then a second short sentence explaining the specific action, problem or next step for returning readers. It comes after actions and other closing details; the relevant question above each answer stays in place. |
-| Sentence scanning | Prefers a short useful bold clue in final prose sentences. A self-contained coloured sentence already serves as a scanning cue. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
+| Sentence scanning | Prefers a short useful underlined clue in working and final prose sentences. A self-contained coloured sentence already serves as a scanning cue. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
 | Computer Use | 🖥️ for manual browser/app interaction, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
 | Context above answers | Shows the question being answered in a rainbow blockquote above the direct-answer arrow, preserving your wording. One colour per word sits inside short selectable chunks that can wrap; a fixed 24-colour cycle keeps agents from reinventing the format. |
@@ -28,7 +28,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
 | Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
 | Code editor | CodeMirror provides syntax highlighting, line numbers, search/replace, undo/redo and bracket matching. Preview, edit and split views. |
-| Scannable tables | Colours important rows using the existing meanings: cyan for useful highlights, red for critical errors, orange for caveats and green for confirmed success. Bolds key words, keeps routine rows neutral and wording short, and uses approved category markers when helpful. |
+| Scannable tables | Colours important rows using the existing meanings: cyan for useful highlights, red for critical errors, orange for caveats and green for confirmed success. Underlines key words, keeps routine rows neutral and wording short, and uses approved category markers when helpful. |
 | Annotation context | Keeps **Problem at hand**, **Earlier response** and **Your annotation**, then the short rainbow question and answer. These layers work together even in follow-up clarifications; native popups do not replace them. The checker rejects missing labelled context. |
 | Notification wording | Defines short, complete notification summaries. Native notification delivery is an optional **separate** integration. |
 
@@ -81,11 +81,11 @@ Markers stay inline for a single line or short statement. For sections spanning 
 
 Read each highlighted clause or sentence on its own: it should make sense without the uncoloured words before or after it. This applies to all four highlight colours; magenta skill names keep their separate name-only styling.
 
-Codex treats each inline LaTeX expression as an unbreakable box. Ethan verified continuous selection in one coloured expression, then showed that whole-paragraph boxes still overflow. Hand-written nested `\textsf` and `\underline` repeatedly produced missing braces and red commands, even after examples were simplified. Working updates now use plain Markdown; final replies use Markdown bold for scanning and only short, selected colour expressions. Keep each expression below 64 approximate visible characters. The generated rainbow question is a separate helper-produced exception.
+Codex treats each inline LaTeX expression as an unbreakable box. Ethan verified continuous selection in one coloured expression, then showed that whole-paragraph boxes still overflow. Hand-written nested `\textsf` and `\underline` repeatedly produced missing braces and red commands, even after examples were simplified. Working and final replies keep short underlined scanning cues, without the explicit sans-serif font command, and use separate short colour expressions. Keep each expression below 64 approximate visible characters. The generated rainbow question is a separate helper-produced exception.
 
-Keep literal names such as `C#` and `sample_tool` in ordinary text or inline code, with short bold scanning cues nearby in final replies. Write percentages outside the LaTeX box too. If they must be coloured, escape the text as `C\#`, `sample\_tool`, `54\%` or `A \& B`. This applies to coloured text and About reminders.
+Keep literal names such as `C#` and `sample_tool` in ordinary text or inline code, with short underlined scanning cues nearby. Write percentages outside the LaTeX box too. If they must be coloured, escape the text as `C\#`, `sample\_tool`, `54\%` or `A \& B`. This applies to coloured text and About reminders.
 
-Start with the [copyable colour patterns](SKILL.md#copy-these-exact-colour-patterns): a cue uses Markdown `**bold**`, colour uses `\(\color{#67e8f9}\text{A complete short fact.}\)`, and About uses the same simple form in lavender. The checker remains an optional diagnostic for tricky expressions or skill maintenance. It validates syntax with bundled KaTeX but cannot guarantee agent obedience or the app’s layout. Annotation replies still require their labelled context, rainbow question and native reference. Automatic reply repair is not used.
+Start with the [copyable colour patterns](SKILL.md#copy-these-exact-colour-patterns): a cue uses `\(\underline{\text{short clue}}\)`, colour uses `\(\color{#67e8f9}\text{A complete short fact.}\)`, and About uses the same simple form in lavender. The checker remains an optional diagnostic for tricky expressions or skill maintenance. It validates syntax with bundled KaTeX but cannot guarantee agent obedience or the app’s layout. Annotation replies still require their labelled context, rainbow question and native reference. Automatic reply repair is not used.
 
 Selected final highlights use `\color{#hex}\text{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
@@ -95,11 +95,11 @@ Final successful completion statements use green, including **committed, merged,
 
 Projects can list additional user-approved emoji meanings in their existing instructions. Apply only the relevant project’s mappings; do not invent any or override global meanings without explicit approval. Pass approved extra symbols to the reply checker with repeatable `--approved-project-marker` flags. 🖥️ is global.
 
-## Bold cues for scanning
+## Underlines for scanning
 
-Prefer a short bold clue in final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first bold clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as **not uploaded** or **after restarting**. Avoid filler and whole-sentence bolding. Exact quotations, code, paths and link labels stay intact.
+Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\text{not uploaded}}\)` or `\(\underline{\text{after restarting}}\)`. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
 
-Write the surrounding sentence as ordinary Markdown. For example: `The backup is **not uploaded**.` or `The **review needs a project** written in` `C#`. Colour highlights use a separate short expression; do not hand-nest colour and underline. The website displays bold cues; never paste raw `<u>` tags into an assistant reply.
+Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\text{not uploaded}}\).` or `The \(\underline{\text{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; do not hand-nest colour and underline. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
 
 ## Generate a viewer
 
@@ -140,7 +140,7 @@ Notifications lead with a short version of your request, in your wording and per
 
 ## Keeping the format consistent
 
-The everyday pattern is deliberately small: write normal Markdown, use `**a useful clue**` in final prose, and use `\(\color{#67e8f9}\text{A complete short fact.}\)` for a selected colour highlight. Leave surrounding prose, links, code and technical names in Markdown so they wrap naturally. Do not hand-write `\textsf` or `\underline` in replies. The final `About:` reminder and generated rainbow question retain their own fixed patterns.
+The everyday pattern is deliberately small: write normal Markdown, use `\(\underline{\text{a useful clue}}\)` in working and final prose, and use `\(\color{#67e8f9}\text{A complete short fact.}\)` for a selected colour highlight. Leave surrounding prose, links, code and technical names in Markdown so they wrap naturally. Do not hand-write `\textsf` in replies; keep underlines with the exact `\underline{\text{...}}` pattern. The final `About:` reminder and generated rainbow question retain their own fixed patterns.
 
 The bundled checker remains available when diagnosing a tricky expression or maintaining the skill:
 

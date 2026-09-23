@@ -1,6 +1,6 @@
 ---
 name: response-preferences
-description: Apply Ethan's response preferences, including section emojis, colours, bold scanning cues, and clickable references, to assistant commentary and final replies. Use for every task when composing responses to Ethan, and when he asks to revise these response preferences. These rules govern assistant replies, not product UI or quoted source text.
+description: Apply Ethan's response preferences, including section emojis, colours, underlined scanning cues, and clickable references, to assistant commentary and final replies. Use for every task when composing responses to Ethan, and when he asks to revise these response preferences. These rules govern assistant replies, not product UI or quoted source text.
 ---
 
 # Response Preferences
@@ -23,11 +23,10 @@ Keep label, conjunctions and explanation ordinary. Respect other explicit silent
 
 - Read this core completely at task start, after compaction and after a style correction. If tool output is truncated, retrieve the missing ranges before writing; never treat a partial read as complete. Read it separately from large unrelated files.
 - Refresh the relevant rules before the final reply, not after an arbitrary number of messages. Older assistant replies are not the authority.
-- Before **every** message, check meaning, phase and markers. Check selected colours and short scanning cues in final replies. Short answers and clarification questions still follow the phase's style unless the user requests a conflicting exact format.
-- Write working commentary in plain Markdown prose with normal-size Unicode markers. The fixed magenta skill-name announcement is the only working-message LaTeX exception. Repeated missing-brace errors came from hand-writing nested `\textsf` underlines during quick progress updates even after the skill supplied correct examples. User correction — 2026-09-23, from the live Compare Zap and Deliveroo task.
-- Do not hand-write `\textsf` or `\underline` in assistant prose. They are unnecessary for the message: use a short **bold clue** in final prose instead. Keep ordinary prose in Markdown and use only selected short colour expressions from the simple `\text` pattern below. This retires the error-prone nested wrapper while preserving coloured outcomes, the generated rainbow question and the lavender final reminder. User correction — 2026-09-23.
+- Before **every** message, check meaning, phase, markers, selected colours and short underlined clues. Short answers and clarification questions still follow the phase's style unless the user requests a conflicting exact format.
+- Keep underlines in working and final replies. Repeated red commands came from an unclosed outer `\textsf` font command, not from underlining itself. Do not hand-write `\textsf` in reply prose. Use the exact short `\(\underline{\text{clue with spaces}}\)` pattern below; `\text` preserves normal words and spaces without requesting a sans-serif font. Do not combine this underline expression with a colour expression. User correction — 2026-09-23.
 - The bundled `scripts/check-reply.py` remains an optional diagnostic for a tricky draft or skill maintenance, not a step for every message. It detects syntax and structural mistakes but cannot make an agent use it or guarantee correct rendering. If red commands appear, inspect the exact emitted expression and compare it with the patterns below before changing the parser. User-requested simplification — 2026-09-22.
-- Recheck the actual draft: opening answer stands alone; bold clues preserve subject and negatives; colours have complete meaning; outcomes are qualified; the final finger points to useful content; About covers the whole message.
+- Recheck the actual draft: opening answer stands alone; underlined clues preserve subject and negatives; colours have complete meaning; outcomes are qualified; the final finger points to useful content; About covers the whole message.
 - Do not add or enable automatic reply repair, Stop-hook continuations, background enforcement, or cross-chat wakeups for these preferences. Harden the rules and check the draft before sending; formatting problems must not trigger another model turn. Existing notifications remain notification-only. Ethan explicitly rejected automatic repair as over-engineered; do not reintroduce it. User correction — 2026-09-20.
 - Explicit exact-format requests override styling. A complaint about broken formatting is not permission to drop the style: identify the actual conflicting output instruction before making an exception. No hook exemption record is needed.
 
@@ -59,14 +58,14 @@ Prefer the specific scenario over generic information/activity/results. 🧪 tak
 
 ## Phase and placement
 
-- **Working commentary:** plain Markdown prose with no LaTeX underlines or colour highlights. Markers are plain Unicode at normal text size, including 🧠. The fixed magenta skill name remains the only styled exception. No attention fingers. A multi-block section begins `ⓘ ⌄`; an inline marker has no caret.
+- **Working commentary:** ordinary Markdown prose around short underlined clues and selected colour highlights. Markers are plain Unicode at normal text size, including 🧠. No attention fingers. A multi-block section begins `ⓘ ⌄`; an inline marker has no caret.
 - **Final reply:** enlarge section markers only, with lowercase `\huge`, e.g. `\(\huge\text{✅}\)`. Keep prose normal size. Normal table-cell markers and exact quotations/code remain unchanged.
 - A short statement keeps its marker inline, first and left-aligned. A multi-paragraph/block section starts with the emoji plus `\(\raisebox{0.3em}{\Large\text{⌄}}\)` on its own left-aligned line. The chevron is smaller, vertically raised, naturally proportioned, and only a visual cue. No old tiny `▾`, mathematical `∨`, centring, indentation or trailing markers.
 - **⮑ always stays beside the opening answer**, even with a table/list/code block below; never alone and never with a caret.
 - Start a new marker when purpose changes; a success marker does not cover later explanation or cautions. Consecutive content with the same purpose shares its marker.
 - **Final replies normally have one attention finger:** favour 🫵 when the message requires something from the user or it is their turn next; favour 👉 when it mainly says “here is the main information”. These are tendencies to skew the choice, not absolute rules; use judgment in context. Two only for distinct important items. Neither appears in commentary. Never invent a user action or isolate a finger after the content. 👉 can follow a semantic marker as an explicit placement exception, but never has a caret.
 - Use approved status/category emojis in tables when grouping helps; keep the wording beside them, group related rows where sensible, preserve meaningful ranking/order, and avoid decoration in every cell. Table formatting is not a preference to use tables everywhere.
-- Whenever giving a table, colour-code its important rows using the existing meanings: cyan for useful information that should stand out, red for critical errors or must-read problems, orange for warnings/caveats, and green for confirmed success (never routine automated checks). Colour the meaningful text in the important cells and bold the key words so the reader knows where to look; keep routine rows neutral, wording short, and existing order/grouping intact. Do not invent an error or force every colour into a table. Before sending, scan only the coloured and bold cells and check that they convey the main distinctions, including negatives and limitations. This applies to compact table values too. Original table request — 2026-09-21; emphasis method changed by user correction — 2026-09-23.
+- Whenever giving a table, colour-code its important rows using the existing meanings: cyan for useful information that should stand out, red for critical errors or must-read problems, orange for warnings/caveats, and green for confirmed success (never routine automated checks). Colour the meaningful text in the important cells and underline the key words so the reader knows where to look; keep routine rows neutral, wording short, and existing order/grouping intact. Do not invent an error or force every colour into a table. Before sending, scan only the coloured and underlined cells and check that they convey the main distinctions, including negatives and limitations. This applies to compact table values too. User correction — 2026-09-23.
 
 ## Question context and links
 
@@ -86,15 +85,15 @@ Keep colours outside Markdown links: follow a coloured skill name or file-relate
 
 ### Copy these exact colour patterns
 
-Use Markdown **bold** for short scanning cues. Do not use LaTeX for underlining or font changes in prose. Use these complete colour-only expressions when a selected outcome needs colour. `\text{...}` preserves spaces; the colour switch is outside it, so each expression has one closing brace before `\)`. Do not assemble fragments or colour whole paragraphs. User correction — 2026-09-23.
+Use the complete short underline expression below for scanning. `\text{...}` preserves spaces; `\underline{...}` draws the line. It ends `}}\)`: one brace closes `\text`, one closes `\underline`. Do not add `\textsf`, hand-nest colour with underline, or colour whole paragraphs. User correction — 2026-09-23.
 
 ```latex
-The upload is **still pending**.
+The upload is \(\underline{\text{still pending}}\).
 \(\color{#ef4444}\text{The upload failed.}\)
 \(\color{#b8a4d9}\text{About: Checking the upload.}\) \(\color{#b8a4d9}\text{Retry after restarting.}\)
 ```
 
-Copy each complete pattern rather than assembling fragments or repairing its ending. The final About expression is its own fixed pattern. Keep technical names, percentages and punctuation-heavy text in ordinary Markdown or inline code. If a short coloured fragment must contain one, escape it as `C\#`, `54\%`, `sample\_tool`, `A \& B` or `\{name\}`. The `#` in a colour value stays unchanged.
+Copy each complete pattern rather than assembling fragments or repairing its ending. Underline and colour stay in separate expressions. The final About expression is its own fixed pattern. Keep technical names, percentages and punctuation-heavy text in ordinary Markdown or inline code. If a short styled fragment must contain one, escape it as `C\#`, `54\%`, `sample\_tool`, `A \& B` or `\{name\}`. The `#` in a colour value stays unchanged.
 
 Use normal-size `\(\color{#67e8f9}\text{This viewer is a snapshot.}\)` for colour highlights. Skill names alone are the magenta `\textrm` exception.
 
@@ -105,15 +104,15 @@ Use normal-size `\(\color{#67e8f9}\text{This viewer is a snapshot.}\)` for colou
 
 A coloured span must make sense from its first word without surrounding text. Keep each colour highlight short and self-contained. Codex treats each KaTeX expression as an unbreakable selection box, so leave the rest of the sentence as wrapping Markdown. Keep every expression below 64 approximate visible characters; split a long highlight into separate short thoughts or leave it uncoloured. Preserve essential negatives and conditions.
 
-In final replies, keep literal technical names (`C#`, `sample_tool`), percentages, paths and other punctuation-heavy text in ordinary Markdown or inline code. For example: `The **review needs a project** written in` `C#`. If literal text must be coloured, escape TeX-special characters in its text argument. Never blanket-escape a finished expression: colour values, commands and braces have their own syntax. Working updates keep all of this in Markdown.
+In working and final replies, keep literal technical names (`C#`, `sample_tool`), percentages, paths and other punctuation-heavy text in ordinary Markdown or inline code. For example: `The \(\underline{\text{review needs a project}}\) written in` `C#`. If literal text must be styled, escape TeX-special characters in its text argument. Never blanket-escape a finished expression: colour values, commands and braces have their own syntax.
 
 The optional diagnostic checker parses/renders explicit `\(...\)`, `\[...\]` and `$$...$$` expressions with bundled KaTeX, checks their delimiters, rejects response-formatting commands outside those delimiters, and rejects unsupported commands. This replaces reliance on isolated character rules. It requires Node.js on PATH (or an explicit `RESPONSE_PREFERENCES_NODE` executable); no npm install or network is needed in a copied skill. A missing/failed renderer is a failed diagnostic, never a pass. Correct that draft if you invoke it; ordinary Markdown remains the safe fallback. Parser success does not prove width, appearance or meaning in the client.
 
-**Write final prose as ordinary Markdown.** Use `**short useful words**` for scanning and `\(\color{#67e8f9}\text{A complete short fact.}\)` when colour helps. A coloured sentence already carries the scanning message; do not duplicate it solely to add bold. Keep expressions short enough to fit, with ordinary spaces around them for wrapping. This preserves the useful outcome of the 2026-09-19 overflow and selection trials without forcing every word into unbreakable boxes. User correction — 2026-09-23.
+**Write prose as ordinary Markdown around short expressions.** Use `\(\underline{\text{short useful words}}\)` for scanning and `\(\color{#67e8f9}\text{A complete short fact.}\)` when colour helps. A coloured sentence already carries the scanning message; do not repeat it solely to add an underline. Keep expressions short enough to fit, with ordinary spaces around them for wrapping. User correction — 2026-09-23.
 
-**Prefer a useful bold clue in each assistant-authored final prose sentence.** A self-contained coloured sentence already supplies a scanning cue; do not duplicate it solely to satisfy this preference. The first bold clue in a paragraph or section names its concrete subject; later cues can give method, result, quantity or qualification. Preserve `not`, `only`, conditions and uncertainty. Do not bold whole sentences mechanically or filler words. Working commentary stays plain. User correction — 2026-09-23.
+**Prefer a useful underlined clue in each assistant-authored prose sentence**, in working and final replies. A self-contained coloured sentence already supplies a scanning cue; do not duplicate it solely to satisfy this preference. The first underline in a paragraph or section names its concrete subject; later cues can give method, result, quantity or qualification. Preserve `not`, `only`, conditions and uncertainty. Do not underline whole sentences mechanically or filler words. User correction — 2026-09-23.
 
-Bold is a scanning cue, not a status or link marker. Preserve literal quotations, reminders, source text, code, paths, URLs and link labels. Labels/headings/marker-only lines need no bold; important compact table values follow the table scanning rule above, and prose sentences in tables/lists retain useful cues. These rules style assistant replies, not ordinary product UI or documentation. Never emit `<u>` or `</u>` in an assistant reply: Codex can display those tags literally. User correction — 2026-09-23.
+Underlines are scanning cues, not status or link markers. Preserve literal quotations, reminders, source text, code, paths, URLs and link labels. Labels/headings/marker-only lines need no underline; important compact table values follow the table scanning rule above, and prose sentences in tables/lists retain useful cues. These rules style assistant replies, not ordinary product UI or documentation. Never emit `<u>` or `</u>` in an assistant reply: Codex can display those tags literally. User correction — 2026-09-23.
 
 ## Closing reminder and notification
 
