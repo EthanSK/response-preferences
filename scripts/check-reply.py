@@ -219,7 +219,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             errors.append(f'Line {number}: {message}')
         for expression in INLINE_MATH.finditer(line):
             if UNESCAPED_PERCENT.search(expression.group(1)):
-                fail(r'Escape literal percent signs inside LaTeX as \%; bare % starts a TeX comment and can break rendering. Leave ordinary Markdown percentages unchanged.')
+                fail(r'Bare % inside LaTeX starts a TeX comment and breaks the expression, even in phrases like 100% sure. Reword the cue or move the percentage into ordinary Markdown; escape it as \% only when it must be styled.')
             if has_text_underscore(expression.group(1)):
                 fail(r'Escape literal underscores in LaTeX text as \_, or keep identifiers in ordinary inline code and underline surrounding prose. Bare _ in text can expose red raw syntax.')
             if has_unwrapped_underline(expression.group(1)):
