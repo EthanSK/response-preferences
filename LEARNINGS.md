@@ -89,6 +89,10 @@ Combine style and notification repair into one bound. After it is exhausted, cos
 KaTeX 0.16.22 rejects an underlined text expression containing a bare percent sign because it starts a TeX comment and consumes closing syntax. Escaping the percent sign renders successfully. The previous structural checker returned no errors for this failure. Reject unescaped percent signs inside inline math, counting backslash parity, while preserving ordinary Markdown, quoted evidence, URLs and code examples. The automatic completion guard imports the same checker and must catch the failure too. This adds a specific regression check, not a full TeX parser.
 
 
+## Everyday percentages and hidden delimiters
+
+On 2026-09-24 a Codex reply emitted `\(\underline{\textsf{not 100% sure}}\)`. Codex showed `\underline{\textsf{not 100% sure}}` in red without the surrounding delimiters, and two follow-up diagnoses wrongly blamed missing delimiters. The raw session JSONL showed both delimiters were present; the bare `%` alone broke the expression. The existing percentage rule was framed around technical names, so an everyday phrase slipped through. The rule is now a bold hard rule beside the copyable patterns and part of the pre-send recheck, with rewording preferred over escaping. When diagnosing red raw text, read the emitted text in the session log rather than inferring from the rendered screenshot.
+
 ## Literal underscores in text wrappers
 
 KaTeX 0.16.22 renders `\underline{\textsf{sample_tool instructions}}` as a red error because `_` is a math subscript operator, invalid in text mode. Escaping it as `\_` succeeds. The percentage guard and freshly read rules did not catch this separate character: the original exact draft still passed. Check literal underscores in text-mode arguments, including nested underlines, while allowing escaped underscores, ordinary code/quotes/URLs and real math subscripts such as `x_i\text{ items}`. Prefer identifiers in ordinary inline code, with readable scanning cues around them. This is a specific authoring guard, not a complete TeX parser.
