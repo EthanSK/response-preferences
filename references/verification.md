@@ -82,6 +82,8 @@ The full annotation context and short reminder are both required. Keep them as d
 \(\huge\text{⮑}\) The **short question stays below the full context**, directly above the answer.
 ```
 
+For an Agent Flow code selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, verify that the response keeps all three fields: `Problem at hand` names worker selection, `Earlier response` quotes the code and identifies its app/file source, and `Your annotation` quotes “Why this limit?”. Repeat with coloured/escaped `app_selection` text and without a native annotation directive. The short rainbow reminder alone fails this check. An unrelated reading highlight and an ordinary standalone question must not acquire invented annotations. This is a manual semantic check; a structural checker cannot infer the omitted source context. User-requested hardening — 2026-09-27.
+
 The opening link must point to the real original-message viewer; the path above is illustrative. Include each real annotation’s required inline directive with its answer. Do not underline or paraphrase the exact earlier-response and annotation quotations.
 
 ## Attention finger coverage
