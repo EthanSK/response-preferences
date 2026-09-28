@@ -4,7 +4,7 @@ import tempfile
 import unittest
 spec=importlib.util.spec_from_file_location('reply',Path(__file__).resolve().parents[1]/'scripts/check-reply.py')
 reply=importlib.util.module_from_spec(spec);spec.loader.exec_module(reply)
-TOPIC = r'\(\color{#b8a4d9}{\textsf{About: the requested file change and its current status.}}\)'
+TOPIC = r'\(\color{#b8a4d9}{\textsf{About: requested file change. Its current status is covered.}}\)'
 def check_message(text, **kwargs):
     return reply.check(text if kwargs.get('commentary') else text+'\n\n'+TOPIC, **kwargs)
 
@@ -12,6 +12,106 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_short_sans_serif_underlines_and_separate_colour(self):
+        good = (r'\(\huge\text{👉}\) The \(\underline{\textsf{Zapp app is ready}}\). '
+                r'\(\textsf{\color{#22c55e}The sign-in finished.}\)' + '\n\n'
+                r'\(\textsf{\color{#b8a4d9}About: Zapp setup.}\) '
+                r'\(\textsf{\color{#b8a4d9}The account is ready to use.}\)')
+        self.assertEqual([], reply.check(good))
+        broken = good.replace('Zapp app is ready}}\\)', 'Zapp app is ready}\\)')
+        self.assertTrue(any('KaTeX parse error' in error for error in reply.check(broken)))
+
+    def test_simple_authoring_patterns_and_missing_outer_brace(self):
+        good = [
+            r'The upload is \(\underline{\textsf{still pending}}\).',
+            r'\(\textsf{\color{#ef4444}The upload failed.}\)',
+            r'\(\textsf{\color{#67e8f9}Every dialog closes.}\)',
+        ]
+        for draft in good:
+            with self.subTest(draft=draft):
+                self.assertEqual([], check_fragment(draft))
+        broken = good[-1].replace(r'.}\)', r'.\)')
+        self.assertTrue(any('KaTeX parse error' in e for e in check_fragment(broken)))
+
+    def test_simple_topic_and_skill_name_patterns(self):
+        topic = r'\(\textsf{\color{#b8a4d9}About: fixing the export.}\) \(\textsf{\color{#b8a4d9}Restart the app, then retry.}\)'
+        self.assertEqual([], reply.check(r'\(\huge\text{👉}\) The export fix is ready.\n\n'.replace(r'\n', '\n') + topic))
+        empty = r'\(\textsf{\color{#b8a4d9}About: }\)'
+        self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.\n\n'.replace(r'\n', '\n') + empty))
+        with tempfile.TemporaryDirectory() as directory:
+            viewer = Path(directory) / 'skill.html'
+            viewer.write_text('example')
+            skill = rf'\(\huge\text{{🧠}}\) **Skill use:** \(\textrm{{\color{{magenta}}skill-creator}}\) [↗]({viewer}) — update the skill.'
+            self.assertEqual([], check_fragment(skill))
+
+    def test_annotation_context_and_rainbow_question_are_both_required(self):
+        context = '> **Problem at hand:** A hidden page changes the visible URL.\n> **Earlier response:** The callback clears the selector.\n> **Your annotation:** Why can another page change it?\n\n'
+        answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
+        self.assertEqual([], check_fragment(context + answer))
+        for label in reply.ANNOTATION_CONTEXT_LABELS:
+            broken = '\n'.join(line for line in context.splitlines() if label not in line) + '\n\n' + answer
+            self.assertTrue(any(label in error for error in check_fragment(broken)))
+        self.assertTrue(any('Problem at hand' in error for error in check_fragment(answer)))
+
+    def test_grouped_annotations_keep_one_context_per_distinct_annotation(self):
+        context = '> Problem at hand: A route callback.\n> Earlier response: It edits the URL.\n> Your annotation: Why?\n\n'
+        answer = '> Why?\n\n' + r'\(\huge\text{⮑}\) \(\textsf{One Router serves both pages.}\) :codex-annotation{index="1"} :codex-annotation{index="2"}'
+        self.assertEqual([], check_fragment(context + context + answer))
+        self.assertTrue(any('Annotation 2' in error for error in check_fragment(context + answer)))
+        self.assertEqual([], check_fragment(context + answer.replace('index="2"', 'index="1"')))
+
+    def test_quoted_and_fenced_annotations_do_not_require_new_context(self):
+        self.assertEqual([], check_fragment('> :codex-annotation{index="1"}'))
+        self.assertEqual([], check_fragment('```text\n:codex-annotation{index="1"}\n```'))
+        self.assertEqual([], check_fragment('An ordinary answer.'))
+
+
+    def test_navigation_reply_missing_outer_brace_in_both_phases(self):
+        broken = r'\(\textsf{\color{#67e8f9}{\underline{Every dialog open when navigation begins now closes}}\)'
+        fixed = broken.replace(r'}}\)', r'}}}\)')
+        for commentary in (False, True):
+            with self.subTest(commentary=commentary):
+                errors = check_fragment(broken, commentary=commentary)
+                self.assertTrue(any('KaTeX parse error' in e for e in errors), errors)
+                self.assertEqual([], check_fragment(fixed, commentary=commentary))
+    def test_bare_prose_underlines_are_rejected_before_spaces_disappear(self):
+        bad = [r'\(\underline{All 110 repository tests passed}\)',
+               r'\(\color{#67e8f9}{\underline{Each rainbow block gets a different start}}\)']
+        for draft in bad:
+            with self.subTest(draft=draft):
+                errors = check_fragment(draft)
+                self.assertTrue(any(r'Keep spaces inside an underline' in error for error in errors), errors)
+        good = [r'\(\underline{\text{All 110 repository tests passed}}\)',
+                r'\(\color{#67e8f9}{\textsf{Each \underline{rainbow block} differs.}}\)']
+        for draft in good:
+            with self.subTest(draft=draft):
+                self.assertEqual([], check_fragment(draft))
+
+    def test_short_outer_expressions_make_selectable_wrappable_chunks(self):
+        grouped = r'\(\textsf{This short chunk keeps \color{#67e8f9}{colour} and \underline{selection} together.}\)'
+        self.assertEqual([], check_fragment(grouped))
+        self.assertEqual([], check_fragment(grouped, commentary=True))
+        split = r'\(\textsf{This paragraph uses a short selectable chunk.}\) \(\textsf{This second chunk gives the browser a wrap point.}\)'
+        self.assertEqual([], check_fragment(split))
+        mixed = r'Ordinary beginning \(\underline{\textsf{formatted middle}}\) ordinary ending.'
+        self.assertEqual([], check_fragment(mixed))
+        exception = r'\(\textsf{The \underline{review needs a project} written in}\) `C#`.'
+        self.assertEqual([], check_fragment(exception))
+        self.assertEqual([], check_fragment('> '+split+'\n\n`'+split+'`'))
+
+    def test_selectable_chunk_length_guardrail(self):
+        proven = r'\(\textsf{This entire sentence lives inside one outer LaTeX element, including \color{#67e8f9}{this coloured section} and the remaining words.}\)'
+        self.assertTrue(any('exceeds 64' in error for error in check_fragment(proven)))
+        fixed = r'\(\textsf{This sentence uses a short selectable outer element.}\) \(\textsf{Its remaining words can wrap as a second chunk.}\)'
+        self.assertEqual([], check_fragment(fixed))
+        oversized = r'\(\textsf{' + ('word ' * 30) + r'}\)'
+        self.assertTrue(any('exceeds 64' in error for error in check_fragment(oversized)))
+
+    def test_formatted_word_counter_handles_nested_commands_and_escapes(self):
+        self.assertEqual([5], reply.formatted_text_word_counts(r'\underline{\textsf{All 110 repository tests passed}}'))
+        self.assertEqual([6], reply.formatted_text_word_counts(r'\textsf{A \underline{short A \& B} cue}'))
+        self.assertEqual([1], reply.formatted_text_word_counts(r'\huge\text{✅}'))
+
     def test_literal_identifier_underscores_in_text_are_rejected(self):
         for wrapper in [r'\underline{\textsf{%s}}', r'\color{#67e8f9}{\textsf{\underline{%s}}}', r'\underline{\text{%s}}']:
             bad = r'\(' + wrapper % 'sample_tool instructions' + r'\)'
@@ -86,6 +186,12 @@ class ReplyChecks(unittest.TestCase):
         for draft in ['<!-- codex-notification {} -->','[↗](/tmp/SKILL.md)','[open](/tmp/skill.html)']:
             self.assertTrue(check_fragment(draft,False))
 
+    def test_html_underline_tags_are_rejected_outside_literal_contexts(self):
+        for draft in ['<u>Broken underline</u>', '<U class="cue">Broken underline</U>']:
+            self.assertTrue(any('HTML <u> tags' in error for error in check_fragment(draft)))
+        for literal in ['> <u>Quoted source</u>', '`<u>Inline example</u>`', '```html\n<u>Code example</u>\n```']:
+            self.assertEqual([], check_fragment(literal))
+
     def test_standalone_caret_does_not_leak_to_inline_markers(self):
         self.assertTrue(check_fragment(r'\(\huge\text{ⓘ}\)'+'\n\nDetails below.'))
         self.assertEqual([],check_fragment(r'\(\huge\text{ⓘ}\) '+reply.CARET+'\n\nDetails below.'))
@@ -101,10 +207,13 @@ class ReplyChecks(unittest.TestCase):
                 self.assertTrue(check_fragment(prefix+' '+reply.CARET+'\n\nThe copy finished.\n\n'+block))
 
     def test_nested_underlines_keep_colour_and_skill_link_validation(self):
-        good=r'\(\color{#67e8f9}{\textsf{The viewer is a \underline{snapshot} of the file.}}\)'
+        good=r'\(\color{#67e8f9}{\textsf{The viewer is a \underline{snapshot}.}}\)'
         self.assertEqual([],check_fragment(good))
         self.assertTrue(check_fragment(good.replace('#67e8f9','gray')))
         self.assertTrue(check_fragment(good.replace('textsf','textrm')))
+        grouped=r'\(\textsf{The viewer is a \color{#67e8f9}{\underline{selectable snapshot}.}}\)'
+        self.assertEqual([],check_fragment(grouped))
+        self.assertTrue(check_fragment(grouped.replace('#67e8f9','gray')))
         skill=r'\(\color{magenta}{\textrm{\underline{skill-creator}}}\)'
         self.assertTrue(check_fragment(skill))
         self.assertEqual([],check_fragment(skill+' [↗](/tmp/skill.html)',False))
@@ -190,21 +299,21 @@ class ReplyChecks(unittest.TestCase):
             self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.'+'\n\n'+invalid))
 
 
-    def test_topic_reminder_can_wrap_between_short_lavender_expressions(self):
-        overview = r'\(\color{#b8a4d9}{\textsf{About: fixing the video export.}}\)'
-        detail = r'\(\color{#b8a4d9}{\textsf{Restart the app, then retry the clip.}}\)'
+    def test_topic_reminder_uses_short_selectable_lavender_chunks(self):
+        overview = (r'\(\color{#b8a4d9}{\textsf{About: fixing the video export.}}\) '
+                    r'\(\color{#b8a4d9}{\textsf{Restart the app, then retry the clip.}}\)')
         for body, options in [(r'\(\huge\text{👉}\) Restart to use the export fix.', {})]:
-            self.assertEqual([], reply.check(body+'\n\n'+overview+' '+detail, **options))
-            for bad in [overview+' '+overview, overview+' stray text '+detail,
-                        overview+' '+detail.replace('#b8a4d9', '#67e8f9'),
-                        overview+' '+detail.replace('textsf', 'textrm'),
-                        overview+' '+detail.replace('Restart the app, then retry the clip.', '')]:
+            self.assertEqual([], reply.check(body+'\n\n'+overview, **options))
+            for bad in [overview+' '+overview, 'stray text '+overview,
+                        overview.replace('#b8a4d9', '#67e8f9'),
+                        overview.replace('textsf', 'textrm')]:
                 self.assertTrue(reply.check(body+'\n\n'+bad, **options), bad)
 
     def test_oversized_inline_prose_is_rejected_without_hiding_nested_underlines(self):
         long_warning = r'\(\color{#fb923c}{\textsf{The \underline{release is still pending}: its working copy has \underline{many outstanding changes}, needs \underline{another review before publication}, and its last recorded task run was interrupted.}}\)'
         self.assertTrue(any('may overflow' in e for e in check_fragment(long_warning)))
-        short = r'\(\color{#fb923c}{\textsf{The \underline{release is still pending}.}}\) The dependency needs another review before publication.'
+        short = (r'\(\textsf{\color{#fb923c}{The \underline{release is still pending}.}}\) '
+                 r'\(\textsf{The dependency needs another review.}\)')
         self.assertEqual([], check_fragment(short))
         self.assertEqual([], check_fragment(short, commentary=True))
         for prefix in [r'\underline{\textsf{', r'\color{#67e8f9}{\textsf{', r'\color{#b8a4d9}{\textsf{About: ']:
@@ -215,5 +324,5 @@ class ReplyChecks(unittest.TestCase):
     def test_prose_length_counts_visible_words_not_wrapper_names(self):
         self.assertEqual(len('The release is still pending.'), reply.prose_length(r'\color{#fb923c}{\textsf{The \underline{release is still pending}.}}'))
         self.assertEqual(5, reply.prose_length(r'\textsf{A \& B}'))
-        self.assertEqual([], check_fragment(r'\(\textsf{'+'x'*80+r'}\)'))
-        self.assertTrue(any('may overflow' in e for e in check_fragment(r'\(\textsf{'+'x'*81+r'}\)')))
+        self.assertEqual([], check_fragment(r'\(\textsf{'+'x'*64+r'}\)'))
+        self.assertTrue(any('may overflow' in e for e in check_fragment(r'\(\textsf{'+'x'*65+r'}\)')))

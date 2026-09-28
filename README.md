@@ -16,20 +16,20 @@ This is a set of agent instructions with helper scripts, not a modification of t
 
 | Feature | Behaviour |
 | --- | --- |
-| Working versus final replies | Keeps all working-message markers at normal text size, including 🧠; final replies use enlarged markers. Meanings, colours and placement stay the same. |
+| Working versus final replies | Working updates use normal-size markers, including 🧠, and short underlined cues. Final replies use enlarged markers, selected colour and underlined scanning cues. |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. Only user-approved project mappings may extend it; no arbitrary emoji additions. |
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
 | Closing topic reminder | Only the final assistant reply ends with a muted-lavender (`#b8a4d9`) `About:` reminder: a brief overall summary, then a second short sentence explaining the specific action, problem or next step for returning readers. It comes after actions and other closing details; the relevant question above each answer stays in place. |
-| Sentence scanning | Underlines the most useful words in every assistant prose sentence, including ordinary and coloured text. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
+| Sentence scanning | Uses a short useful underlined clue in each substantive working and final prose sentence, not just the first sentence of a paragraph. A self-contained coloured sentence already serves as a scanning cue. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
 | Computer Use | 🖥️ for manual browser/app interaction, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
-| Context above answers | Uses only the question or excerpt being answered, in your own grammatical perspective, in a blockquote above the direct-answer arrow. |
+| Context above answers | Shows a short exact excerpt of the question in a rainbow blockquote above the direct-answer arrow. The reminder aims to stay on one line; a fixed 24-colour cycle keeps agents from reinventing the format. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
 | Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
 | Code editor | CodeMirror provides syntax highlighting, line numbers, search/replace, undo/redo and bracket matching. Preview, edit and split views. |
-| Table grouping | Uses approved markers beside category/status labels when helpful, keeping related rows together. |
-| Annotation context | Preserves the full annotation context, then the short question in your wording underneath, then the answer. Groups related answers without dropping either context layer. |
+| Scannable tables | Colours important rows using the existing meanings: cyan for useful highlights, red for critical errors, orange for caveats and green for confirmed success. Underlines key words, keeps routine rows neutral and wording short, and uses approved category markers when helpful. |
+| Annotation context | Uses **Problem at hand**, **Earlier response** and **Your annotation** for native and genuine custom annotations, then the short rainbow question and answer. Includes Agent Flow code selections and coloured/escaped context tags; identifies the real source in **Earlier response**. Before sending, checks all three fields for each relevant selection and comment; ignores reading-only highlights. Replaces square-bracket context notes without inventing native annotation links. |
 | Notification wording | Defines short, complete notification summaries. Native notification delivery is an optional **separate** integration. |
 
 The response-preference skill itself is used silently. Other skill announcements use 🧠 with a magenta skill name and an adjacent opening link.
@@ -54,7 +54,7 @@ Use $response-preferences for all replies.
 
 You can also invoke `$response-preferences` explicitly. Start a fresh task if an already-running task retains earlier instructions. The formatting defaults follow Ethan's choices; edit `SKILL.md` to change them for yourself. LaTeX appearance and file links depend on the chat client's renderer.
 
-When maintaining Ethan’s skill, check the website and README after every response-style change, update affected examples, validate, commit and push to the public repository. Other users should use their own authorised fork.
+When maintaining Ethan’s skill, check the website and README after every response-style change, update affected examples, validate, commit and push to the public repository. Other users should use their own authorised fork. Publishing is part of the same task, without a separate sync request. Compare the installed rules and public checkout before finishing, reconcile shared changes using the latest preferences, and verify the new remote commit and deployment. This is an agent workflow, not a background auto-publisher; private local integrations stay local.
 
 For updates, use `git pull --ff-only` only after reviewing your local edits. Keep personal overrides on your own branch or fork. Do not discard customised preferences to update.
 
@@ -81,15 +81,13 @@ Markers stay inline for a single line or short statement. For sections spanning 
 
 Read each highlighted clause or sentence on its own: it should make sense without the uncoloured words before or after it. This applies to all four highlight colours; magenta skill names keep their separate name-only styling.
 
-Long inline LaTeX prose can extend beyond the Codex message pane. Keep each coloured statement short and independently understandable, with supporting details in ordinary wrapping Markdown. Apply this to underline boxes and the closing topic reminder too. Aim for about 40 visible characters or fewer per box; the checker rejects expressions over 80 approximate visible characters as a guardrail, not a guarantee of fit at every width or zoom. Preserve useful facts and qualifications. For example, colour **The release is still pending.** and keep the review details in normal prose.
+Codex treats each inline LaTeX expression as an unbreakable box. Ethan verified continuous selection in one coloured expression, then showed that whole-paragraph boxes still overflow. Underlines did not give him whole-line triple-click selection, so do not put their surrounding sentence or paragraph inside another LaTeX wrapper just for grouping. The earlier red commands came from missing closing braces or math delimiters, not from an invalid sans-serif/underline combination. Working and final replies keep the short, complete `\underline{\textsf{...}}` cue: its inner `\textsf` provides the preferred font. Colour and About use separate short expressions. Keep each expression below 64 approximate visible characters. The generated rainbow question is a separate helper-produced exception.
 
-In working updates and finals, keep literal names such as `C#` and `sample_tool` in ordinary text or inline code, with short readable scanning cues nearby. Write percentages outside the LaTeX box too. If they must be styled, escape the text as `C\#`, `sample\_tool`, `54\%` or `A \& B`. This applies to coloured text, underlines and About reminders. Check the exact working draft with `--commentary`, and check the exact final before sending.
+Keep literal names such as `C#` and `sample_tool` in ordinary text or inline code, with short underlined scanning cues nearby. Write percentages outside the LaTeX box too, including everyday phrases such as “100% sure”: a bare `%` makes the rest of the box disappear and the whole cue turns red. Reword the cue (“not fully sure”) instead. If they must be coloured, escape the text as `C\#`, `sample\_tool`, `54\%` or `A \& B`. This applies to coloured text and About reminders.
 
-Start with the [exact copyable LaTeX patterns](SKILL.md#copy-these-exact-latex-patterns): change the words, preserve the wrapper. The plain underline and About examples need two closing braces; the combined colour-and-underline example needs three.
+Start with the [copyable colour patterns](SKILL.md#copy-these-exact-colour-patterns): a cue uses `\(\underline{\textsf{short clue}}\)`, colour uses `\(\textsf{\color{#67e8f9}A complete short fact.}\)`, and About uses the same simple form in lavender. The checker remains an optional diagnostic for tricky expressions or skill maintenance. It validates syntax with bundled KaTeX but cannot guarantee agent obedience or the app’s layout. Annotation replies still require their labelled context, rainbow question and native reference. Automatic reply repair is not used.
 
-The checker now validates explicit math expressions with bundled KaTeX, including mismatched delimiters and unsupported commands. It needs Node.js on PATH, or an executable selected with `RESPONSE_PREFERENCES_NODE`; no npm install or network is needed for a copied skill. If the renderer cannot run, the check fails rather than reporting success. Use ordinary Markdown for prose if validation is unavailable. The optional completion guard handles finals after they stream; working updates still need the pre-send check. Parsing cannot guarantee layout or model obedience. A checked draft can still be changed by the model when it sends the answer. Compare the actual sent text with the draft; a guard requesting repair does not prove a correction appeared. See [failed-repair diagnosis](references/reliability.md#when-a-checked-draft-still-produces-red-commands).
-
-Highlights use `\textsf{...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
+Selected final highlights use `\textsf{\color{#hex}...}` with red `#ef4444`, green `#22c55e`, orange `#fb923c`, or cyan `#67e8f9`. Skill names use upright serif magenta as a deliberate exception. Colours appear outside links because some Codex renderers expose raw LaTeX when it is used as a link label.
 
 Use cyan selectively for **useful explanations of what changed or how the resulting system behaves**, including the main explanation in an opening direct answer after ⮑ or 👉. For example, “Both Playlist types share one visual row” is cyan; “The clipping bug is fixed” is an explicit confirmed success statement and is green. A completion reply does not make every descriptive sentence green. Keep each highlight short and understandable on its own.
 
@@ -99,9 +97,9 @@ Projects can list additional user-approved emoji meanings in their existing inst
 
 ## Underlines for scanning
 
-Every assistant prose sentence gets short underlined cues: the subject, action, result or qualification that gives away its meaning at a glance. Make the first underline in each paragraph name its concrete subject, so someone who notices a later cue can glance back and understand what it describes. For example: **skill-update decisions** → **agent-based**. Re-establish context when the topic changes; later cues can stay short. Read the underlined words in order and keep crucial negatives or limits, such as **not uploaded** or **after restarting**. Avoid underlining filler or whole sentences by default. Exact quotations, code, paths and link labels stay intact; headings and compact labels do not need forced underlines.
+Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\textsf{not uploaded}}\)` or `\(\underline{\textsf{after restarting}}\)`. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
 
-Use `The \(\underline{\textsf{backup}}\) was \(\underline{\textsf{not uploaded}}\) because the provider was unavailable.` For colour and underlines together: `\(\color{#67e8f9}{\textsf{\underline{The viewer} is a \underline{snapshot} of the file.}}\)`. The whole coloured clause still makes sense independently, while its underlined words provide scanning clues. Underlining is not another importance level and does not make text clickable. The website demonstrates it with styled `<u>` spans; ordinary documentation is not formatted as an assistant reply.
+Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\textsf{not uploaded}}\).` or `The \(\underline{\textsf{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; keep both forms short and fully closed. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
 
 ## Generate a viewer
 
@@ -126,6 +124,7 @@ The context helper preserves exact message text and copies available attachments
 
 ## Editing and privacy
 
+- The viewer is a compact utility: file name and save state in the header, a Preview / Edit / Split control, a line field, icon actions (Search, Open file, Save, Download copy, Light / dark; each names itself in a tooltip and to assistive technology), and a status bar at the bottom for messages. The theme starts from the system appearance; the toggle switches it.
 - **Download copy** exports the edited source. It does not overwrite the original.
 - **Open file** lets you choose a file on disk. Browsers supporting the File System Access API can then enable **Save** for that picked file. Otherwise, download the copy.
 - Saving checks for external edits first and refuses a conflicting write. This is not an atomic lock against other applications; use a copy for files being edited concurrently.
@@ -143,19 +142,21 @@ Notifications lead with a short version of your request, in your wording and per
 
 ## Keeping the format consistent
 
-The skill requires a quick check before every reply. Immediately before a final completion reply, reread its colour and final-check rules; reread the full skill after compaction or a user style correction. This follows context changes and completion, rather than an arbitrary message counter. Before sending a final reply, save its exact Markdown and run:
+The everyday pattern is deliberately small: write normal Markdown, use `\(\underline{\textsf{a useful clue}}\)` in working and final prose, and use `\(\textsf{\color{#67e8f9}A complete short fact.}\)` for a selected colour highlight. Leave surrounding prose, links, code and technical names in Markdown so they wrap naturally. Keep `\textsf` inside the short underline cue and in separate colour and About expressions. The final `About:` reminder and generated rainbow question retain their own fixed patterns.
+
+The bundled checker remains available when diagnosing a tricky expression or maintaining the skill:
 
 ```sh
 python3 ~/.codex/skills/response-preferences/scripts/check-reply.py /absolute/reply.md
 ```
 
-This catches missing magenta skill announcements, missing opening links, unknown or misplaced wrapped markers, wrong marker sizes for working/final messages, uppercase `\Huge`, obsolete colour/font combinations, oversized inline LaTeX prose, missing question quotes, missing or misplaced closing topic reminders, direct Markdown links and leaked notification comments. It checks local link destinations exist. Quoted earlier messages and code examples are excluded. It validates LaTeX syntax with KaTeX, but does not interpret meaning, guarantee model obedience or verify the app's visual layout; see [verification and coverage](references/verification.md).
+It checks mechanical syntax and some structural rules. It is not a required action before every reply, nor proof that the app rendered the message correctly. The earlier brace error was caught by the checker when tested later; the assistant had not checked that outgoing reply. The skill therefore reduces the amount of LaTeX the agent writes rather than depending on a check it might skip. See [verification and coverage](references/verification.md).
 
 GitHub Actions runs the test suite on every push and pull request, including regression cases for the reply checker and the website's marker, colour, quote and skill-link presentation.
 
 The always-read skill is a compact core; [the detailed reference](references/style-reference.md) retains the complete preferences. Read the core separately and retrieve missing ranges if a tool truncates it. Refresh it after compaction or a style correction.
 
-An optional [automatic completion guard](references/reliability.md) can catch omissions in the actual final reply even when the agent skips the draft check. It requires a separately configured synchronous completion adapter, shares one correction with notification preparation, and leaves explicit exact-format requests alone through a task/reply-specific exception. It does not install a global hook for you, hide text already shown, check every working update, or guarantee correct emphasis. Ethan's local adapter includes an off switch; other installations need their own supported adapter.
+Automatic reply repair is not part of this workflow. Follow the simple complete patterns; use the draft checker only when a diagnostic helps. The old guard and exemption helpers were removed; do not add a completion-hook repair or wake another task to fix formatting.
 
 ## Develop
 
@@ -184,7 +185,7 @@ Only the final reply includes an attention finger: normally one, leaning towards
 
 Only the final assistant reply closes with an About reminder; working updates have none. The reminder uses two short sentences: a brief overall summary, then more specific context to remind you exactly what we are doing. For example: **About: fixing the video export. Restart the app, then retry the clip.** The second sentence adds the action, problem, result or next step instead of repeating the overview. Keep it concise, but let it wrap rather than squeezing it into one line.
 
-Use separate short lavender expressions with ordinary spaces between them: `\(\color{#b8a4d9}{\textsf{About: fixing the video export.}}\) \(\color{#b8a4d9}{\textsf{Restart the app, then retry the clip.}}\)`. The existing width guardrail still applies to each expression. Muted lavender is reserved for this one closing reminder, with one `About:` prefix and no extra emoji, underline or divider. The relevant first-person quote remains above its answer; the reminder stays last after any outstanding-item recommendation or applicable environment details.
+Use short selectable lavender chunks when needed: `\(\textsf{\color{#b8a4d9}About: fixing video export.}\) \(\textsf{\color{#b8a4d9}Restart the app, then retry the clip.}\)`. Keep each chunk within the 64-character guardrail and separate chunks with ordinary spaces. Muted lavender is reserved for this one closing reminder, with one `About:` prefix and no extra emoji, bold or divider. The relevant first-person quote remains above its answer; the reminder stays last after any outstanding-item recommendation or applicable environment details.
 
 Closing outstanding-item recommendations include a hover-only ↗ whose destination text gives the fuller explanation; it is deliberately not a working file link. Env footers are reserved for AIMVS work, not unrelated tasks.
 
@@ -195,3 +196,9 @@ Prefer Codex’s native `:codex-annotation{index="N"}` reference for an actual a
 The quoted question can use `[↗](</Original user text here>)` to show the original text in Codex’s destination popup. This user-confirmed short-text technique includes a leading slash and is hover-only: clicking does not open a file. Keep a separate real context-viewer link for attached images or clickable context. Long messages, line breaks and special characters are not yet verified.
 
 The example sidebar includes a [numbered separator chat](https://ethansk.github.io/response-preferences/#separator), showing how Ethan uses a pinned task with a dashed name to visually separate groups of chats.
+
+## Rainbow question reminders
+
+The short quoted question above each answer uses a fixed 24-colour cycle, including pink between violet and red. These colours identify your words; status highlights in the answer retain their own meanings. Each new quote starts one position further along that fixed cycle. The helper advances a small shared local counter, wrapping after 24; a lock protects simultaneous tasks. The counter stays outside the public skill, and retries reuse the same generated quote. The reminder uses a relevant exact excerpt of at most 40 visible characters so it normally stays on one line; the full answer supplies the context. Every word advances one colour. Full annotation/evidence blocks remain unchanged.
+
+[Copy the exact recipes and different-length examples](references/format-recipes.md), or run `python3 scripts/rainbow-quote.py question-1.txt question-2.txt` to generate renderer-checked blockquotes from one or more plain-text excerpts. Multiple files are handled in one process and receive consecutive starting colours. The recipes also settle recurring choices for success versus information, test results, final pointers, punctuation and About reminders.

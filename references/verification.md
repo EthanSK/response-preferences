@@ -6,8 +6,8 @@ Read this when changing the skill, auditing prior requests, or testing the respo
 
 1. Read the current installed skill when beginning a task, and reread it after a response-style correction. Old replies, screenshots and earlier in-memory skill text can contain superseded rules.
 2. Check the actual draft. Skill announcements need 🧠, magenta upright-serif names and a separate working ↗ for each name. Apply the response-preferences silent-use exception.
-3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour selectively to self-contained clauses or sentences. Read every coloured bit from its first word, without its surrounding prose; check it still names the subject and makes sense. Read only the underlined words in each prose sentence in order: check they carry its useful clues and retain crucial negations, uncertainty and conditions. Exact quotations, code and links stay untouched. Keep markers inline for short statements and above sections with multiple paragraphs/blocks, followed by a `⌄` chevron. Working commentary uses plain normal-size markers and `ⓘ ⌄`; final replies use lowercase `\huge` with the caret rendered as `\(\raisebox{0.3em}{\Large\text{⌄}}\)`. Keep the return arrow beside the opening answer even when a table, list or code block follows. Tables use ordinary-sized markers and category text.
-4. Save final Markdown and run `scripts/check-reply.py /absolute/reply.md`. Fix failures, then prepare notification metadata separately using the installed native integration, if present. If the draft changes afterwards, check and prepare again.
+3. Review meaning manually: answer the specific question first, keep the answer understandable without rereading its excerpt, distinguish success from information and live progress, and apply colour selectively to self-contained clauses or sentences. Read every coloured bit from its first word, without its surrounding prose; check it still names the subject and makes sense. In working and final prose, read only the underlined clues in order: check they retain crucial negations, uncertainty and conditions. Working commentary uses normal-size markers. Exact quotations, code and links stay untouched. Keep markers inline for short statements and above sections with multiple paragraphs/blocks, followed by a `⌄` chevron. Final replies use lowercase `\huge` with the caret rendered as `\(\raisebox{0.3em}{\Large\text{⌄}}\)`. Keep the return arrow beside the opening answer even when a table, list or code block follows. Tables use ordinary-sized markers and category text.
+4. Use the complete short patterns in the core skill. For a tricky expression or skill maintenance, `scripts/check-reply.py /absolute/reply.md` is an optional syntax diagnostic. It does not need to run for every outgoing reply. Prior check results never prove a new reply is correct. User-requested simplification — 2026-09-22.
 
 The checker is deliberately limited. It catches common structural regressions in conventional Markdown/LaTeX replies, including the missing-magenta announcement that prompted it. It does not parse every Markdown or LaTeX construct, decide what is important, choose useful underlined words or guarantee sentence coverage, prove a link supports a claim, detect every omitted marker, inspect the Codex renderer, or force another model to obey instructions. A passing result is not a guarantee of perfect formatting.
 
@@ -22,11 +22,11 @@ The checker is deliberately limited. It catches common structural regressions in
 | Other meanings | 🫵 user action, 🤨 unusual, ⚠️ caution, ❓ uncertainty, 💡 recommendation, ⚖️ trade-offs, ⛔ external blocker, 🧠 skill use, ➕➕ extra scope, ⮑ answer | Closed vocabulary and website meaning controls |
 | Marker placement | Left aligned, before content; inline for a short statement, standalone with a visible ⌄ chevron for multi-block sections; the return arrow stays beside its opening answer | Reply checker; website structure test; desktop/mobile inspection |
 | Marker size | Plain normal-size markers in commentary, including 🧠; lowercase `\huge` in final replies; normal-size table labels | Phase-specific checker fixtures; website marker size and screenshots |
-| Highlighting | Selected self-contained red/green/orange/cyan clauses or sentences in normal-size sans serif; no new colour meanings | Checker; website computed styles; manual reading of each highlight in isolation |
+| Highlighting | Selected self-contained red/green/orange/cyan clauses or sentences in normal-size text; no new colour meanings | Checker; website computed styles; manual reading of each highlight in isolation |
 | Computer Use and automated checks | 🖥️ with explicit manual-test status; green only for successful manual tests, never automated tests/lint | Manual semantic check; website example and global/project marker tests |
-| Underlined scanning cues | Useful words in every assistant prose sentence, inside colours and ordinary prose; preserve negatives and conditions | Manual sentence-by-sentence clue review; nested-colour checker regression; website quote/link preservation and scanning examples |
+| Underlined scanning cues | Prefer a short cue in working and final prose sentences; self-contained colour can carry the cue; preserve negatives and conditions | Manual sentence-by-sentence clue review; website quote/link preservation and scanning examples |
 | Skill references | 🧠 announcement, each skill name magenta upright serif with a real adjacent ↗; preference skill used silently | Historical failure fixture; local destination check; website computed styles and links |
-| Reply context | Relevant question/excerpt, user's perspective, blockquote restored, answer outside it and self-contained | Checker for quote placement; manual perspective/coverage review |
+| Reply context | Relevant question/excerpt in selectable chunks of at most 64 visible characters, with a repeating 24-colour per-word rainbow, user's perspective, answer outside it and self-contained | Quote helper validates its authored KaTeX directly; general checker still excludes evidence; manual wording and width review |
 | Original message | Exact source text, heading Your message, images preserved best effort, actual file link | Context helper and image-preservation tests |
 | Markdown/code links | Generated HTML by default, specific verified line when relevant, source retained | Generator, parser source maps, target-line and editor tests |
 | Viewer | Preview/edit/split, syntax highlighting, search/replace, undo/redo, downloadable copy; explicit picked-file saving only | Viewer tests; browser interaction and screenshots |
@@ -37,9 +37,13 @@ The checker is deliberately limited. It catches common structural regressions in
 
 ## Preference changes and unresolved experiments
 
+### Formatting complaints are not exceptions
+
+Self-improved — 2026-09-09: a formatting complaint was incorrectly interpreted as a plain-text request. Check this semantic boundary before using the exact-format helper: “Why is the formatting broken?” requires repairing the styled reply and checking it; “Reply in plain text without LaTeX” explicitly permits an exception. The checker cannot infer user intent, so a quoted complaint alone is not evidence of approval.
+
 Use the latest explicit choice, not every historical experiment simultaneously. The final choices supersede the old smiley/default-tick pattern, original ⏎ glyph, spinner, grey highlight, short whole-message summary, removed quote borders, always-standalone markers, coloured LaTeX inside links and word-labelled opening links. Preserve current notifications rather than restoring their earlier title/body arrangement.
 
-Do not silently adopt unconfirmed experiments. Using a deliberately invalid link destination as a hover-only original message was proposed and sampled, but no successful adoption was confirmed; actual context-file links remain the supported default. This is distinct from the website's own explanatory hover preview.
+Ethan confirmed and adopted the original-text-as-destination hover control on 2026-09-07. A short single-line question appeared in the native Codex popup with a leading slash. This is a hover-only exception, not a working file link. Keep real context viewers for attachments and clickable context. Long text, line breaks and special characters remain unverified; distinguish these limits from the successful short-text trial. The website preview is a simulation, not evidence of native rendering.
 
 Native notification banner duration is outside this public package. Doubling it was requested, but no supported measured implementation was established. Do not claim that wording changes or a successful send doubled its duration.
 
@@ -54,7 +58,7 @@ The table below does not move the return arrow onto its own line:
 ```markdown
 > How about now?
 
-\(\huge\text{⮑}\) The \(\underline{\textsf{sample copy}}\) \(\underline{\textsf{finished}}\); the upload is \(\underline{\textsf{still waiting}}\).
+\(\huge\text{⮑}\) The **sample copy finished**; the upload is **still waiting**.
 
 | Item | Status |
 |---|---|
@@ -75,8 +79,10 @@ The full annotation context and short reminder are both required. Keep them as d
 
 > Can I still see my short question below the full annotation? [↗](absolute-context-viewer.html)
 
-\(\huge\text{⮑}\) The \(\underline{\textsf{short question}}\) stays \(\underline{\textsf{below the full context}}\), directly above the answer.
+\(\huge\text{⮑}\) The **short question stays below the full context**, directly above the answer.
 ```
+
+For an Agent Flow code selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, verify that the response keeps all three fields: `Problem at hand` names worker selection, `Earlier response` quotes the code and identifies its app/file source, and `Your annotation` quotes “Why this limit?”. Repeat with coloured/escaped `app_selection` text and without a native annotation directive. The short rainbow reminder alone fails this check. An unrelated reading highlight and an ordinary standalone question must not acquire invented annotations. This is a manual semantic check; a structural checker cannot infer the omitted source context. User-requested hardening — 2026-09-27.
 
 The opening link must point to the real original-message viewer; the path above is illustrative. Include each real annotation’s required inline directive with its answer. Do not underline or paraphrase the exact earlier-response and annotation quotations.
 
@@ -86,10 +92,10 @@ Check that working commentary has no attention fingers. The final reply normally
 
 ## Context when scanning backwards
 
-Pick a later underlined cue in each paragraph, then read it with the first underline. The first cue should name the concrete topic so the pair makes sense without searching other paragraphs. Use `skill-update decisions` followed by `agent-based`, not an isolated `agent-based`. Re-establish the subject when the topic changes; do not expand every cue into a whole sentence. This is a semantic review, not something the structural checker can prove.
+In working and final prose, pick a later underlined cue in each paragraph, then read it with the first cue. The first should name the concrete topic so the pair makes sense without searching other paragraphs. Use `skill-update decisions` followed by `agent-based`, not an isolated `agent-based`. Re-establish the subject when the topic changes; do not expand every cue into a whole sentence. This is a semantic review, not something the structural checker can prove.
 
 ## Inline prose overflow
 
 A long single coloured `\textsf` expression with nested underlines was visibly clipped in Codex desktop 26.901.51231 (8109). The bundled `.katex .base` uses `white-space: nowrap` and inline-block layout. A synthetic reproduction using that client's KaTeX JS/CSS measured 1069px of content in 700px and 316px paragraphs; a short complete coloured statement plus ordinary supporting prose fit both widths. This is an authoring workaround, not an app-renderer fix. The public website uses HTML/CSS and cannot establish native rendering.
 
-The draft checker now rejects inline prose expressions above 80 approximate visible characters, including nested underlines and long topic labels. This catches the observed failure pattern but does not measure glyph widths. Keep spans substantially shorter where possible and preserve negations and qualifications. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.
+Ordinary Markdown surrounds short complete style expressions. The optional checker rejects styled chunks above 64 approximate visible characters and malformed LaTeX. It does not measure glyph widths. Links, code, paths, literal quotes and mathematical expressions without prose text commands remain explicit exceptions.

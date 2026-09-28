@@ -1,5 +1,13 @@
 # Verified project lessons
 
+## LaTeX selection and wrapping limits
+
+Ethan verified continuous selection inside one outer `\textsf` expression with a nested coloured span. A later whole-paragraph expression visibly overflowed. A subsequent single-expression trial containing both an underline and an emoji did not give Ethan the desired whole-line triple-click selection; that trial does not isolate which element caused the selection behavior. Do not claim that underlined LaTeX fixes triple-click or that selection crosses expression boundaries. Cap each unbreakable expression at 64 approximate visible characters and leave ordinary spaces between expressions for wrapping. Links, code and paths remain outside when unsafe in KaTeX. User-verified behavior — 2026-09-18 and 2026-09-19.
+
+## Treat broken closing delimiters as syntax failures, not colour failures
+
+A live Codex reply emitted `}}\\):` where the valid underline ends `}}\):`. The opening `\(` was present, but the extra backslash escaped the closing delimiter, so Codex displayed the inner underline command as raw red text. The validator must reject both unmatched delimiters and response-formatting commands written outside explicit math delimiters. A narrow completion-hook syntax check can enforce this independently of the optional broad response-style guard.
+
 ## Standalone bundling
 
 Use replacement functions when injecting bundled JavaScript into the HTML shell. JavaScript `String.replace` replacement strings interpret `$&`, `$\`` and `$'`; dependency code can contain them. Passing the bundle as a replacement string duplicated HTML fragments and prevented the editor from starting. `scripts/build.mjs` uses literal-returning replacement functions. `tests/editor.test.mjs` boots the actual built template, and the static-site validator checks duplicate IDs.
@@ -13,6 +21,10 @@ Use markdown-it token source maps, not substring searches. Repeated list entries
 CodeMirror's Markdown language needs a `codeLanguages` resolver to colour fenced languages in the source editor. Language-specific support for standalone files alone does not cover fences.
 
 Keep the saved baseline separate from the current editor revision during asynchronous writes. Check the picked file against its previous raw contents before creating a writer, and abort failed writes. Conflict and failure cases are covered by `tests/files.test.mjs`. A browser download is an exported copy, not a saved source; keep the unsaved indicator until a real write or undo restores the baseline.
+
+## Viewer chrome and theming
+
+Define the CodeMirror `HighlightStyle` with class names rather than inline colours so `viewer.css` can theme editor tokens and highlight.js fences from the same light/dark variables; inline colours cannot follow a runtime theme toggle. The compact shell is a fixed-height column (header, workspace, status bar) where each pane scrolls on its own, so passage centring depends on the preview's bottom padding and `scrollPastEnd()` rather than document scrolling. `tests/editor.test.mjs` boots the built template and covers accessible action names, the system-preference theme start, save tooltip state and status messages; visual placement still needs screenshot inspection.
 
 ## Public and private artifacts
 
@@ -56,7 +68,7 @@ Copy buttons need explicit foreground and background styles at the same specific
 
 A long single coloured `\textsf` expression with nested underlines was visibly clipped in Codex desktop 26.901.51231 (8109). The bundled `.katex .base` uses `white-space: nowrap` and inline-block layout. A synthetic reproduction using that client's KaTeX JS/CSS measured 1069px of content in 700px and 316px paragraphs; a short complete coloured statement plus ordinary supporting prose fit both widths. This is an authoring workaround, not an app-renderer fix. The public website uses HTML/CSS and cannot establish native rendering.
 
-The draft checker now rejects inline prose expressions above 80 approximate visible characters, including nested underlines and long topic labels. This catches the observed failure pattern but does not measure glyph widths. Keep spans substantially shorter where possible and preserve negations and qualifications. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.
+The 115-character selection example proved continuous selection but later visibly overflowed. The draft checker now rejects selectable prose chunks above 64 approximate visible characters, including nested underlines and topic labels. It does not measure glyph widths. Literal quotes, code examples and mathematical expressions without prose text commands remain outside this rule.
 
 ## Personal desktop wrapper
 
@@ -77,6 +89,10 @@ Combine style and notification repair into one bound. After it is exhausted, cos
 KaTeX 0.16.22 rejects an underlined text expression containing a bare percent sign because it starts a TeX comment and consumes closing syntax. Escaping the percent sign renders successfully. The previous structural checker returned no errors for this failure. Reject unescaped percent signs inside inline math, counting backslash parity, while preserving ordinary Markdown, quoted evidence, URLs and code examples. The automatic completion guard imports the same checker and must catch the failure too. This adds a specific regression check, not a full TeX parser.
 
 
+## Everyday percentages and hidden delimiters
+
+On 2026-09-24 a Codex reply emitted `\(\underline{\textsf{not 100% sure}}\)`. Codex showed `\underline{\textsf{not 100% sure}}` in red without the surrounding delimiters, and two follow-up diagnoses wrongly blamed missing delimiters. The raw session JSONL showed both delimiters were present; the bare `%` alone broke the expression. The existing percentage rule was framed around technical names, so an everyday phrase slipped through. The rule is now a bold hard rule beside the copyable patterns and part of the pre-send recheck, with rewording preferred over escaping. When diagnosing red raw text, read the emitted text in the session log rather than inferring from the rendered screenshot.
+
 ## Literal underscores in text wrappers
 
 KaTeX 0.16.22 renders `\underline{\textsf{sample_tool instructions}}` as a red error because `_` is a math subscript operator, invalid in text mode. Escaping it as `\_` succeeds. The percentage guard and freshly read rules did not catch this separate character: the original exact draft still passed. Check literal underscores in text-mode arguments, including nested underlines, while allowing escaped underscores, ordinary code/quotes/URLs and real math subscripts such as `x_i\text{ items}`. Prefer identifiers in ordinary inline code, with readable scanning cues around them. This is a specific authoring guard, not a complete TeX parser.
@@ -89,8 +105,28 @@ A passing parser still cannot establish viewport fit, font appearance or model o
 
 ## Validate the emitted reply and confirm the repair separately
 
-A valid checked draft was emitted with one extra closing brace in each of two About expressions. The installed KaTeX checker rejected both errors in the stored final, and the installed adapter recorded `style_repair_required`; the available task history nevertheless ended without a correction. This distinguishes draft-to-final mutation from validator coverage and continuation delivery. A repair-request receipt alone is not proof of a visible repair. The sanitized two-expression case in `tests/test_guard.py` verifies the valid draft passes and the emitted mutation requests a bounded repair. It does not simulate or prove desktop continuation delivery.
+A valid checked draft was emitted with one extra closing brace in each of two About expressions. The installed KaTeX checker rejected both errors in the stored final, and the installed adapter recorded `style_repair_required`; the available task history nevertheless ended without a correction. This distinguishes draft-to-final mutation from validator coverage and continuation delivery. A repair-request receipt alone is not proof of a visible repair. The former sanitized guard test covered the validator response, but did not simulate or prove desktop continuation delivery. The unused guard and exemption helpers were removed on 2026-09-22 at Ethan's request for simpler authoring instead of repair enforcement.
+
+## Keep hand-written reply syntax simpler than the diagnostic
+
+A bounded sweep of recent stored replies and a fresh Claude Opus review found repeated red raw commands when hand-authored colour and underline groups ended together. In one reply, expressions with ordinary text after a nested group rendered while an expression ending immediately after that group lacked an outer closing brace. The checker caught the malformed expression when run later, but requiring it before every message did not address agents omitting that step. Keep ordinary prose in Markdown and use short, complete underline or colour expressions without an additional wrapper around the surrounding sentence. A colour switch inside `\textsf` makes the hand-written colour form end consistently with `}\)`. The short underline's *inner* `\textsf` remains valid, as the later finding below confirms. Generated rainbow quotes are a distinct fixed exception. The optional checker remains useful for diagnostics and repository tests; do not turn it into a per-message dependency. User-requested simplification — 2026-09-22; clarified 2026-09-23. The patterns passed KaTeX rendering and dedicated reply tests.
 
 ## Final-only About reminders
 
 The About reminder is required only in final replies. Commentary must omit it while retaining its other formatting rules. Keep the phase-aware draft check and public working examples aligned; quoted prior reminders and code examples remain literal. Covered by the reply checker and website message-phase tests.
+
+## Rainbow question rendering
+
+The reply checker intentionally skips blockquoted evidence, so a passing whole-reply check does not validate newly authored rainbow wrappers inside a quote. The quote helper calls the bundled renderer on its expressions directly; tests preserve words, escape literal punctuation and HTML, and keep long tokens out of unbreakable math boxes. Reuse the same chunker for public HTML examples. This does not change historical evidence exclusions or introduce a completion hook.
+
+Ethan's screenshot showed a rainbow question on two lines even though each generated LaTeX expression was under the 64-character guardrail. That bound protects individual unbreakable boxes; it does not bound the complete reminder. Keep the live question excerpt at 40 visible characters or fewer, shorter in a narrow pane, and reject longer CLI batches before reserving colour offsets. Do not force a long expression onto one line because a narrow pane would clip it. User correction — 2026-09-23.
+
+After the one-line rainbow update, the final reply used only one underlined clue across several substantive sentences despite the existing preference for one clue per sentence. The rule had not been removed, but `Prefer` allowed an agent to treat the density as optional. State the per-sentence behavior directly for working and final prose, retaining the exception for a self-contained coloured sentence and the ban on mechanical whole-sentence underlining. User correction — 2026-09-23.
+
+## Restore valid short sans-serif underlines
+
+In the live **Compare Zap and Deliveroo** task, all 13 assistant-authored expressions with ordinary words after the inner underline had balanced braces; all three expressions where that underline was the final content omitted the outer `\textsf` closing brace. The repository already had tests proving properly closed combined forms render. A direct KaTeX check also rendered both `\underline{\textsf{still pending}}` and `\textsf{\underline{still pending}}` with the sans-serif class and spaces intact, while either form without its final brace failed. The prior blanket ban on combining the commands removed a working part of Ethan's preferred look and overstated the cause. A later change mistakenly removed `\textsf` from the short underlined cue; Ethan clarified that he meant the *additional paragraph-wide grouping wrapper*. Keep `\(\underline{\textsf{clue with spaces}}\)` as the canonical cue, and keep ordinary prose outside the math box. Leave selected colour/About statements in their own short expressions. Do not promise whole-line triple-click selection from an underline or add an outer grouping wrapper to chase it. The optional diagnostic remains optional; do not add an automatic repair turn or per-message checker. User clarification and verified rendering — 2026-09-23.
+
+## Check links in the rendered demo footer
+
+The public page's `window.js` replaces the static `.composer-note` footer during startup. A link added only to `docs/index.html` passed source checks but did not appear in the live page. For navigation links that must remain visible, put them in the footer built by `window.js`, then inspect the live DOM and click the link after deployment. The static footer can still carry the link for the JavaScript-disabled fallback. Verified while connecting Ethan's setup on 2026-09-24.
