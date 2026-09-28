@@ -70,7 +70,7 @@ Use a separate section marker only when the purpose changes. Supporting blocks a
 
 ## Annotation context and short reminder
 
-The full annotation context and short reminder are both required. Keep them as distinct quote blocks, with the answer immediately after the short one:
+The full annotation context and short reminder are both required. Separate distinct annotation-response sections with `---`, including Agent Flow selections, while keeping each section's context, short question and answer together. Verify the two-answer divider in the website demo. Keep context and reminder as distinct quote blocks, with the answer immediately after the short one:
 
 ```markdown
 > **Problem at hand:** Keep the short question visible.
