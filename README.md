@@ -105,6 +105,8 @@ Use `The \(\underline{\textsf{backup}}\) was \(\underline{\textsf{not uploaded}}
 
 ## Generate a viewer
 
+Drag table header dividers to resize columns; double-click to reset. This changes only the view, not the Markdown source.
+
 ```sh
 python3 ~/.codex/skills/response-preferences/scripts/create-viewer.py /absolute/path/to/document.md --line 45
 ```
