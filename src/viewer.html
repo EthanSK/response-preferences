@@ -3,22 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-__NONCE__'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiNlZWVhZmEiLz48cGF0aCBkPSJNMTYgMTN2MjBxMCA5IDEwIDloMjRNNDAgMzFsMTEgMTEtMTEgMTEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzY5NTRkOSIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4K">
   <title>__TITLE__ · Response Preferences</title>
   <style>__STYLE__</style>
 </head>
 <body>
   <header>
-    <div class="file-heading"><span class="brand-mark" aria-hidden="true">⮑</span><div><h1 id="filename">Document</h1><p id="file-note">Local document viewer</p></div><span id="dirty" role="status">Snapshot</span></div>
+    <div class="identity">
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="16" fill="#eeeafa"/><path d="M16 13v20q0 9 10 9h24M40 31l11 11-11 11" fill="none" stroke="#6954d9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="file"><h1 id="filename">Document</h1><p id="file-note">Local document viewer</p></div>
+      <span id="dirty" role="status">Snapshot</span>
+    </div>
     <div class="toolbar">
       <div class="modes" role="group" aria-label="Document view"><button type="button" data-mode="preview" aria-pressed="true">Preview</button><button type="button" data-mode="edit" aria-pressed="false">Edit</button><button type="button" data-mode="split" aria-pressed="false">Split</button></div>
-      <form id="jump-form"><label for="line">Line</label><input id="line" type="number" min="1" value="1" required aria-label="Jump to line"><button type="submit">Show passage</button></form>
-      <div class="file-actions"><button type="button" id="search">Search</button><button type="button" id="open">Open file</button><button type="button" id="save" disabled title="Open a file with browser saving support first">Save</button><button type="button" id="download">Download copy</button><button type="button" id="theme" aria-label="Switch colour theme">Light / dark</button></div>
+      <form id="jump-form" class="jump"><label for="line">Line</label><input id="line" type="number" min="1" value="1" required inputmode="numeric" aria-label="Jump to line"><button type="submit" title="Show the passage at this line">Go</button></form>
+      <div class="actions">
+        <button type="button" id="search" aria-label="Search" title="Search and replace in the source"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.2 10.2 14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button type="button" id="open" aria-label="Open file" title="Open a file from disk"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.25A1.25 1.25 0 0 1 3.25 3h2.9l1.5 1.5h5.1A1.25 1.25 0 0 1 14 5.75v6A1.25 1.25 0 0 1 12.75 13h-9.5A1.25 1.25 0 0 1 2 11.75z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+        <button type="button" id="save" aria-label="Save" title="Open a file with browser saving support first" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7.75L13.5 5.25V13a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.25 2.5v3.25h4.5V2.5M5.25 13.5V9.25h5.5v4.25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+        <button type="button" id="download" aria-label="Download copy" title="Download a copy of the current text"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v7.75M5 7.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.75 11v1.5a1 1 0 0 0 1 1h8.5a1 1 0 0 0 1-1V11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button type="button" id="theme" aria-label="Switch colour theme" title="Light / dark"><svg class="icon-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.25 9.6A5.6 5.6 0 0 1 6.4 2.75a5.6 5.6 0 1 0 6.85 6.85z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><svg class="icon-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75v1.5M8 12.75v1.5M1.75 8h1.5M12.75 8h1.5M3.6 3.6l1.05 1.05M11.35 11.35l1.05 1.05M3.6 12.4l1.05-1.05M11.35 4.65l1.05-1.05" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </div>
     </div>
-    <div id="status" role="status" aria-live="polite">Files stay in your browser. Nothing is uploaded.</div>
   </header>
-  <main id="workspace" data-mode="preview"><section id="editor-pane" aria-label="Source editor"><div id="editor"></div></section><article id="preview" aria-label="Formatted document"></article></main>
-  <footer>Response Preferences · <span id="snapshot-note">Edits here do not change the file this page was generated from.</span></footer>
+  <main id="workspace" data-mode="preview"><section id="editor-pane" aria-label="Source editor"><div id="editor"></div></section><article id="preview" aria-label="Formatted document" tabindex="0"></article></main>
+  <footer><div id="status" role="status" aria-live="polite">Files stay in your browser. Nothing is uploaded.</div><span id="snapshot-note">Edits here do not change the file this page was generated from.</span></footer>
   <input id="file-input" type="file" hidden accept=".md,.markdown,.txt,.js,.mjs,.cjs,.jsx,.ts,.tsx,.json,.py,.css,.html,.htm,.xml,.yaml,.yml,.sh,.zsh,.bash,.sql,.rs,.go,.java,.c,.h,.cpp,.toml,.csv">
   <noscript>This viewer needs JavaScript. Open the original file to read it without this viewer.</noscript>
   <script id="document-data" type="application/json">__DOCUMENT__</script>
