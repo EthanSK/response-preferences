@@ -27,7 +27,7 @@ def expressions(text):
         else:
             masked.append(re.sub(r'(`+).*?\1', lambda m: ' ' * len(m[0]), raw))
     source = ''.join(masked)
-    spans, errors = [], []
+    spans, errors, protected = [], [], []
     active = None
     pairs = {r'\(': r'\)', r'\[': r'\]', '$$': '$$'}
     for match in re.finditer(r'\\[()[\]]|\$\$', source):
@@ -39,15 +39,36 @@ def expressions(text):
         line = source.count('\n', 0, start) + 1
         if active and token == pairs[active[0]]:
             spans.append((active[2], source[active[1]:start]))
+            protected.append((active[3], match.end()))
             active = None
         elif active:
             errors.append(f'Line {line}: Mismatched or nested LaTeX delimiter.')
         elif token in pairs:
-            active = (token, match.end(), line)
+            active = (token, match.end(), line, match.start())
         else:
             errors.append(f'Line {line}: LaTeX closing delimiter has no opening delimiter.')
     if active:
         errors.append(f'Line {active[2]}: LaTeX opening delimiter has no closing delimiter.')
+        protected.append((active[3], len(source)))
+
+    # A response-formatting command outside explicit math delimiters renders as
+    # raw red TeX in Codex. Keep quoted evidence/code excluded by the mask above,
+    # and reject the authored leak before a user ever sees it.
+    outside = list(source)
+    for start, end in protected:
+        outside[start:end] = ' ' * (end - start)
+    outside = ''.join(outside)
+    commands = re.compile(r'\\(?:underline|textsf|textrm|text|textcolor|color|huge|Huge|large|Large|LARGE|raisebox)\s*\{')
+    reported_lines = set()
+    for match in commands.finditer(outside):
+        line = outside.count('\n', 0, match.start()) + 1
+        if line in reported_lines:
+            continue
+        reported_lines.add(line)
+        errors.append(
+            f'Line {line}: LaTeX formatting command is outside explicit math delimiters. '
+            r'Wrap the whole expression in \( and \), and do not add a stray backslash before the closing delimiter.'
+        )
     return spans, errors
 
 

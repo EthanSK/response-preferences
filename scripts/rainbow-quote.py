@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+"""Render a literal question reminder using the fixed rainbow recipe."""
+import argparse
+import html
+import importlib.util
+from pathlib import Path
+import re
+import os
+import fcntl
+import tempfile
+
+PALETTE = ('#fa7070', '#fa9370', '#fab570', '#fad870', '#fafa70', '#d8fa70', '#b5fa70', '#93fa70', '#70fa70', '#70fa93', '#70fab5', '#70fad8', '#70fafa', '#70d8fa', '#70b5fa', '#7093fa', '#7070fa', '#9370fa', '#b570fa', '#d870fa', '#fa70fa', '#fa70d8', '#fa70b5', '#fa7093')
+MAX_CHARS = 24
+MAX_GROUP_CHARS = 64
+MAX_QUOTE_CHARS = 40
+ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
+           '%': r'\%', '_': r'\_', '&': r'\&', '$': r'\$',
+           '^': r'\textasciicircum{}', '~': r'\textasciitilde{}'}
+
+
+def reserve_start_indices(count):
+    """Reserve consecutive offsets in one locked counter update."""
+    if not isinstance(count, int) or count < 1:
+        raise ValueError('count must be a positive integer.')
+    home = Path(os.environ.get('CODEX_HOME', str(Path.home() / '.codex')))
+    state = home / 'state' / 'response-preferences' / 'rainbow-next-index.txt'
+    state.parent.mkdir(parents=True, exist_ok=True)
+    with state.with_suffix('.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        try:
+            index = int(state.read_text().strip()) % len(PALETTE)
+        except FileNotFoundError:
+            index = 0
+        except ValueError as error:
+            raise ValueError(f'Invalid rainbow counter in {state}; repair it before generating another quote.') from error
+        fd, temporary = tempfile.mkstemp(dir=state.parent, prefix='.rainbow-')
+        try:
+            with os.fdopen(fd, 'w') as stream:
+                stream.write(str((index + count) % len(PALETTE)) + '\n')
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, state)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+        return [(index + offset) % len(PALETTE) for offset in range(count)]
+
+
+def next_start_index():
+    """Reserve one offset across tasks; keep runtime state outside the skill."""
+    return reserve_start_indices(1)[0]
+
+
+def chunks(text):
+    """One colour per whitespace-delimited word."""
+    return text.split()
+
+
+def validate_short_quote(text):
+    """Reject long reminder excerpts before reserving any palette positions."""
+    visible = ' '.join(chunks(text))
+    if not visible:
+        raise ValueError('Provide the relevant question or excerpt as plain text.')
+    if len(visible) > MAX_QUOTE_CHARS:
+        raise ValueError(
+            f'Rainbow reminder is {len(visible)} characters; choose an exact relevant excerpt '
+            f'of {MAX_QUOTE_CHARS} characters or fewer so it usually fits on one line.'
+        )
+    return visible
+
+
+def tex(text):
+    return ''.join(ESCAPES.get(char, char) for char in text)
+
+
+def inline_code(text):
+    fence = '`' * (max((len(m[0]) for m in re.finditer(r'`+', text)), default=0) + 1)
+    return fence + ' ' + text + ' ' + fence
+
+
+def render(text, format='markdown', start_index=None):
+    if not text.strip():
+        raise ValueError('Provide the relevant question or excerpt as plain text.')
+    if start_index is None:
+        start_index = next_start_index()
+    if not isinstance(start_index, int) or not 0 <= start_index < len(PALETTE):
+        raise ValueError('start_index must be between 0 and 23.')
+    parts, expressions, group = [], [], []
+    group_chars = 0
+    def flush_group():
+        nonlocal group_chars
+        if not group:
+            return
+        expression = r'\textsf{' + ' '.join(group) + '}'
+        expressions.append(expression)
+        parts.append(r'\(' + expression + r'\)')
+        group.clear()
+        group_chars = 0
+    for i, chunk in enumerate(chunks(text)):
+        if len(chunk) > MAX_CHARS:
+            # Do not turn a long URL/identifier into an unbreakable math box.
+            if format == 'markdown':
+                flush_group()
+            parts.append('<code>' + html.escape(chunk) + '</code>' if format == 'html' else inline_code(chunk))
+            continue
+        colour = PALETTE[(start_index + i) % len(PALETTE)]
+        if format == 'html':
+            parts.append('<span class="rq-chunk" style="color:' + colour + '">' + html.escape(chunk) + '</span>')
+        else:
+            needed = len(chunk) + (1 if group else 0)
+            if group and group_chars + needed > MAX_GROUP_CHARS:
+                flush_group()
+            group.append(r'\color{' + colour + '}{' + tex(chunk) + '}')
+            group_chars += len(chunk) + (1 if group_chars else 0)
+    if format == 'markdown':
+        flush_group()
+    return ('<span class="rainbow-quote">' + ' '.join(parts) + '</span>' if format == 'html'
+            else '> ' + ' '.join(parts)), expressions
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('source', type=Path, nargs='+', help='One or more UTF-8 plain-text question files; never shell-interpolated messages.')
+    parser.add_argument('--format', choices=['markdown', 'html'], default='markdown')
+    parser.add_argument('--start-index', type=int, choices=range(len(PALETTE)), help='Pin the offset without advancing the counter, for reproducible examples/tests.')
+    args = parser.parse_args()
+    try:
+        texts = [source.read_text(encoding='utf-8') for source in args.source]
+        if any(not text.strip() for text in texts):
+            raise ValueError('Provide each relevant question or excerpt as plain text.')
+        if args.format == 'markdown':
+            texts = [validate_short_quote(text) for text in texts]
+        starts = ([((args.start_index + offset) % len(PALETTE)) for offset in range(len(texts))]
+                  if args.start_index is not None else reserve_start_indices(len(texts)))
+        rendered = [render(text, args.format, start) for text, start in zip(texts, starts)]
+        outputs = [item[0] for item in rendered]
+        expressions = [expression for item in rendered for expression in item[1]]
+        spec = importlib.util.spec_from_file_location('quote_math', Path(__file__).with_name('math-validation.py'))
+        validator = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(validator)
+        errors = [error for error in validator.render_errors(expressions) if error]
+        if errors:
+            parser.exit(1, '\n'.join(errors) + '\n')
+        print('\n\n'.join(outputs))
+    except (OSError, ValueError) as error:
+        parser.exit(1, str(error) + '\n')
+
+
+if __name__ == '__main__':
+    main()
