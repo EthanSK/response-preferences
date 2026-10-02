@@ -46,7 +46,7 @@ Closing a details pane must restore focus to its opener. On small screens the pa
 
 ## Notification wording and fit
 
-Notification titles describe the user's request in their perspective; a task label or result heading is not interchangeable with that question. Put the status icon with the answer below. Visible macOS text capacity depends on glyph width and available layout, not just character count. Keep the native integration's measured limits separate from public skill wording and push-payload byte limits. The native sender is a separate installation; this repository documents its behavior without bundling it.
+User correction — 2026-10-02: notification titles always use the exact current chat name, including its emoji. This supersedes the earlier condensed-question title rule; resolve identity in the sender so older agent instructions cannot override it. Put the status icon with the answer below. Visible macOS text capacity depends on glyph width and available layout, not just character count. Keep the native integration's measured limits separate from public skill wording and push-payload byte limits. The native sender is a separate installation; this repository documents its behavior without bundling it.
 
 ## Reply-format regression checks
 

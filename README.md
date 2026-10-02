@@ -138,7 +138,7 @@ See [viewer instructions](references/viewer.md) for details. User clicks and aut
 
 ## Optional notifications
 
-Notifications lead with a short version of your request, in your wording and perspective. The text below pairs the status icon with a brief answer summary. Titles contain no emoji; the status icon starts the answer below. The native integration measures one title line and two answer lines before accepting the text. There is no universal macOS character count that guarantees a fit. Metadata stays out of chat. This repository does **not** install notification hooks, a native sender, task routing, or display-duration changes. On Ethan's Mac those are provided by a separate `macos-heads-up-notification` integration. Without it, the agent skips notification preparation. All other features work independently.
+Notification titles always match the exact current Codex chat name, including its existing emoji. The sender reads the name at delivery, so renaming a chat changes the next notification automatically. The text below pairs the status icon with a brief answer summary. The native integration measures the body against a two-line budget; it never shortens the chat name to fit. macOS may visually truncate a long title. Metadata stays out of chat. This repository does **not** install notification hooks, a native sender, task routing, or display-duration changes. On Ethan's Mac those are provided by a separate `macos-heads-up-notification` integration. Without it, the agent skips notification preparation. All other features work independently.
 
 ## Keeping the format consistent
 
