@@ -70,6 +70,8 @@ Use a separate section marker only when the purpose changes. Supporting blocks a
 
 ## Annotation context and short reminder
 
+Repeat the context-and-rainbow check in a read-only side conversation with an Agent Flow full prompt: retain the applicable three context fields and a separate rainbow excerpt of its authored words immediately above ⮑. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User correction — 2026-09-30.
+
 The full annotation context and short reminder are both required. Separate distinct annotation-response sections with `---`, including Agent Flow selections, while keeping each section's context, short question and answer together. Verify the two-answer divider in the website demo. Keep context and reminder as distinct quote blocks, with the answer immediately after the short one:
 
 ```markdown

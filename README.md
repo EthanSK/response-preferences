@@ -23,7 +23,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Sentence scanning | Uses a short useful underlined clue in each substantive working and final prose sentence, not just the first sentence of a paragraph. A self-contained coloured sentence already serves as a scanning cue. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
 | Computer Use | 🖥️ for manual browser/app interaction, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
-| Context above answers | Shows a short exact excerpt of the question in a rainbow blockquote above the direct-answer arrow. The reminder aims to stay on one line; a fixed 24-colour cycle keeps agents from reinventing the format. |
+| Context above answers | Shows a short exact excerpt of the question in a rainbow blockquote above the direct-answer arrow, in main and side chats, alongside applicable annotation context; read-only side chats use the existing helper without updating shared state. The reminder aims to stay on one line; a fixed 24-colour cycle keeps agents from reinventing the format. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
 | Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
