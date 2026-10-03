@@ -8,7 +8,9 @@ await build({entryPoints:[path.join(root,'src/render-math.js')],bundle:true,mini
 fs.copyFileSync(path.join(root,'node_modules/katex/LICENSE'), path.join(root,'assets/katex-LICENSE.txt'));
 const result=await build({entryPoints:[path.join(root,'src/editor.js')],bundle:true,minify:true,write:false,format:'iife',target:'es2022',legalComments:'inline'});
 const script=result.outputFiles[0].text.replace(/<\/script/gi,'<\\/script');
-const style=fs.readFileSync(path.join(root,'src/viewer.css'),'utf8');
+const font=fs.readFileSync(path.join(root,'assets/InterVariable.woff2')).toString('base64');
+const fontLicense=fs.readFileSync(path.join(root,'assets/Inter-LICENSE.txt'),'utf8');
+const style=`/* ${fontLicense} */\n@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,${font}) format('woff2')}\n`+fs.readFileSync(path.join(root,'src/viewer.css'),'utf8');
 // A replacement function keeps library strings such as $& and $` literal.
 const template=fs.readFileSync(path.join(root,'src/viewer.html'),'utf8').replace('__STYLE__',()=>style).replace('__SCRIPT__',()=>script);
 fs.mkdirSync(path.join(root,'assets'),{recursive:true});

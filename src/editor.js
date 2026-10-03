@@ -19,6 +19,7 @@ import {go} from '@codemirror/legacy-modes/mode/go';
 import {renderMarkdown, selectPassage} from './markdown.js';
 import {decodeText, writeIfUnchanged} from './files.js';
 import {resizeTables} from './table-resize.js';
+import {installAppearance} from './theme.js';
 
 const $ = id => document.getElementById(id);
 const data = JSON.parse($('document-data').textContent);
@@ -39,7 +40,8 @@ const colours = HighlightStyle.define([
   {tag: [tags.string, tags.special(tags.string), tags.attributeValue, tags.regexp], class: 'tok-string'},
   {tag: [tags.number, tags.bool, tags.null, tags.atom], class: 'tok-number'},
   {tag: tags.comment, class: 'tok-comment'},
-  {tag: [tags.function(tags.variableName), tags.function(tags.propertyName), tags.definition(tags.variableName), tags.typeName, tags.className, tags.propertyName, tags.attributeName], class: 'tok-function'},
+  {tag: [tags.function(tags.variableName), tags.function(tags.propertyName), tags.definition(tags.variableName), tags.propertyName, tags.attributeName], class: 'tok-function'},
+  {tag: [tags.typeName, tags.className], class: 'tok-type'},
   {tag: tags.heading, class: 'tok-heading'}, {tag: [tags.link, tags.url], class: 'tok-link'},
   {tag: tags.strong, class: 'tok-strong'}, {tag: tags.emphasis, class: 'tok-emphasis'},
   {tag: [tags.meta, tags.processingInstruction, tags.list, tags.contentSeparator], class: 'tok-meta'},
@@ -143,10 +145,7 @@ $('jump-form').onsubmit=event=>{event.preventDefault();jump($('line').value);};
 $('search').onclick=()=>{if(currentMode==='preview')setMode('edit');openSearchPanel(editor);editor.focus();};
 $('open').onclick=openFile;$('save').onclick=saveFile;$('download').onclick=downloadFile;
 $('file-input').onchange=async()=>{const file=$('file-input').files[0];if(file)try{await loadFile(file);}catch(error){say('Could not open this file. '+error.message);}finally{$('file-input').value='';}};
-// Start from the system appearance; the toggle then flips the explicit theme.
-const root=document.documentElement;
-if(!root.dataset.theme) root.dataset.theme=typeof matchMedia==='function' && matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
-$('theme').onclick=()=>{root.dataset.theme=root.dataset.theme==='light'?'dark':'light';};
+installAppearance(document.documentElement, $('theme'), data.appearance);
 $('preview').onclick=event=>{const unavailable=event.target.closest('[data-unavailable]');if(unavailable){event.preventDefault();say('Open the linked file from disk. It is not included in this viewer.');}};
 addEventListener('beforeunload',event=>{if(isDirty()){event.preventDefault();event.returnValue='';}});
 addEventListener('hashchange',()=>{const match=location.hash.match(/^#L(\d+)$/);if(match)jump(+match[1],true);});

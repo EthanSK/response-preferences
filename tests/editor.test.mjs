@@ -107,3 +107,40 @@ test('compact chrome keeps accessible names, theme toggle, save state and status
     assert.deepEqual(errors,[]);
   } finally {dom.window.close();}
 });
+
+test('saved Codex appearance overrides system mode and clears dark overrides on toggle',async()=>{
+  const appearance={mode:'dark',dark:{surface:'#0f0f11',ink:'#e3e4e6',accent:'#606acc',contrast:50,ui:'Inter',codeThemeId:'linear'},light:{surface:'#ffffff',ink:'#0d0d0d',accent:'#0169cc',contrast:45}};
+  const {dom,errors}=boot({name:'theme.md',source:'# Theme\n',line:1,images:{},links:{},appearance},w=>{
+    w.matchMedia=()=>({matches:true,addEventListener(){}});
+  });
+  try {
+    await new Promise(resolve=>setTimeout(resolve,100));
+    const d=dom.window.document,root=d.documentElement;
+    assert.equal(root.dataset.theme,'dark');
+    assert.equal(root.style.getPropertyValue('--bg'),'#0f0f11');
+    assert.equal(root.style.getPropertyValue('--accent'),'#606acc');
+    assert.match(root.style.getPropertyValue('--ui'),/^Inter,/);
+    d.querySelector('#theme').click();
+    assert.equal(root.dataset.theme,'light');
+    assert.equal(root.style.getPropertyValue('--bg'),'#ffffff');
+    assert.equal(root.style.getPropertyValue('--accent'),'#0169cc');
+    assert.equal(root.style.getPropertyValue('--ui'),'');
+    d.querySelector('#theme').click();
+    assert.equal(root.style.getPropertyValue('--bg'),'#0f0f11');
+    assert.deepEqual(errors,[]);
+  } finally {dom.window.close();}
+});
+
+test('system appearance follows changes until the reader chooses a theme',async()=>{
+  let changed;
+  const media={matches:false,addEventListener(type,fn){changed=fn;}};
+  const {dom}=boot({name:'system.md',source:'# Theme\n',line:1,images:{},links:{},appearance:{mode:'system'}},w=>{w.matchMedia=()=>media;});
+  try {
+    await new Promise(resolve=>setTimeout(resolve,100));
+    const d=dom.window.document,root=d.documentElement;
+    assert.equal(root.dataset.theme,'dark');
+    media.matches=true;changed();assert.equal(root.dataset.theme,'light');
+    d.querySelector('#theme').click();assert.equal(root.dataset.theme,'dark');
+    changed();assert.equal(root.dataset.theme,'dark');
+  } finally {dom.window.close();}
+});

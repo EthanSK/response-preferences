@@ -4,6 +4,7 @@ from pathlib import Path
 import re
 import tempfile
 import unittest
+from unittest.mock import patch
 
 spec=importlib.util.spec_from_file_location('generator', Path(__file__).resolve().parents[1] / 'scripts/create-viewer.py')
 generator=importlib.util.module_from_spec(spec)
@@ -11,6 +12,41 @@ spec.loader.exec_module(generator)
 
 
 class GeneratorTests(unittest.TestCase):
+    def test_appearance_is_whitelisted_private_and_changes_snapshot_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            home=Path(tmp); source=home/'theme.md';source.write_text('# Theme\n')
+            config=home/'config.toml'
+            config.write_text('''[desktop]
+appearanceTheme = "dark"
+appearanceDarkCodeThemeId = "linear"
+unrelatedSecret = "must never appear"
+[desktop.appearanceDarkChromeTheme]
+surface = "#0f0f11"
+ink = "#e3e4e6"
+accent = "#606acc"
+contrast = 50
+[desktop.appearanceDarkChromeTheme.fonts]
+ui = "Inter"
+code = "bad; background:red"
+''')
+            with patch.dict('os.environ',{'CODEX_HOME':tmp}):
+                first=generator.create_viewer(source)
+                page=first.read_text()
+                payload=json.loads(re.search(r'<script id="document-data" type="application/json">(.*?)</script>',page,re.S).group(1))
+                self.assertEqual(payload['appearance']['mode'],'dark')
+                self.assertEqual(payload['appearance']['dark']['ui'],'Inter')
+                self.assertEqual(payload['appearance']['dark']['codeThemeId'],'linear')
+                self.assertNotIn('code',payload['appearance']['dark'])
+                self.assertNotIn('must never appear',page)
+                config.write_text(config.read_text().replace('#606acc','#12abcd'))
+                second=generator.create_viewer(source)
+                self.assertNotEqual(first,second)
+                public=generator.create_viewer(source,home/'public.html',public=True).read_text()
+                payload=json.loads(re.search(r'<script id="document-data" type="application/json">(.*?)</script>',public,re.S).group(1))
+                self.assertNotIn('appearance',payload)
+                config.write_text('[desktop.appearanceDarkChromeTheme]\nsurface = "red; url(bad)"\n')
+                self.assertEqual(generator.codex_appearance(),{})
+
     def test_exact_source_roundtrip_and_script_termination(self):
         with tempfile.TemporaryDirectory() as tmp:
             source=Path(tmp)/'test.md';text='# Test\r\n\r\n</script><script>alert(1)</script>\r\n';source.write_bytes(text.encode())

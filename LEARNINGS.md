@@ -130,3 +130,12 @@ In the live **Compare Zap and Deliveroo** task, all 13 assistant-authored expres
 ## Check links in the rendered demo footer
 
 The public page's `window.js` replaces the static `.composer-note` footer during startup. A link added only to `docs/index.html` passed source checks but did not appear in the live page. For navigation links that must remain visible, put them in the footer built by `window.js`, then inspect the live DOM and click the link after deployment. The static footer can still carry the link for the JavaScript-disabled fallback. Verified while connecting Ethan's setup on 2026-09-24.
+
+
+## Match local Codex appearance without exporting configuration
+
+Local viewer generation reads only validated appearance values from Codex config: mode, surface, ink, accent, contrast, fonts and supported code-theme IDs. Include that small appearance payload in the cache fingerprint so changing the saved theme produces a fresh snapshot. Public generation must omit the payload entirely. Never embed the config body or unrelated fields. The reader stays compatible with the package's Python 3.9 minimum and resets its section at every table heading.
+
+The verified Linear Dark seed uses surface `#0f0f11`, ink `#e3e4e6`, accent `#606acc`, UI font Inter and code surface `#17181d`. Embed the licensed font in the standalone HTML so font-family alone does not silently fall back offline. Keep the code editor and Markdown code fences on that code surface; the chrome surface is separate. A light/dark toggle must clear old palette overrides before applying the next seed, and manual selection stops following system changes for that page.
+
+Generator whitelist/privacy and fingerprint tests, editor theme-switch tests, and actual Chrome preview/edit/split checks verified this behavior. The narrow 560-pixel panel, search, undo and line jump were also inspected visually. Existing generated snapshots keep their original template and appearance; installing a new template affects fresh links.
