@@ -60,6 +60,18 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(any('Annotation 2' in error for error in check_fragment(context + answer)))
         self.assertEqual([], check_fragment(context + answer.replace('index="2"', 'index="1"')))
 
+    def test_agent_flow_context_without_native_reference(self):
+        context = '> **Problem at hand:** Suggestions sorting adds Back steps.\n> **Earlier response:** I fixed the sort helper.\n> **Your annotation:** Why did you omit the context?\n\n'
+        answer = '> Why did you omit the context?\n\n' + r'\(\huge\text{⮑}\) The draft missed its context.'
+        self.assertEqual([], check_fragment(context + answer, require_annotation_context=True))
+        self.assertEqual([], check_fragment(answer))
+        for label in reply.ANNOTATION_CONTEXT_LABELS:
+            for replacement in ('', '> **' + label + ':**'):
+                broken = '\n'.join(replacement if label in line else line for line in context.splitlines())
+                self.assertTrue(any(label in error for error in check_fragment(broken + '\n\n' + answer, require_annotation_context=True)))
+        self.assertTrue(check_fragment(answer + '\n\n' + context, require_annotation_context=True))
+        self.assertTrue(check_fragment(context, require_annotation_context=True))
+
     def test_quoted_and_fenced_annotations_do_not_require_new_context(self):
         self.assertEqual([], check_fragment('> :codex-annotation{index="1"}'))
         self.assertEqual([], check_fragment('```text\n:codex-annotation{index="1"}\n```'))

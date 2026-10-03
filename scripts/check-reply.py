@@ -145,13 +145,14 @@ def leading_marker(line):
     return MARKER.match(line) or PLAIN_MARKER.match(line)
 
 
-def annotation_errors(text):
+def annotation_errors(text, require_context=False):
     """Check full annotation context without enabling unrelated styling checks."""
     errors = []
     counts = dict.fromkeys(ANNOTATION_CONTEXT_LABELS, 0)
     seen = set()
     fence = None
     pending_label = None
+    checked_first_answer = False
     for number, raw in enumerate(text.splitlines(), 1):
         line = raw.lstrip()
         opening = re.match(r'(`{3,}|~{3,})', line)
@@ -177,6 +178,11 @@ def annotation_errors(text):
             continue
         pending_label = None
         line = INLINE_CODE.sub('', line)
+        if require_context and not checked_first_answer and '⮑' in line:
+            checked_first_answer = True
+            for label in ANNOTATION_CONTEXT_LABELS:
+                if not counts[label]:
+                    errors.append(f'Line {number}: The Agent Flow answer needs quoted {label}: context before its answer. The short rainbow question does not replace it.')
         for annotation in ANNOTATION.finditer(line):
             index = annotation.group(1)
             if index in seen:
@@ -185,13 +191,15 @@ def annotation_errors(text):
             for label in ANNOTATION_CONTEXT_LABELS:
                 if counts[label] < len(seen):
                     errors.append(f'Line {number}: Annotation {index} needs its own quoted {label}: context before the answer/reference. The short rainbow question and native popup do not replace it.')
+    if require_context and not checked_first_answer:
+        errors.append('The annotated reply needs a direct-answer arrow after its three quoted context fields.')
     return errors
 
 
-def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True):
+def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True, require_annotation_context=False):
     errors = math_validation.check_math(text)
     if not commentary:
-        errors.extend(annotation_errors(text))
+        errors.extend(annotation_errors(text, require_annotation_context))
     topic_lines = []
     last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
@@ -339,7 +347,8 @@ if __name__ == '__main__':
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
+    parser.add_argument('--require-annotation-context', action='store_true', help='Require the three nonempty quoted context fields before the first answer, including Agent Flow selections without native annotation references.')
     args = parser.parse_args()
-    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary, hover_contexts=args.hover_context)
+    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary, hover_contexts=args.hover_context, require_annotation_context=args.require_annotation_context)
     print('\n'.join(errors) if errors else 'Reply structure passed. Meaning, coverage and visual appearance still need review.')
     raise SystemExit(bool(errors))
