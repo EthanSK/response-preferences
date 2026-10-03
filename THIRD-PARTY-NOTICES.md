@@ -1079,3 +1079,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
+# Inter
+
+The standalone viewer embeds Inter Variable 4.1 by Rasmus Andersson, distributed under the SIL Open Font License 1.1. The original font and license are retained in `assets/InterVariable.woff2` and `assets/Inter-LICENSE.txt`; the generated HTML includes the license. Source: https://github.com/rsms/inter/tree/v4.1.

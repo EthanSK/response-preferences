@@ -124,7 +124,7 @@ The context helper preserves exact message text and copies available attachments
 
 ## Editing and privacy
 
-- The viewer is a compact utility: file name and save state in the header, a Preview / Edit / Split control, a line field, icon actions (Search, Open file, Save, Download copy, Light / dark; each names itself in a tooltip and to assistive technology), and a status bar at the bottom for messages. The theme starts from the system appearance; the toggle switches it.
+- The viewer is a compact utility: file name and save state in the header, a Preview / Edit / Split control, a line field, icon actions (Search, Open file, Save, Download copy, Light / dark; each names itself in a tooltip and to assistive technology), and a status bar at the bottom for messages. New local viewers use your saved Codex appearance colours, contrast, fonts and light/dark mode. The default dark palette is Linear Dark, with offline Inter typography and matching code colours. The toggle switches light/dark; public demos use the default palette and omit local settings. Existing HTML snapshots keep their original theme.
 - **Download copy** exports the edited source. It does not overwrite the original.
 - **Open file** lets you choose a file on disk. Browsers supporting the File System Access API can then enable **Save** for that picked file. Otherwise, download the copy.
 - Saving checks for external edits first and refuses a conflicting write. This is not an atomic lock against other applications; use a copy for files being edited concurrently.

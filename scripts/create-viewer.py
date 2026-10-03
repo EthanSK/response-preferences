@@ -18,6 +18,54 @@ MAX_IMAGES = 40 * 1024 * 1024
 MIMES = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp'}
 
 
+def codex_appearance(config=None):
+    """Read only simple appearance settings, also on Python 3.9 without tomllib."""
+    config = Path(config) if config else Path(os.environ.get('CODEX_HOME', Path.home() / '.codex')) / 'config.toml'
+    tables, section = {}, ''
+    try:
+        if config.stat().st_size > 1024 * 1024:
+            return {}
+        with config.open(encoding='utf-8') as stream:
+            for line in stream:
+                heading = re.fullmatch(r'\s*\[([\w.]+)\]\s*(?:#.*)?', line.rstrip())
+                if heading:
+                    section = heading.group(1)
+                    continue
+                if line.lstrip().startswith('['):
+                    section = ''
+                    continue
+                if not section.startswith('desktop'):
+                    continue
+                match = re.fullmatch(r'\s*(\w+)\s*=\s*("(?:[^"\\]|\\.)*"|\d+)\s*(?:#.*)?', line.rstrip())
+                if match:
+                    try:
+                        tables.setdefault(section, {})[match.group(1)] = json.loads(match.group(2))
+                    except (ValueError, TypeError):
+                        pass
+    except (OSError, UnicodeError):
+        return {}
+    desktop = tables.get('desktop', {})
+    appearance = {'mode': desktop.get('appearanceTheme', 'system')}
+    if appearance['mode'] not in ('light', 'dark', 'system'):
+        appearance['mode'] = 'system'
+    for mode in ('light', 'dark'):
+        prefix = 'desktop.appearance' + mode.title() + 'ChromeTheme'
+        values = tables.get(prefix, {})
+        if not all(isinstance(values.get(k), str) and re.fullmatch(r'#[0-9a-fA-F]{6}', values[k]) for k in ('surface','ink','accent')):
+            continue
+        theme = {k: values[k] for k in ('surface','ink','accent')}
+        theme['contrast'] = min(100, max(0, values.get('contrast', 50))) if isinstance(values.get('contrast', 50), int) else 50
+        for key in ('ui', 'code'):
+            font = tables.get(prefix + '.fonts', {}).get(key)
+            if isinstance(font, str) and re.fullmatch(r'[\w ,"\'.-]{1,200}', font):
+                theme[key] = font
+        code_theme = desktop.get('appearance' + mode.title() + 'CodeThemeId')
+        if code_theme in ('linear', 'codex'):
+            theme['codeThemeId'] = code_theme
+        appearance[mode] = theme
+    return appearance if any(k in appearance for k in ('light','dark')) else {}
+
+
 def destinations(text):
     # Best effort for inline and reference destinations, including paths in <...>.
     for match in re.finditer(r'!?\[[^\]\n]*\]\(\s*(?:<([^>\n]+)>|([^\s)]+))(?:\s+[^)]*)?\)', text):
@@ -41,6 +89,8 @@ def create_viewer(source, output=None, line=1, embed_images=True, public=False):
         raise ValueError(f'Line must be between 1 and {count}')
     template = (ROOT / 'assets/viewer.html').read_text(encoding='utf-8')
     data = {'name': source.name, 'source': text, 'line': line, 'generated': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'), 'images': {}, 'links': {}}
+    if not public:
+        data['appearance'] = codex_appearance()
     used = 0
     for href in dict.fromkeys(destinations(text)):
         parsed = urlparse(href)
@@ -62,7 +112,7 @@ def create_viewer(source, output=None, line=1, embed_images=True, public=False):
                 data['images'][href] = f'data:{mime};base64,' + base64.b64encode(image_bytes).decode('ascii')
                 used += len(image_bytes)
     payload = json.dumps(data, ensure_ascii=False).replace('&', '\\u0026').replace('<', '\\u003c').replace('>', '\\u003e')
-    fingerprint = hashlib.sha256(str(source).encode() + raw + template.encode() + str(line).encode() + json.dumps(data['images'], sort_keys=True).encode() + str(public).encode()).hexdigest()[:16]
+    fingerprint = hashlib.sha256(str(source).encode() + raw + template.encode() + str(line).encode() + json.dumps(data['images'], sort_keys=True).encode() + json.dumps(data.get('appearance', {}), sort_keys=True).encode() + str(public).encode()).hexdigest()[:16]
     if output is None:
         codex = Path(os.environ.get('CODEX_HOME', Path.home() / '.codex'))
         folder = codex / 'outputs' / 'viewers' / datetime.now().strftime('%Y-%m-%d')
