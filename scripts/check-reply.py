@@ -31,6 +31,7 @@ WORKING_CARET = '⌄'
 # real spaces between expressions where it can wrap.
 MAX_PROSE_CHARACTERS = 64
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
+MANUAL_CHECKS_HEADING = re.compile(r'\s*(?:\\\(.*?\\\)\s*)*(?:#{1,6}\s+)?(?:\*\*)?Manual checks\b', re.IGNORECASE)  # User request — 2026-10-04: Manual checks sections use the computer emoji.
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
 
@@ -237,6 +238,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         # Ordinary Markdown prose is the preferred companion to short styled
         # cues. Keep checking the expressions themselves, not the surrounding
         # sentence for LaTeX coverage.
+        if MANUAL_CHECKS_HEADING.match(line) and '🖥' not in line:
+            fail('Start every Manual checks section with the 🖥️ computer marker, including checks proposed for the user to run.')
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):

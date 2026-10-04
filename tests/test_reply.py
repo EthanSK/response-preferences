@@ -237,6 +237,8 @@ class ReplyChecks(unittest.TestCase):
 
     def test_computer_marker_is_global_and_project_extensions_are_scoped(self):
         self.assertEqual([],check_fragment(r'\(\huge\text{🖥️}\) Manual browser test passed.'))
+        self.assertTrue(check_fragment('**Manual checks**\n\n1. Open the page.'))
+        self.assertEqual([],check_fragment(r'\(\huge\text{🖥️}\) **Manual checks**' + '\n\n1. Open the page.'))
         example=r'\(\huge\text{🧬}\) Project-specific fixture.'
         self.assertTrue(check_fragment(example))
         self.assertEqual([],check_fragment(example, approved_project_markers=['🧬']))
