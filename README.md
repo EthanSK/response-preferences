@@ -191,6 +191,8 @@ Closing outstanding-item recommendations include a hover-only ↗ whose destinat
 
 ## Original-message hover
 
+Clarify a term or limitation where it first appears, including in annotation answers. A later section can add detail, introduced with “More clarification below”, but must not supply an explanation needed to understand the earlier answer. For example: “The panel stays attached — Angular can still update it while it is hidden; its subscriptions need their own pause. More clarification below.”
+
 Separate distinct annotation answers with a Markdown horizontal divider (`---`), including Agent Flow selections. Keep a section's full context, short rainbow question and answer together; related annotations can share one answer. The website example shows two annotation answers with this divider.
 
 Prefer Codex’s native `:codex-annotation{index="N"}` reference for an actual attached response annotation. It shows the selected text and the user’s comment on hover, so no fake file-path link is needed for that annotation. Its index must point to an annotation supplied with the message; it cannot be used to attach arbitrary message text. The ordinary-message fallback below remains useful when there is no supported native reference.
