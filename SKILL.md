@@ -123,6 +123,16 @@ The optional diagnostic checker parses/renders explicit `\(...\)`, `\[...\]` and
 
 Underlines are scanning cues, not status or link markers. Preserve literal quotations, reminders, source text, code, paths, URLs and link labels. Labels/headings/marker-only lines need no underline; important compact table values follow the table scanning rule above, and prose sentences in tables/lists retain useful cues. These rules style assistant replies, not ordinary product UI or documentation. Never emit `<u>` or `</u>` in an assistant reply: Codex can display those tags literally. User correction — 2026-09-23.
 
+## Other-model contributions
+
+User request — 2026-10-04: "at the end of every message if you used a different model only"; "Just tell me quickly what Opus did or what another model did."
+
+When a different model ran, is running, or supplied results used in the work being reported, end each applicable commentary or final reply with one short cyan `Models:` sentence naming the actual model and its role. For example: `\(\textsf{\color{#67e8f9}Models: Claude Opus 5.5 reviewed the layout.}\)`. Use ordinary wrapping text or separate short expressions for several models; retain the 64-character limit. No new icon is needed.
+
+Use verified run metadata for the model/version, not an assumed alias; while a call is pending, name the requested model and say the version is unverified until metadata establishes it. Distinguish a finished review, implementation, advice, a pending call and a failed call; do not imply that suggestions were accepted or checks executed. Name only the other models that contributed to the work in that reply, including earlier results being used now. Omit this line when only the chat's own model worked, including a separate session using that same model or when merely discussing possible models. This formatting rule does not authorize model calls.
+
+In commentary, place the model sentence last. In final replies, place it after the main content and before required environment/outstanding-item footers and the final lavender `About:` reminder, preserving those existing closing rules.
+
 ## Closing reminder and notification
 
 End **only the final reply** with one lavender `#b8a4d9` **About:** reminder. Do not add About reminders to working commentary or progress updates. Split its two short sentences into sans-serif `\(\textsf{\color{#b8a4d9}...}\)` chunks of at most 64 visible characters when needed. Use a concrete overall subject, then useful explanation/action/result/next step. Keep every expression within the 64-character guardrail and leave ordinary spaces between them. No bold, emoji, caret, link, heading or divider in this reminder. It comes after any applicable outstanding-item or environment footer and does not replace the question quote.
