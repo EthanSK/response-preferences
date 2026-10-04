@@ -59,6 +59,8 @@ When maintaining Ethan’s skill, check the website and README after every respo
 
 For updates, use `git pull --ff-only` only after reviewing your local edits. Keep personal overrides on your own branch or fork. Do not discard customised preferences to update.
 
+Orange warnings explain the affected feature, expected and observed behaviour, practical impact, and whether the issue is confirmed or pre-existing. Routine details stay less prominent. Review replies append verified Codex/Opus finding counts to the existing cyan Models line; shared findings are counted once and withdrawn findings are separated.
+
 ## Marker vocabulary
 
 | Marker | Meaning | Marker | Meaning |
