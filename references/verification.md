@@ -96,6 +96,8 @@ Check that working commentary has no attention fingers. The final reply normally
 
 ## Context when scanning backwards
 
+Read each annotation answer without the later sections. A term such as “attached” must be explained at its first mention: “The panel stays attached — Angular can still update it while it is hidden.” Include the relevant limitation there too, such as ordinary subscriptions needing their own pause. “More clarification below” may introduce extra detail, but must not postpone an explanation needed to understand the first answer. Repeat this check for ordinary and side chat replies. This is a manual semantic check; syntax tests cannot prove the explanation is complete. User request — 2026-10-04.
+
 In working and final prose, pick a later underlined cue in each paragraph, then read it with the first cue. The first should name the concrete topic so the pair makes sense without searching other paragraphs. Use `skill-update decisions` followed by `agent-based`, not an isolated `agent-based`. Re-establish the subject when the topic changes; do not expand every cue into a whole sentence. This is a semantic review, not something the structural checker can prove.
 
 ## Inline prose overflow
