@@ -109,6 +109,8 @@ Use normal-size `\(\textsf{\color{#67e8f9}This viewer is a snapshot.}\)` for col
 - **Red `#ef4444`:** critical, must-read information.
 - **Green `#22c55e`:** explicit confirmed success/status, including saved, committed, merged or deployed and successful manual tests. Colour the short outcome itself, not just its tick. Never colour automated tests, lint or equivalent routine checks green; never colour unfinished work green.
 - **Orange `#fb923c`:** warnings or kind-of-important details; critical information is red.
+
+User request — 2026-10-04: Explain orange warnings, including orange `(sus)` points, in a bit more detail from first principles: remind me what feature or surface we are talking about, what should happen, what actually happens, and why it matters. State whether it is a confirmed bug, an intentional limitation or still unverified, and whether it was introduced here or already existed. Keep the short orange highlight self-contained and put the necessary explanation beside it in ordinary wrapping prose. Other routine information should stay less prominent; do not make everything stand out.
 - **Cyan `#67e8f9`:** selected useful information, including what changed/how the resulting system behaves in the opening direct answer. “Both Playlist types share one visual row” is cyan; “The clipping bug is fixed” is green. A completion reply does not turn every descriptive sentence green. Preserve ⮑/👉 roles; supporting information uses ⓘ.
 
 A coloured span must make sense from its first word without surrounding text. Keep each colour highlight short and self-contained. Codex treats each KaTeX expression as an unbreakable selection box, so leave the rest of the sentence as wrapping Markdown. Keep every expression below 64 approximate visible characters; split a long highlight into separate short thoughts or leave it uncoloured. Preserve essential negatives and conditions.
@@ -132,6 +134,8 @@ When a different model ran, is running, or supplied results used in the work bei
 Use verified run metadata for the model/version, not an assumed alias; while a call is pending, name the requested model and say the version is unverified until metadata establishes it. Distinguish a finished review, implementation, advice, a pending call and a failed call; do not imply that suggestions were accepted or checks executed. Name only the other models that contributed to the work in that reply, including earlier results being used now. Omit this line when only the chat's own model worked, including a separate session using that same model or when merely discussing possible models. This formatting rule does not authorize model calls.
 
 In commentary, place the model sentence last. In final replies, place it after the main content and before required environment/outstanding-item footers and the final lavender `About:` reminder, preserving those existing closing rules.
+
+User request — 2026-10-04: At the end of findings, append the Codex/Opus finding split to the existing cyan `Models:` line, in this same colour. Follow [code-review-findings](../code-review-findings/SKILL.md) for verified attribution, deduplication and shared/withdrawn counts; identify the scope being counted. For example: `Models: Claude Opus 5.5 reviewed the change.` followed by `Findings: Codex 2; Opus 3; shared 1.` Split these into short cyan expressions as needed. Findings credit says who identified the issue, not who implemented its fix; do not invent a count when provenance is unavailable.
 
 ## Closing reminder and notification
 
