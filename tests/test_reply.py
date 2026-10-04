@@ -257,17 +257,32 @@ class ReplyChecks(unittest.TestCase):
             self.assertTrue(check_message(finger+' Read this.', require_pointer=False, commentary=True))
 
     def test_marker_sizes_depend_on_reply_phase(self):
-        for symbol in reply.MARKERS - {'🫵', '👉'}:
+        for symbol in reply.MARKERS - {'🫵', '👉', '⮑'}:
             with self.subTest(symbol=symbol):
-                prefix = '> Check the files.\n\n' if symbol == '⮑' else ''
-                plain = prefix + symbol + ' Checking the files.'
-                large = prefix + r'\(\huge\text{' + symbol + r'}\) Checking the files.'
+                plain = symbol + ' Checking the files.'
+                large = r'\(\huge\text{' + symbol + r'}\) Checking the files.'
                 self.assertEqual([], check_fragment(plain, commentary=True))
                 self.assertTrue(check_fragment(large, commentary=True))
                 self.assertEqual([], check_fragment(large))
                 self.assertTrue(check_fragment(plain))
         for wrapper in [r'\(\Large\text{ⓘ}\)', r'\(\Huge\text{ⓘ}\)', r'\(\text{ⓘ}\)']:
             self.assertTrue(check_fragment(wrapper+' Details.', commentary=True))
+
+    def test_direct_answers_stay_large_in_both_phases(self):
+        # Responses aimed at the user stand out even in working commentary.
+        large = '> Is it fixed?\n\n' + r'\(\huge\text{⮑}\) Yes, the export is fixed.'
+        plain = '> Is it fixed?\n\n⮑ Yes, the export is fixed.'
+        for commentary in (False, True):
+            with self.subTest(commentary=commentary):
+                self.assertEqual([], check_fragment(large, commentary=commentary))
+                errors = check_fragment(plain, commentary=commentary)
+                self.assertTrue(errors)
+                self.assertFalse(any('plain normal-size' in e for e in errors), errors)
+        for wrapper in [r'\(\Large\text{⮑}\)', r'\(\Huge\text{⮑}\)']:
+            self.assertTrue(check_fragment('> Is it fixed?\n\n'+wrapper+' Yes.', commentary=True))
+        # The arrow keeps its placement rules when enlarged in commentary.
+        self.assertTrue(check_fragment(r'\(\huge\text{⮑}\) Yes, it is fixed.', commentary=True))
+        self.assertTrue(check_fragment('> Is it fixed?\n\n'+r'\(\huge\text{⮑}\) ⌄'+'\n\nYes.', commentary=True))
 
     def test_small_commentary_markers_keep_structure_and_reference_checks(self):
         with tempfile.TemporaryDirectory() as directory:

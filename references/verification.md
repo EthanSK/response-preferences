@@ -21,7 +21,7 @@ The checker is deliberately limited. It catches common structural regressions in
 | Planning and brainstorming | 🛠️ is one shared category for options, approaches and next steps; ⓘ remains facts and 🐌 execution underway | Reply checker in both phases; home example, click popover and planning filter |
 | Other meanings | 🫵 user action, 🤨 unusual, ⚠️ caution, ❓ uncertainty, 💡 recommendation, ⚖️ trade-offs, ⛔ external blocker, 🧠 skill use, ➕➕ extra scope, ⮑ answer | Closed vocabulary and website meaning controls |
 | Marker placement | Left aligned, before content; inline for a short statement, standalone with a visible ⌄ chevron for multi-block sections; the return arrow stays beside its opening answer | Reply checker; website structure test; desktop/mobile inspection |
-| Marker size | Plain normal-size markers in commentary, including 🧠; lowercase `\huge` in final replies; normal-size table labels | Phase-specific checker fixtures; website marker size and screenshots |
+| Marker size | Plain normal-size markers in commentary, including 🧠, except an enlarged ⮑ direct answer; lowercase `\huge` in final replies; normal-size table labels | Phase-specific checker fixtures; website marker size and screenshots |
 | Highlighting | Selected self-contained red/green/orange/cyan clauses or sentences in normal-size text; no new colour meanings | Checker; website computed styles; manual reading of each highlight in isolation |
 | Computer Use and automated checks | 🖥️ with explicit manual-test status; green only for successful manual tests, never automated tests/lint | Manual semantic check; website example and global/project marker tests |
 | Underlined scanning cues | Prefer a short cue in working and final prose sentences; self-contained colour can carry the cue; preserve negatives and conditions | Manual sentence-by-sentence clue review; website quote/link preservation and scanning examples |
@@ -92,7 +92,7 @@ The opening link must point to the real original-message viewer; the path above 
 
 ## Attention finger coverage
 
-Check that working commentary has no attention fingers. The final reply normally has one 🫵 at a real user action or one 👉 before its main self-contained takeaway; two are appropriate only for distinct important items. Quotations and code examples do not count. The checker defaults to final mode; use `--commentary` to require normal-size markers and reject fingers in work updates. Website checks cover both progress messages and final replies. Review the caret visually: smaller than the emoji and raised toward its vertical centre.
+Check that working commentary has no attention fingers. The final reply normally has one 🫵 at a real user action or one 👉 before its main self-contained takeaway; two are appropriate only for distinct important items. Quotations and code examples do not count. The checker defaults to final mode; use `--commentary` to require normal-size markers, an enlarged ⮑ direct answer and no fingers in work updates. Website checks cover both progress messages and final replies. Review the caret visually: smaller than the emoji and raised toward its vertical centre.
 
 ## Context when scanning backwards
 
@@ -103,3 +103,7 @@ In working and final prose, pick a later underlined cue in each paragraph, then 
 A long single coloured `\textsf` expression with nested underlines was visibly clipped in Codex desktop 26.901.51231 (8109). The bundled `.katex .base` uses `white-space: nowrap` and inline-block layout. A synthetic reproduction using that client's KaTeX JS/CSS measured 1069px of content in 700px and 316px paragraphs; a short complete coloured statement plus ordinary supporting prose fit both widths. This is an authoring workaround, not an app-renderer fix. The public website uses HTML/CSS and cannot establish native rendering.
 
 Ordinary Markdown surrounds short complete style expressions. The optional checker rejects styled chunks above 64 approximate visible characters and malformed LaTeX. It does not measure glyph widths. Links, code, paths, literal quotes and mathematical expressions without prose text commands remain explicit exceptions.
+
+## Viewer link existence
+
+Self-improved — 2026-10-04: a skill announcement linked a guessed fingerprint path that did not exist. Regenerating the viewer returned an existing file. Copy the helper’s exact output and check `Path(returned_path).is_file()` before posting; this verifies link existence, not document accuracy or browser permission. A nonexistent synthetic path must fail the same check.

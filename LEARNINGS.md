@@ -54,7 +54,7 @@ A saved formatting rule can remain intact while an assistant reply omits it. Val
 
 Nested underline braces inside coloured LaTeX must not bypass palette, font or adjacent-link checks. The old flat-text colour matcher skipped these spans entirely; `tests/test_reply.py` now checks invalid colours/fonts and missing magenta links with nested underlines. This remains a structural check, not a TeX parser or a semantic underline selector.
 
-Reply phase determines marker size: plain commentary markers must pass through the same vocabulary, position, direct-answer and skill-link checks as enlarged final markers. Treating plain commentary as exempt would lose those checks; `tests/test_reply.py` covers both forms and their different caret sizes. The website uses the enclosing assistant message’s `final` class so all working markers, including skill announcements, inherit prose size together.
+Reply phase determines marker size, except that a ⮑ direct answer stays enlarged in commentary too (user request — 2026-10-04): plain commentary markers must pass through the same vocabulary, position, direct-answer and skill-link checks as enlarged final markers. Treating plain commentary as exempt would lose those checks; `tests/test_reply.py` covers both forms and their different caret sizes. The website uses the enclosing assistant message’s `final` class so all working markers, including skill announcements, inherit prose size together.
 
 ## Guide controls and responsive state
 

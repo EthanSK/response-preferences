@@ -84,6 +84,18 @@ test('working markers use text size while final markers stay enlarged',()=>{
  for(const marker of working){assert.equal(style(marker).fontSize,style(marker.parentElement).fontSize);assert.equal(style(marker).verticalAlign,'baseline');}
  for(const marker of d.querySelectorAll('.msg.assistant.final .mk'))assert.equal(style(marker).fontSize,'32px');
  assert(d.querySelector('#format').textContent.includes('Working messages use small markers'));
+ assert(d.querySelector('#format').textContent.includes('A direct answer to you stays large'));
+ dom.window.close();
+});
+
+test('a direct answer stays large in a working update',()=>{
+ const dom=demo(),d=dom.window.document,style=el=>dom.window.getComputedStyle(el);
+ const working=d.querySelector('.msg.assistant:not(.final)');
+ const answer=d.createElement('p');answer.dataset.kind='answer';
+ answer.innerHTML='<button type="button" class="mk">⮑</button>Yes, the export is fixed.';
+ working.append(answer);
+ assert.equal(style(answer.querySelector('.mk')).fontSize,'32px');
+ assert.notEqual(style(answer.querySelector('.mk')).verticalAlign,'baseline');
  dom.window.close();
 });
 
