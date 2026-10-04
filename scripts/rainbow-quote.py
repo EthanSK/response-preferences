@@ -12,7 +12,7 @@ import tempfile
 PALETTE = ('#fa7070', '#fa9370', '#fab570', '#fad870', '#fafa70', '#d8fa70', '#b5fa70', '#93fa70', '#70fa70', '#70fa93', '#70fab5', '#70fad8', '#70fafa', '#70d8fa', '#70b5fa', '#7093fa', '#7070fa', '#9370fa', '#b570fa', '#d870fa', '#fa70fa', '#fa70d8', '#fa70b5', '#fa7093')
 MAX_CHARS = 24
 MAX_GROUP_CHARS = 64
-MAX_QUOTE_CHARS = 120
+MAX_QUOTE_CHARS = 80
 ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
            '%': r'\%', '_': r'\_', '&': r'\&', '$': r'\$',
            '^': r'\textasciicircum{}', '~': r'\textasciitilde{}'}
