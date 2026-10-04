@@ -151,6 +151,21 @@ class RainbowQuotes(unittest.TestCase):
             self.assertIn(quote.PALETTE[0], blocks[1])
             self.assertEqual('2', state.read_text().strip())
 
+    def test_cli_accepts_eighty_characters_and_rejects_eighty_one(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'question.txt'
+            state = Path(self.home.name)/'state/response-preferences/rainbow-next-index.txt'
+            for length, expected_returncode in [(80, 0), (81, 1)]:
+                path.write_text('Why ' * 19 + 'now?' + '?' * (length - 80))
+                result = subprocess.run(
+                    ['python3', str(ROOT/'scripts/rainbow-quote.py'), str(path)],
+                    text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
+                self.assertEqual(expected_returncode, result.returncode, result.stderr)
+                self.assertEqual('1', state.read_text().strip(), 'Rejected quote must not advance the palette')
+                if expected_returncode:
+                    self.assertEqual('', result.stdout)
+                    self.assertIn('80 characters or fewer', result.stderr)
+
     def test_cli_rejects_long_reminder_before_reserving_batch(self):
         with tempfile.TemporaryDirectory() as directory:
             first = Path(directory) / 'first.txt'
@@ -163,9 +178,9 @@ class RainbowQuotes(unittest.TestCase):
                 text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
             self.assertNotEqual(0, result.returncode)
             self.assertEqual('', result.stdout)
-            self.assertIn('120 characters or fewer', result.stderr)
+            self.assertIn('80 characters or fewer', result.stderr)
             self.assertFalse(state.exists(), 'Invalid batch must not advance the palette')
-            second.write_text('Could this longer question wrap while preserving the useful detail about what I was asking?')
+            second.write_text('Can this question wrap while keeping the useful detail about what I was asking?')
             result = subprocess.run(
                 ['python3', str(ROOT/'scripts/rainbow-quote.py'), str(first), str(second)],
                 text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
