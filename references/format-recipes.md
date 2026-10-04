@@ -76,4 +76,4 @@ For working and final replies, use `\(\underline{\textsf{short useful clue}}\)` 
 ```
 
 
-For a working update, replace the enlarged marker with its plain Unicode symbol and omit the finger and About. Keep the short underline cue. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is \(\underline{\textsf{still pending}}\)” must not become a success cue merely because other work finished.
+For a working update, replace the enlarged marker with its plain Unicode symbol and omit the finger and About. Keep a ⮑ direct answer enlarged as `\(\huge\text{⮑}\)`: answers aimed at the user stay big in working updates too. Keep the short underline cue. These are alternative snippets, not a requirement to include every category in one message. Underline the subject first and preserve negatives: “The upload is \(\underline{\textsf{still pending}}\)” must not become a success cue merely because other work finished.

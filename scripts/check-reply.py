@@ -252,7 +252,13 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('Reserve attention fingers for the final reply, not working commentary.')
             if match.group(2) == '👉' and line[match.end():].strip() in {'', CARET, WORKING_CARET}:
                 fail('Put the reading pointer inline immediately before its takeaway.')
-            if commentary and match.re is MARKER:
+            # A direct answer is aimed at the user, so its ⮑ stays enlarged
+            # even in working commentary; every other working marker is plain.
+            # User request — 2026-10-04.
+            if commentary and match.group(2) == '⮑':
+                if match.group(1) != 'huge':
+                    fail('Keep a ⮑ direct answer large in working commentary too, with lowercase \\huge.')
+            elif commentary and match.re is MARKER:
                 fail('Use plain normal-size markers in working commentary, without LaTeX size wrappers.')
             elif not commentary and match.group(1) != 'huge':
                 fail('Use lowercase \\huge for section markers.')
@@ -343,7 +349,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reply', type=Path)
-    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers; attention fingers and About reminders are forbidden.')
+    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers except an enlarged ⮑ answer; attention fingers and About reminders are forbidden.')
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
