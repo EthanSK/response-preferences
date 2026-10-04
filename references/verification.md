@@ -33,6 +33,7 @@ The checker is deliberately limited. It catches common structural regressions in
 | Tables | Approved emoji plus category text, consistent grouping, no decorative new mappings | Website table and manual review |
 | Annotations | Full problem/earlier-response/annotation quote, then a separate short question in the user’s perspective, then the answer; required inline directives; related answers grouped | Manual review; quote content excluded from reply lint |
 | Notifications | Current separate integration's live exact-chat-title and status/summary contract; metadata stays out of replies | Reply checker; native integration tests and fit check separately |
+| Other-model contributions | Short cyan Models line on each relevant commentary/final reply; verified model and role; omitted for chat-only work; before required final footers/About | Semantic check against actual run metadata; format demonstration and rendered sample |
 | Sharing and maintenance | Public repo and Pages, README/site checked each change, installed/source/remote reconciled, normal push | CI; static validation; generated demo consistency; live bytes and install verification |
 
 ## Preference changes and unresolved experiments
