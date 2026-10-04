@@ -21,7 +21,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
 | Closing topic reminder | Only the final assistant reply ends with a muted-lavender (`#b8a4d9`) `About:` reminder: a brief overall summary, then a second short sentence explaining the specific action, problem or next step for returning readers. It comes after actions and other closing details; the relevant question above each answer stays in place. |
 | Sentence scanning | Uses a short useful underlined clue in each substantive working and final prose sentence, not just the first sentence of a paragraph. A self-contained coloured sentence already serves as a scanning cue. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
-| Computer Use | 🖥️ for manual browser/app interaction, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
+| Computer Use | 🖥️ for manual browser/app interaction and every Manual checks section, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
 | Context above answers | Shows a short exact excerpt of the question in a rainbow blockquote above the direct-answer arrow, in main and side chats, alongside applicable annotation context; read-only side chats use the existing helper without updating shared state. The reminder aims to stay on one line; a fixed 24-colour cycle keeps agents from reinventing the format. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
@@ -70,10 +70,10 @@ For updates, use `git pull --ff-only` only after reviewing your local edits. Kee
 | ❓ | Missing information | 💡 | Recommendation |
 | ⚖️ | Trade-offs | ⛔ | External blocker |
 | 🧠 | Skill use | ➕➕ | Added beyond your request |
-| 🖥️ | Computer Use and manual browser/app tests | 👉 | Main takeaway |
+| 🖥️ | Computer Use, manual browser/app tests and Manual checks | 👉 | Main takeaway |
 | 🛠️ | Planning and brainstorming | 🧪 | Tests |
 
-Test-related information uses **🧪**: setup, coverage, progress, results and limitations. State the actual status in words; the icon does not mean a test passed. Automated results remain uncoloured. **🖥️** still marks actual Computer Use/manual browser or app tests, and **🐞** still reports actual bugs.
+Test-related information uses **🧪**: setup, coverage, progress, results and limitations. State the actual status in words; the icon does not mean a test passed. Automated results remain uncoloured. **🖥️** still marks actual Computer Use/manual browser or app tests and every Manual checks section, and **🐞** still reports actual bugs.
 
 Planning and brainstorming share **🛠️**: exploring options, proposing an approach and outlining next steps. Use it instead of information for plans; **🐌** remains execution underway and **💡** remains a recommendation. For example: `🛠️ Install the skill, try it on a real reply, then change the markers to suit you.`
 

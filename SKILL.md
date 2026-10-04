@@ -43,7 +43,7 @@ Use only these meanings; do not invent, swap or combine markers. User-approved p
 | 👀 | Starting to inspect, check or review |
 | 🐌 | Work starting or actively underway; not historical or completed work |
 | 🧪 | Test setup, coverage, progress, results and limitations |
-| 🖥️ | Actual Computer Use, including manual browser/app tests |
+| 🖥️ | Actual Computer Use, including manual browser/app tests, and every **Manual checks** section |
 | 🐞 | Reporting an actual bug; not looking for one or incomplete verification |
 | 🛠️ | Planning and brainstorming together: options, approach, next steps |
 | ⓘ | Information, explanations and historical status |
@@ -55,7 +55,7 @@ Use only these meanings; do not invent, swap or combine markers. User-approved p
 | ⛔ | External blocker |
 | ➕➕ | Every **Added beyond your request** section; never a single plus |
 
-Prefer the specific scenario over generic information/activity/results. 🧪 takes precedence for tests; 🖥️ for actual manual Computer Use; 🐞 for actual bugs. State test/Computer Use status explicitly: planned, starting, running, passed, failed, incomplete, not run or unverified. Their icons never imply success. A review finding a bug is not a failed review. Completed checks outside these specific sections use the outcome, not 👀 or 🐌. Minor non-bug observations use ⓘ or 💡. ⮑ and skill announcements keep their structural roles. If no approved meaning fits, leave content unmarked rather than guessing.
+Prefer the specific scenario over generic information/activity/results. 🧪 takes precedence for tests; 🖥️ for actual manual Computer Use and every **Manual checks** section; 🐞 for actual bugs. Use the computer emoji for manual checks: start each **Manual checks** section with 🖥️, including checks proposed for the user to run; it labels the section and never claims the agent ran them. Before sending, check every Manual checks heading has it. User request — 2026-10-04. State test/Computer Use status explicitly: planned, starting, running, passed, failed, incomplete, not run or unverified. Their icons never imply success. A review finding a bug is not a failed review. Completed checks outside these specific sections use the outcome, not 👀 or 🐌. Minor non-bug observations use ⓘ or 💡. ⮑ and skill announcements keep their structural roles. If no approved meaning fits, leave content unmarked rather than guessing.
 
 ## Phase and placement
 
