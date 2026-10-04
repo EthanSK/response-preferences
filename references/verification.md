@@ -71,7 +71,7 @@ Use a separate section marker only when the purpose changes. Supporting blocks a
 
 ## Annotation context and short reminder
 
-Repeat the context-and-rainbow check in a read-only side conversation with an Agent Flow full prompt: retain the applicable three context fields and a separate rainbow excerpt of its authored words immediately above ⮑. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User correction — 2026-09-30.
+Repeat the context-and-rainbow check in a read-only side conversation with an Agent Flow full prompt: retain the applicable three context fields and a separate rainbow reminder based on its authored words immediately above ⮑, minimally clarifying the resolved subject when needed. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User correction — 2026-09-30.
 
 The full annotation context and short reminder are both required. Separate distinct annotation-response sections with `---`, including Agent Flow selections, while keeping each section's context, short question and answer together. Verify the two-answer divider in the website demo. Keep context and reminder as distinct quote blocks, with the answer immediately after the short one:
 
@@ -96,6 +96,8 @@ The opening link must point to the real original-message viewer; the path above 
 Check that working commentary has no attention fingers. The final reply normally has one 🫵 at a real user action or one 👉 before its main self-contained takeaway; two are appropriate only for distinct important items. Quotations and code examples do not count. The checker defaults to final mode; use `--commentary` to require normal-size markers, an enlarged ⮑ direct answer and no fingers in work updates. Website checks cover both progress messages and final replies. Review the caret visually: smaller than the emoji and raised toward its vertical centre.
 
 ## Context when scanning backwards
+
+Read each rainbow reminder without the answer or context block. For “if it's like a one-time thing” about pausing hidden components, check that the reminder names the resolved subject, such as “Can we pause the whole hidden component at once?”. For a self-contained “Can you pause hidden Comments refreshes?”, keep the wording; when the subject is genuinely ambiguous, preserve more relevant context instead of guessing. Keep questions/requests in Ethan's perspective, the exact annotation/source quotes unchanged, and the existing 80-character maximum. These are manual semantic checks; syntax validation cannot resolve a pronoun. User request — 2026-10-04.
 
 Read each annotation answer without the later sections. A term such as “attached” must be explained at its first mention: “The panel stays attached — Angular can still update it while it is hidden.” Include the relevant limitation there too, such as ordinary subscriptions needing their own pause. “More clarification below” may introduce extra detail, but must not postpone an explanation needed to understand the first answer. Repeat this check for ordinary and side chat replies. This is a manual semantic check; syntax tests cannot prove the explanation is complete. User request — 2026-10-04.
 
