@@ -156,16 +156,16 @@ class RainbowQuotes(unittest.TestCase):
             first = Path(directory) / 'first.txt'
             second = Path(directory) / 'second.txt'
             first.write_text('Can you check this?')
-            second.write_text('Could this entire long question be repeated across more than one line?')
+            second.write_text('Could this entire long question be repeated across more than one line, while keeping all its extra details in the rainbow reminder?')
             state = Path(self.home.name)/'state/response-preferences/rainbow-next-index.txt'
             result = subprocess.run(
                 ['python3', str(ROOT/'scripts/rainbow-quote.py'), str(first), str(second)],
                 text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
             self.assertNotEqual(0, result.returncode)
             self.assertEqual('', result.stdout)
-            self.assertIn('40 characters or fewer', result.stderr)
+            self.assertIn('120 characters or fewer', result.stderr)
             self.assertFalse(state.exists(), 'Invalid batch must not advance the palette')
-            second.write_text('Could this question wrap?')
+            second.write_text('Could this longer question wrap while preserving the useful detail about what I was asking?')
             result = subprocess.run(
                 ['python3', str(ROOT/'scripts/rainbow-quote.py'), str(first), str(second)],
                 text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
