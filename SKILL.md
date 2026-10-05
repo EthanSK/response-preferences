@@ -100,7 +100,7 @@ The upload is \(\underline{\textsf{still pending}}\).
 \(\textsf{\color{#b8a4d9}About: Checking the upload.}\) \(\textsf{\color{#b8a4d9}Retry after restarting.}\)
 ```
 
-Copy each complete pattern rather than assembling fragments or repairing its ending. Underline and colour stay in separate expressions. The final About expression is its own fixed pattern.
+Copy each complete pattern rather than assembling fragments or repairing its ending. Before sending, check that every assistant-authored `\(` expression has its closing `\)`: an underline ends `}}\)`, not just `}}`. Braces close the formatting commands; they do not close the math expression. User correction — 2026-10-05. Underline and colour stay in separate expressions. The final About expression is its own fixed pattern.
 
 **Hard rule: never put a bare `%`, `#`, `_`, `&`, `$`, `~`, `^` or literal brace in the words of a cue, colour or About expression. This includes everyday wording such as “not 100% sure”, not just technical names.** In LaTeX, `%` makes the renderer ignore the rest of the expression, so the whole cue appears as red raw text. Reword the cue (`\(\underline{\textsf{not fully sure}}\)`) or keep the number, name or symbol in ordinary text beside it. Escape it (`100\%`, `C\#`, `sample\_tool`, `A \& B`, `\{name\}`) only when that literal itself must be styled. The `#` in a colour value stays unchanged. User request — 2026-09-24.
 

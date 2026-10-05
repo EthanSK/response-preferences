@@ -34,6 +34,12 @@ class RendererChecks(unittest.TestCase):
         self.assertIn('outside explicit math delimiters', ' '.join(math.check_math(bare)))
         self.assertEqual([], math.check_math(correct))
 
+    def test_closed_formatting_braces_do_not_close_math_expression(self):
+        broken = r'The video is \(\underline{\textsf{made fixed-size once}}, so rendering stays simple.'
+        correct = broken.replace(r'once}},', r'once}}\),')
+        self.assertIn('opening delimiter has no closing delimiter', ' '.join(math.check_math(broken)))
+        self.assertEqual([], math.check_math(correct))
+
     def test_sans_serif_and_underline_are_valid_when_fully_closed(self):
         valid = [r'\(\underline{\textsf{still pending}}\)',
                  r'\(\textsf{\underline{still pending}}\)']
