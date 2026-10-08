@@ -33,7 +33,7 @@ The checker is deliberately limited. It catches common structural regressions in
 | Tables | Approved emoji plus category text, consistent grouping, no decorative new mappings | Website table and manual review |
 | Annotations | Full problem/earlier-response/annotation quote, then a separate short question in the user’s perspective, then the answer; required inline directives; related answers grouped | Manual review; quote content excluded from reply lint |
 | Notifications | Current separate integration's live exact-chat-title and status/summary contract; metadata stays out of replies | Reply checker; native integration tests and fit check separately |
-| Other-model contributions | Short cyan Models line on each relevant commentary/final reply; verified model and role; omitted for chat-only work; before required final footers/About | Semantic check against actual run metadata; format demonstration and rendered sample |
+| Other-model contributions | Short cyan Models line once at each other-model invocation's start and end; no repeated polling/progress/reuse notices; verified model and role; omitted for chat-only work; before required final footers/About | Semantic check against actual run metadata: one invocation across several progress messages gets two notices, a new invocation gets its own pair, and chat-only work gets none; format demonstration and rendered sample |
 | Sharing and maintenance | Public repo and Pages, README/site checked each change, installed/source/remote reconciled, normal push | CI; static validation; generated demo consistency; live bytes and install verification |
 
 ## Preference changes and unresolved experiments
@@ -112,3 +112,7 @@ Ordinary Markdown surrounds short complete style expressions. The optional check
 ## Viewer link existence
 
 Self-improved — 2026-10-04: a skill announcement linked a guessed fingerprint path that did not exist. Regenerating the viewer returned an existing file. Copy the helper’s exact output and check `Path(returned_path).is_file()` before posting; this verifies link existence, not document accuracy or browser permission. A nonexistent synthetic path must fail the same check.
+
+## Prices in styled prose
+
+Self-improved — 2026-10-09: an unescaped dollar sign in a fully closed underline produced red raw commands. `test_prices_in_styled_prose_require_escaping_or_plain_markdown` verifies that the existing KaTeX diagnostic rejects `\(\underline{\textsf{Pro $500 upgrade grants access}}\)` and accepts both `\$500` inside the cue and `$500/month` outside it. Closing-delimiter checks alone cannot catch this separate authoring error. Reading the rule or testing an older reply does not validate the current draft; the checker stays optional and cannot force model obedience.
