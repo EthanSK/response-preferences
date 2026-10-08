@@ -19,6 +19,14 @@ class RendererChecks(unittest.TestCase):
     def test_untrusted_and_runaway_commands_do_not_pass(self):
         self.assertTrue(all(math.render_errors([r'\href{https://example.com}{x}', r'\includegraphics{https://example.com/a.png}', r'\def\x{\x}\x'])))
 
+    def test_prices_in_styled_prose_require_escaping_or_plain_markdown(self):
+        broken = r'\(\underline{\textsf{Pro $500 upgrade grants access}}\)'
+        self.assertTrue(any('KaTeX parse error' in error for error in math.check_math(broken)))
+        escaped = r'\(\underline{\textsf{Pro \$500 upgrade grants access}}\)'
+        outside = r'The \(\underline{\textsf{Pro upgrade grants access}}\), at $500/month.'
+        self.assertEqual([], math.check_math(escaped))
+        self.assertEqual([], math.check_math(outside))
+
     def test_delimiters_and_multiline(self):
         for text in [r'\(x', r'x\)', r'\(x\]', '$$x', r'\(x\(y\)']:
             self.assertTrue(math.check_math(text), text)
