@@ -38,6 +38,9 @@ Use **Open file** to read another Markdown or code file from disk. In browsers w
 
 ## Keep symbols visible
 
+Copy these short expressions into a chat client that supports LaTeX. This Markdown viewer shows their source:
+
+```latex
 \(\underline{\textsf{10\% cheaper than Balanced}}\)
 
 \(\underline{\textsf{about 20\% lower compute-plus-transfer cost}}\)
@@ -45,5 +48,6 @@ Use **Open file** to read another Markdown or code file from disk. In browsers w
 \(\textsf{\color{#67e8f9}The price is \$99.95, down 10\%.}\)
 
 \(\underline{\textsf{C\# and sample\_tool}}\); \(\textsf{A \& B, \{name\}, \textasciitilde{}, \textasciicircum{}, \textbackslash{}}\).
+```
 
-Ordinary Markdown keeps 10% and $500 unchanged. The backslashes above tell the renderer to display literal symbols; they are not visible in the preview.
+Ordinary Markdown keeps 10% and $500 unchanged. In a supporting renderer, the backslashes tell LaTeX to display literal symbols without displaying those escape backslashes.
