@@ -9,3 +9,11 @@ This is the fictional message used to introduce the website. The response below 
 Important bold wording also gets an underline on the same words. For example: \(\underline{\textsf{\textbf{Neither automatically wins}}}\). Bold alone is not a scanning cue; keep expressions short so the surrounding sentence wraps.
 
 A main answer keeps its large ⮑. Inside that answer, small reply markers make individual responses visible: ⮑ The upload can resume. ⮑ A browser reload may require selecting the file again. These are direct answers, not new sections.
+
+A compact coloured table value uses the same complete colour template as prose:
+
+| Value | Complete source |
+| --- | --- |
+| Weekly allowance | `\(\textsf{\color{#67e8f9}100\%}\)` |
+
+The colour code's group closes immediately after the code; only the text group remains open after the value. Do not reuse the underline's two-brace ending for colour or About. Symbols remain allowed, and the checker remains optional.

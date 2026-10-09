@@ -99,6 +99,16 @@ process.stdin.on('end', () => process.stdout.write(JSON.stringify(
         self.assertEqual(expected, self.visible_text(rendered))
         self.assertEqual([], math.check_math('Plain 10%, $500, C#, sample_tool, A & B, {name}, ~, ^ and \\.'))
 
+    def test_compact_colour_and_underline_values_have_distinct_endings(self):
+        colour = r'\textsf{\color{#67e8f9}100\%}'
+        underline = r'\underline{\textsf{100\%}}'
+        for expression in (colour, underline):
+            self.assertEqual([], math.check_math(r'\(' + expression + r'\)'))
+        self.assertEqual(['100%', '100%'], self.visible_text([colour, underline]))
+        broken = r'\(\textsf{\color{#67e8f9}100\%}}\)'
+        self.assertTrue(any("Expected 'EOF', got '}'" in error
+                            for error in math.check_math(broken)))
+
     def test_delimiters_and_multiline(self):
         for text in [r'\(x', r'x\)', r'\(x\]', '$$x', r'\(x\(y\)']:
             self.assertTrue(math.check_math(text), text)

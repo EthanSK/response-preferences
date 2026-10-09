@@ -93,11 +93,12 @@ Keep colours outside Markdown links: follow a coloured skill name or file-relate
 
 ### Copy these exact colour patterns
 
-Use the complete short underline expression below for scanning. `\textsf{...}` keeps the sans-serif font and spaces; `\underline{...}` draws the line. It ends `}}\)`: one brace closes `\textsf`, one closes `\underline`. The colour pattern is separate and ends `}\)`. Keep each expression short enough to wrap around ordinary Markdown. User correction — 2026-09-23.
+Copy the complete short patterns below, including in compact table cells. `\textsf{...}` preserves the sans-serif font and spaces. An underline ends `}}\)`, closing `\textsf` and `\underline`. In the colour pattern, `\color{#67e8f9}` is already closed immediately after the colour code; only `\textsf` remains open, so the text ends `}\)`. Do not borrow the underline's two-brace ending for colour or About. Keep each expression short enough to wrap around ordinary Markdown. User correction — 2026-09-23; brace clarification requested — 2026-10-09 ([verified table case](references/verification.md#colour-declaration-and-closing-braces)).
 
 ```latex
 The upload is \(\underline{\textsf{still pending}}\).
 \(\textsf{\color{#ef4444}The upload failed.}\)
+\(\textsf{\color{#67e8f9}100\%}\)
 \(\textsf{\color{#b8a4d9}About: Checking the upload.}\) \(\textsf{\color{#b8a4d9}Retry after restarting.}\)
 ```
 
