@@ -33,6 +33,20 @@ class ReplyChecks(unittest.TestCase):
         broken = good[-1].replace(r'.}\)', r'.\)')
         self.assertTrue(any('KaTeX parse error' in e for e in check_fragment(broken)))
 
+    def test_extra_closing_brace_in_fourth_table_row_is_rejected(self):
+        cell = r'\(\textsf{\color{#67e8f9}100\%}\)'
+        table = ('| Account | Weekly allowance left |\n'
+                 '| --- | ---: |\n'
+                 '| 1 | 4% |\n'
+                 '| 2 | 22% |\n'
+                 '| 3 | 0% |\n'
+                 f'| 4 | {cell} |\n')
+        self.assertEqual([], check_fragment(table))
+        broken = table.replace(cell, r'\(\textsf{\color{#67e8f9}100\%}}\)')
+        errors = check_fragment(broken)
+        self.assertTrue(any("Line 6" in error and "Expected 'EOF', got '}'" in error
+                            for error in errors), errors)
+
     def test_simple_topic_and_skill_name_patterns(self):
         topic = r'\(\textsf{\color{#b8a4d9}About: fixing the export.}\) \(\textsf{\color{#b8a4d9}Restart the app, then retry.}\)'
         self.assertEqual([], reply.check(r'\(\huge\text{👉}\) The export fix is ready.\n\n'.replace(r'\n', '\n') + topic))
