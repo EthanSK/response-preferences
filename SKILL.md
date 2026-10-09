@@ -27,7 +27,7 @@ Keep label, conjunctions and explanation ordinary. Respect other explicit silent
 - Before **every** message, check meaning, phase, markers, selected colours and short underlined clues sentence by sentence. Short answers and clarification questions still follow the phase's style unless the user requests a conflicting exact format.
 - Keep underlines in working and final replies, including their sans-serif styling. Use the complete short `\(\underline{\textsf{clue with spaces}}\)` pattern below. The `\textsf` **inside that short underline stays**. Do not add a second, outer LaTeX wrapper around its surrounding sentence or paragraph for selection/grouping: that did not give Ethan whole-line triple-click selection and can overflow. Keep colours and About in their separate short patterns. User clarification — 2026-09-23.
 - The bundled `scripts/check-reply.py` remains an optional diagnostic for a tricky draft or skill maintenance, not a step for every message. It detects syntax and structural mistakes but cannot make an agent use it or guarantee correct rendering. If red commands appear, inspect the exact emitted expression and compare it with the patterns below before changing the parser. Codex hides the `\(`/`\)` of an expression it cannot render, so red raw text alone does not prove the delimiters were missing; read the raw session text before diagnosing. Self-improved — 2026-09-24: a red `not 100% sure` cue was misdiagnosed as missing delimiters; the session log showed both delimiters and a bare `%`. Evidence: `LEARNINGS.md`, “Everyday percentages and hidden delimiters”. User-requested simplification — 2026-09-22.
-- Recheck the actual draft: opening answer stands alone; underlined clues preserve subject and negatives; literal symbols use valid formatting; dollar signs and prices stay visible, using `$500` in ordinary Markdown or `\$500` inside styled text; colours have complete meaning; outcomes are qualified; the final finger points to useful content; About covers the whole message.
+- Recheck the actual draft: opening answer stands alone; underlined clues preserve subject and negatives; numbers and symbols stay visible; inside each styled text argument, write `10\%` and `\$500`, not bare `10%` or `$500`; colours have complete meaning; outcomes are qualified; the final finger points to useful content; About covers the whole message.
 - Do not add or enable automatic reply repair, Stop-hook continuations, background enforcement, or cross-chat wakeups for these preferences. Harden the rules and check the draft before sending; formatting problems must not trigger another model turn. Existing notifications remain notification-only. Ethan explicitly rejected automatic repair as over-engineered; do not reintroduce it. User correction — 2026-09-20.
 - Explicit exact-format requests override styling. A complaint about broken formatting is not permission to drop the style: identify the actual conflicting output instruction before making an exception. No hook exemption record is needed.
 
@@ -104,7 +104,31 @@ Copy each complete pattern rather than assembling fragments or repairing its end
 
 **Dollar signs and prices are allowed. Show the price the user needs and figure out the correct formatting without making them handle it.** Write `$500` in ordinary Markdown, or `\$500` inside an underline, colour or About expression; both display the dollar sign. For example, `\(\underline{\textsf{Pro \$500 upgrade grants access}}\)` keeps the price inside the styled cue. Do not omit a price, replace its currency or ban dollar signs to avoid a formatting error. User correction — 2026-10-09: replace the misleading ban with correct handling (see [price verification](references/verification.md#prices-in-styled-prose)).
 
-For other TeX-special characters (`%`, `#`, `_`, `&`, `~`, `^` and literal braces), use ordinary Markdown or escape the literal when styling it (`100\%`, `C\#`, `sample\_tool`, `A \& B`, `\{name\}`). A bare `%` inside styled text makes the renderer ignore the rest of the expression. Reword the cue (`\(\underline{\textsf{not fully sure}}\)`) or keep the literal beside it when that reads better. The `#` in a colour value stays unchanged. User request — 2026-09-24.
+### Keep literal symbols visible
+
+**Allow ordinary symbols, especially percentages. Handle the escaping yourself; never prohibit, drop or change a number, unit, price or symbol just to make styling easier.** Inside an underline, colour or About text argument, use the lookup below. Outside LaTeX, ordinary Markdown keeps `10%` and `$500` unchanged. User-requested hardening — 2026-10-09; [rendering verification](references/verification.md#literal-symbols-in-styled-prose).
+
+| Visible literal | Write inside styled text |
+| --- | --- |
+| `%` | `\%` |
+| `$` | `\$` |
+| `#` | `\#` |
+| `_` | `\_` |
+| `&` | `\&` |
+| `{` / `}` | `\{` / `\}` |
+| `~` | `\textasciitilde{}` |
+| `^` | `\textasciicircum{}` |
+| backslash | `\textbackslash{}` |
+
+Copy the complete pattern, replacing only its literal text and escaping that text once. A bare `%` starts a TeX comment, hiding the remaining text and closing braces. `10\%` still displays **10%**, not the backslash. These two percentage cues preserve their wording:
+
+```latex
+\(\underline{\textsf{10\% cheaper than Balanced}}\)
+\(\underline{\textsf{about 20\% lower compute-plus-transfer cost}}\)
+\(\textsf{\color{#67e8f9}The price is \$99.95, down 10\%.}\)
+```
+
+Escape only literal text being inserted, never a finished expression: the `#` in `\color{#67e8f9}`, command backslashes, structural braces and real mathematical subscripts/superscripts keep their syntax. Do not double an existing escape. Keep code, paths, links and exact source quotations in their existing Markdown form; ordinary punctuation needs no invented escape.
 
 Use normal-size `\(\textsf{\color{#67e8f9}This viewer is a snapshot.}\)` for colour highlights. Skill names alone are the magenta `\textrm` exception.
 
@@ -117,7 +141,7 @@ User request — 2026-10-04: Explain orange warnings, including orange `(sus)` p
 
 A coloured span must make sense from its first word without surrounding text. Keep each colour highlight short and self-contained. Codex treats each KaTeX expression as an unbreakable selection box, so leave the rest of the sentence as wrapping Markdown. Keep every expression below 64 approximate visible characters; split a long highlight into separate short thoughts or leave it uncoloured. Preserve essential negatives and conditions.
 
-In working and final replies, keep literal technical names (`C#`, `sample_tool`), percentages, paths and other punctuation-heavy text in ordinary Markdown or inline code. For example: `The \(\underline{\textsf{review needs a project}}\) written in` `C#`. If literal text must be styled, escape TeX-special characters in its text argument. Never blanket-escape a finished expression: colour values, commands and braces have their own syntax.
+In working and final replies, short cues may include percentages, prices and literal names using the symbol lookup above. Ordinary Markdown remains useful for surrounding prose; paths, code, links and exact quotations retain their own formatting. Keep each styled expression short so it can wrap beside that prose.
 
 The optional diagnostic checker parses/renders explicit `\(...\)`, `\[...\]` and `$$...$$` expressions with bundled KaTeX, checks their delimiters, rejects response-formatting commands outside those delimiters, and rejects unsupported commands. This replaces reliance on isolated character rules. It requires Node.js on PATH (or an explicit `RESPONSE_PREFERENCES_NODE` executable); no npm install or network is needed in a copied skill. A missing/failed renderer is a failed diagnostic, never a pass. Correct that draft if you invoke it; ordinary Markdown remains the safe fallback. Parser success does not prove width, appearance or meaning in the client.
 

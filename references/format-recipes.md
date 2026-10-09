@@ -58,7 +58,7 @@ These synthetic questions show the same word-by-word rhythm for short and longer
 | Automated test result | 🧪 and ordinary text, with an explicit passed/failed/unverified status. |
 | Needs the user's next action / mainly a takeaway | Favour 🫵 / 👉 respectively, normally once and only in the final reply. |
 | One statement / several blocks | Inline marker / standalone marker plus the existing raised chevron. Keep ⮑ beside its answer in either case. |
-| Technical punctuation in prose | Keep the identifier or number in inline code/ordinary text; underline the readable context around it. The quote helper can safely escape short literals. |
+| Literal symbols in prose | Keep numbers and symbols visible. Short styled text uses the core symbol lookup: `10\%`, `\$500`, `C\#`, `sample\_tool`. Ordinary Markdown needs no TeX escape. Code, paths and exact quotes retain their own formatting. The quote helper escapes its short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
 
 For working and final replies, use `\(\underline{\textsf{short useful clue}}\)` for a short scanning cue. Keep its inner `\textsf` for the sans-serif font, but do not wrap the whole surrounding sentence or paragraph in another LaTeX expression for grouping. That extra wrapper did not give whole-line triple-click selection and can overflow. Keep normal-size markers in working updates. A selected non-underlined colour uses a separate sans-serif `\(\textsf{\color{#hex}Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. User clarification — 2026-09-23.

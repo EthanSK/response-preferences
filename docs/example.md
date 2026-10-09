@@ -35,3 +35,15 @@ Use **Open file** to read another Markdown or code file from disk. In browsers w
 | Split | Read and edit together |
 
 > Files stay in your browser. This viewer does not upload them.
+
+## Keep symbols visible
+
+\(\underline{\textsf{10\% cheaper than Balanced}}\)
+
+\(\underline{\textsf{about 20\% lower compute-plus-transfer cost}}\)
+
+\(\textsf{\color{#67e8f9}The price is \$99.95, down 10\%.}\)
+
+\(\underline{\textsf{C\# and sample\_tool}}\); \(\textsf{A \& B, \{name\}, \textasciitilde{}, \textasciicircum{}, \textbackslash{}}\).
+
+Ordinary Markdown keeps 10% and $500 unchanged. The backslashes above tell the renderer to display literal symbols; they are not visible in the preview.

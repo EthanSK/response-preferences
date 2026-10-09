@@ -1,8 +1,12 @@
 import importlib.util
+import json
+import os
 from pathlib import Path
+import shutil
 import subprocess
 import unittest
 from unittest.mock import patch
+import xml.etree.ElementTree as ET
 
 spec = importlib.util.spec_from_file_location('math_validation', Path(__file__).resolve().parents[1] / 'scripts/math-validation.py')
 math = importlib.util.module_from_spec(spec)
@@ -10,6 +14,31 @@ spec.loader.exec_module(math)
 
 
 class RendererChecks(unittest.TestCase):
+    def visible_text(self, values):
+        """Read rendered text nodes, excluding TeX source and underline glyphs."""
+        node = os.environ.get('RESPONSE_PREFERENCES_NODE') or shutil.which('node')
+        script = r'''
+const katex = require('katex');
+let input = '';
+process.stdin.on('data', chunk => input += chunk);
+process.stdin.on('end', () => process.stdout.write(JSON.stringify(
+  JSON.parse(input).map(value => katex.renderToString(value, {
+    output: 'mathml', throwOnError: true, strict: 'error', trust: false
+  }))
+)));
+'''
+        result = subprocess.run(
+            [node, '-e', script], input=json.dumps(values), text=True,
+            capture_output=True, cwd=Path(__file__).resolve().parents[1],
+            timeout=8, check=True,
+        )
+        return [
+            ''.join(''.join(n.itertext()) for n in ET.fromstring(html).iter()
+                    if n.tag == '{http://www.w3.org/1998/Math/MathML}mtext')
+            .replace('\u00a0', ' ')
+            for html in json.loads(result.stdout)
+        ]
+
     def test_literal_text_and_real_math(self):
         bad = [r'\underline{\textsf{C# task}}', r'\textsf{A & B}', r'\textsf{sample_tool}', r'\textsf{54%}', r'\underline{\textsf{missing brace}', r'\unknowncommand{x}', r'\textsf{Value \ensuremath{x_i}}']
         self.assertTrue(all(math.render_errors(bad)))
@@ -32,6 +61,43 @@ class RendererChecks(unittest.TestCase):
         for price in valid_prices:
             with self.subTest(price=price):
                 self.assertEqual([], math.check_math(price))
+
+    def test_percent_cues_preserve_the_complete_visible_text(self):
+        cues = ['10% cheaper than Balanced',
+                'about 20% lower compute-plus-transfer cost']
+        corrected = []
+        for cue in cues:
+            with self.subTest(cue=cue):
+                broken = r'\(\underline{\textsf{' + cue + r'}}\)'
+                self.assertTrue(any('KaTeX parse error' in e
+                                    for e in math.check_math(broken)))
+                fixed = broken.replace('%', r'\%')
+                self.assertEqual([], math.check_math(fixed))
+                corrected.append(r'\underline{\textsf{' + cue.replace('%', r'\%') + '}}')
+        self.assertEqual(cues, self.visible_text(corrected))
+
+    def test_styled_literal_symbols_preserve_visible_text(self):
+        samples = [
+            ('10%', r'10\%'), ('$99.95', r'\$99.95'),
+            ('C#', r'C\#'), ('sample_tool', r'sample\_tool'),
+            ('A & B', r'A \& B'), ('{name}', r'\{name\}'),
+            ('~', r'\textasciitilde{}'), ('^', r'\textasciicircum{}'),
+            ('\\', r'\textbackslash{}'),
+            ('The price is $99.95, down 10%.',
+             r'The price is \$99.95, down 10\%.'),
+        ]
+        expected, rendered = [], []
+        wrappers = [r'\underline{\textsf{CONTENT}}',
+                    r'\textsf{\color{#67e8f9}CONTENT}',
+                    r'\textsf{\color{#b8a4d9}About: CONTENT}']
+        for wrapper in wrappers:
+            for literal, escaped in samples:
+                expression = wrapper.replace('CONTENT', escaped)
+                rendered.append(expression)
+                expected.append(('About: ' if 'About:' in wrapper else '') + literal)
+        self.assertEqual([], math.check_math('\n'.join(r'\(' + value + r'\)' for value in rendered)))
+        self.assertEqual(expected, self.visible_text(rendered))
+        self.assertEqual([], math.check_math('Plain 10%, $500, C#, sample_tool, A & B, {name}, ~, ^ and \\.'))
 
     def test_delimiters_and_multiline(self):
         for text in [r'\(x', r'x\)', r'\(x\]', '$$x', r'\(x\(y\)']:
