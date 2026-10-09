@@ -205,6 +205,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
     last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
     has_pointer = False
+    has_direct_answer = False
     fence = None
     caret = WORKING_CARET if commentary else CARET
     for number, raw in enumerate(text.splitlines(), 1):
@@ -249,6 +250,11 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         if plain:
             matches.insert(0, plain)
         for match in matches:
+            if match.group(2) == '⮑':
+                if match.group(1) == 'huge':
+                    has_direct_answer = True
+                elif has_direct_answer and match.re is PLAIN_MARKER and line[match.end():].strip():
+                    continue  # Small follow-up reply within an already contextualized answer.
             if match.group(2) in {'🫵', '👉'}:
                 has_pointer = True
                 if commentary:

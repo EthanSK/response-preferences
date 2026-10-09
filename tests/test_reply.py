@@ -286,6 +286,13 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(check_fragment(r'\(\huge\text{⮑}\) Yes, it is fixed.', commentary=True))
         self.assertTrue(check_fragment('> Is it fixed?\n\n'+r'\(\huge\text{⮑}\) ⌄'+'\n\nYes.', commentary=True))
 
+    def test_small_followup_answers_share_main_answer_context(self):
+        main = '> How does upload recovery work?\n\n' + r'\(\huge\text{⮑}\) Upload recovery is supported.'
+        for commentary in (False, True):
+            for followup in ('\n\n⮑ Reloads may require file selection.', '\n\nThe browser stores progress. ⮑ It reuses finished parts.', '\n\n- ⮑ Retry continues the upload.'):
+                with self.subTest(commentary=commentary, followup=followup):
+                    self.assertEqual([], check_fragment(main + followup, commentary=commentary))
+
     def test_small_commentary_markers_keep_structure_and_reference_checks(self):
         with tempfile.TemporaryDirectory() as directory:
             p=Path(directory)/'skill.html'; p.write_text('example')
