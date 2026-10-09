@@ -106,6 +106,12 @@ Projects can list additional user-approved emoji meanings in their existing inst
 
 ## Underlines for scanning
 
+When important words are bold, underline those same words too: bold alone is not a scanning cue. This applies to opening answers, conclusions and list lead-ins. Use a plain short underline if bold adds nothing. Exact quotations, code, paths and link labels keep their original formatting.
+
+```latex
+\(\underline{\textsf{\textbf{Neither automatically wins}}}\)
+```
+
 Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\textsf{not uploaded}}\)` or `\(\underline{\textsf{after restarting}}\)`. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
 
 Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\textsf{not uploaded}}\).` or `The \(\underline{\textsf{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; keep both forms short and fully closed. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
