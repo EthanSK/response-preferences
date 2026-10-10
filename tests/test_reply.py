@@ -185,6 +185,12 @@ class ReplyChecks(unittest.TestCase):
     def test_regressed_marker_and_colour_patterns_are_rejected(self):
         for draft in [r'\(\Huge\text{✅}\) Done.',r'Done. \(\huge\text{✅}\)',r'\(\huge\text{🎯}\) Explanation.',r'\(\huge\text{➕}\) Added.',r'\(\color{gray}{\textsf{A fact}}\)',r'\(\color{magenta}{\textsf{skill-creator}}\)']:
             with self.subTest(draft=draft):self.assertTrue(check_fragment(draft))
+    def test_extra_work_uses_the_complete_attention_marker(self):
+        self.assertEqual([], check_fragment('➕➕❗ Added work.', commentary=True))
+        self.assertEqual([], check_fragment(r'\(\huge\text{➕➕❗}\) Added work.'))
+        for marker in ('➕', '➕➕', '❗'):
+            with self.subTest(marker=marker):
+                self.assertTrue(check_fragment('\\(\\huge\\text{' + marker + '}\\) Added work.'))
     def test_quotes_and_code_examples_do_not_become_new_instructions(self):
         self.assertEqual([],check_fragment('> Earlier response: '+r'\(\Huge\text{🎯}\)'+'\n\n```md\n<!-- example -->\n```'))
     def test_direct_answer_needs_its_question_quote(self):

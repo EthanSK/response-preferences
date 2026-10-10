@@ -53,7 +53,9 @@ Use only these meanings; do not invent, swap or combine markers. User-approved p
 | ⚠️ / ❓ | Caution / uncertainty or missing information |
 | 💡 / ⚖️ | Recommendation / trade-offs |
 | ⛔ | External blocker |
-| ➕➕ | Every **Added beyond your request** section; never a single plus |
+| ➕➕❗ | Every **Added beyond your request** section; keep both pluses and the exclamation mark |
+
+User request — 2026-10-10: add an exclamation mark after the plus-plus marker so extra work is easy to notice. Use the complete `➕➕❗` marker and a short bold, underlined “Added beyond your request” label; keep its phase-dependent marker size and existing chevron placement. The exclamation belongs only to this marker, not to every section.
 
 Prefer the specific scenario over generic information/activity/results. 🧪 takes precedence for tests; 🖥️ for actual manual Computer Use and every **Manual checks** section; 🐞 for actual bugs. Use the computer emoji for manual checks: start each **Manual checks** section with 🖥️, including checks proposed for the user to run; it labels the section and never claims the agent ran them. Before sending, check every Manual checks heading has it. User request — 2026-10-04. State test/Computer Use status explicitly: planned, starting, running, passed, failed, incomplete, not run or unverified. Their icons never imply success. A review finding a bug is not a failed review. Completed checks outside these specific sections use the outcome, not 👀 or 🐌. Minor non-bug observations use ⓘ or 💡. ⮑ and skill announcements keep their structural roles. If no approved meaning fits, leave content unmarked rather than guessing.
 
