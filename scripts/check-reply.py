@@ -232,6 +232,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             errors.append(f'Line {number}: {message}')
         if raw.strip().startswith('Questions:'):
             coverage_lines.append(number)
+            if commentary:
+                fail('Questions coverage counts belong only in the final reply, never commentary.')
             coverage = QUESTION_COVERAGE.fullmatch(raw.strip())
             if not coverage:
                 fail('Use the question-coverage line with detected questions, user messages, replies in this draft and earlier carried-over questions.')
@@ -240,8 +242,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 detected, messages, answered, carried = map(int, (detected, messages, answered, carried))
                 if answered > detected or carried > detected or (detected and not messages):
                     fail('Question counts are inconsistent: replies and carried-over questions cannot exceed detected questions; asks need a source message.')
-                if phase != ('this update' if commentary else 'this final draft'):
-                    fail('Use this update for commentary and this final draft for a final reply.')
+                if phase != 'this final draft':
+                    fail('Use this final draft for final question coverage; commentary has no coverage footer.')
             if not topic_lines or previous != text.splitlines()[topic_lines[-1] - 1]:
                 fail('Put question coverage immediately below the About reminder.')
             if number != last_line:
@@ -366,11 +368,11 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('The local link destination does not exist: ' + path)
         if line.strip():
             previous = line
-    if commentary and topic_lines and not coverage_lines:
-        errors.append('A commentary About reminder needs its question-coverage line underneath.')
-    if require_topic and (not commentary or require_question_coverage) and len(topic_lines) != 1:
+    if commentary and topic_lines:
+        errors.append('About reminders belong only in the final reply, never commentary.')
+    if require_topic and not commentary and len(topic_lines) != 1:
         errors.append('End the final reply with exactly one muted-lavender About: topic reminder.')
-    if len(coverage_lines) > 1 or (require_question_coverage and len(coverage_lines) != 1):
+    if len(coverage_lines) > 1 or (require_question_coverage and not commentary and len(coverage_lines) != 1):
         errors.append('Include exactly one question-coverage line below About.')
     if require_pointer and not has_pointer:
         errors.append('Include 🫵 for a real user action, or 👉 before the main reading takeaway.')
@@ -380,12 +382,12 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reply', type=Path)
-    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers except an enlarged ⮑ answer, no attention fingers, and this update in question coverage.')
+    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers except an enlarged ⮑ answer, no attention fingers, and no About or Questions coverage footers.')
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
     parser.add_argument('--require-annotation-context', action='store_true', help='Require the three nonempty quoted context fields before the first answer, including Agent Flow selections without native annotation references.')
-    parser.add_argument('--require-question-coverage', action='store_true', help='Require the closing question counts under About; validates structure and numeric bounds, not semantic coverage.')
+    parser.add_argument('--require-question-coverage', action='store_true', help='Require final-reply question counts under About; validates structure and numeric bounds, not semantic coverage.')
     args = parser.parse_args()
     errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary, hover_contexts=args.hover_context, require_annotation_context=args.require_annotation_context, require_question_coverage=args.require_question_coverage)
     print('\n'.join(errors) if errors else 'Reply structure passed. Meaning, coverage and visual appearance still need review.')

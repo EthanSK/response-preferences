@@ -143,12 +143,12 @@ test('automated results stay uncoloured and manual success uses the computer mar
  dom.window.close();
 });
 
-test('only final example replies have attention fingers; every reply has About and counts',()=>{
+test('only final example replies have attention fingers, About and counts',()=>{
  const dom=demo();
  for(const msg of dom.window.document.querySelectorAll('.msg.assistant')){
   assert.equal([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵'].includes(m.textContent)),msg.classList.contains('final'));
-  assert.equal(msg.querySelectorAll('.topic-reminder').length,1);
-  assert.equal(msg.querySelectorAll('.question-coverage').length,1);
+  assert.equal(msg.querySelectorAll('.topic-reminder').length,msg.classList.contains('final')?1:0);
+  assert.equal(msg.querySelectorAll('.question-coverage').length,msg.classList.contains('final')?1:0);
  }
  dom.window.close();
 });
@@ -225,15 +225,15 @@ test('mobile sidebar and editor isolate the background and restore it',async()=>
  d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);dom.window.close();
 });
 
-test('every example closes with a distinct topic reminder followed by scoped counts',()=>{
+test('every final example closes with a distinct topic reminder followed by scoped counts',()=>{
  const dom=demo(),d=dom.window.document;
- for(const msg of d.querySelectorAll('.msg.assistant')){
+ for(const msg of d.querySelectorAll('.msg.assistant.final')){
   const reminders=msg.querySelectorAll('.topic-reminder');assert.equal(reminders.length,1);
   const reminder=reminders[0],coverage=msg.querySelector('.question-coverage');
   assert.equal(reminder.nextElementSibling,coverage);
   assert.equal(msg.lastElementChild,coverage);
-  assert.match(coverage.textContent,/^Questions: \d+ detected across \d+ user messages?; \d+ replied to in this (?:final draft|update); \d+ carried over from earlier messages\.$/);
-  assert(coverage.textContent.includes(msg.classList.contains('final')?'this final draft':'this update'));
+  assert.match(coverage.textContent,/^Questions: \d+ detected across \d+ user messages?; \d+ replied to in this final draft; \d+ carried over from earlier messages\.$/);
+  assert(coverage.textContent.includes('this final draft'));
   assert.match(reminder.textContent,/^About: .+/);
   assert.equal(reminder.querySelectorAll('u,a,.mk').length,0);
   assert.equal(dom.window.getComputedStyle(reminder).color,'var(--topic)');
