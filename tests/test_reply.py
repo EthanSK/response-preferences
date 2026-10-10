@@ -12,17 +12,22 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
-    def test_question_coverage_under_about_in_both_phases(self):
-        for commentary, body, phase in [(False, r'\(\huge\text{👉}\) The rename is complete.', 'this final draft'), (True, '🐌 Checking the rename.', 'this update')]:
-            coverage = f'Questions: 3 detected across 2 user messages; 3 replied to in {phase}; 1 carried over from earlier messages.'
-            draft = body+'\n\n'+TOPIC+'\n'+coverage
-            options = dict(commentary=commentary, require_pointer=not commentary, require_question_coverage=True)
-            self.assertEqual([], reply.check(draft, **options))
-            self.assertTrue(reply.check(body+'\n\n'+TOPIC, **options))
-            self.assertTrue(reply.check(body+'\n'+coverage+'\n'+TOPIC, **options))
-            self.assertTrue(reply.check(draft+'\nMore content.', **options))
-            self.assertTrue(reply.check(draft+'\n'+coverage, **options))
-            self.assertTrue(reply.check(draft.replace(phase, 'this final draft' if commentary else 'this update'), **options))
+    def test_final_question_coverage_under_about(self):
+        body = r'\(\huge\text{👉}\) The rename is complete.'
+        coverage = 'Questions: 3 detected across 2 user messages; 3 replied to in this final draft; 1 carried over from earlier messages.'
+        draft = body+'\n\n'+TOPIC+'\n'+coverage
+        self.assertEqual([], reply.check(draft, require_question_coverage=True))
+        for broken in [body+'\n'+TOPIC, body+'\n'+coverage+'\n'+TOPIC, draft+'\nMore content.', draft+'\n'+coverage, draft.replace('this final draft', 'this update')]:
+            self.assertTrue(reply.check(broken, require_question_coverage=True))
+
+    def test_commentary_has_neither_closing_footer(self):
+        body = '🐌 Checking the rename.'
+        coverage = 'Questions: 1 detected across 1 user message; 0 replied to in this update; 0 carried over from earlier messages.'
+        for required in [False, True]:
+            options = dict(commentary=True, require_pointer=False, require_question_coverage=required)
+            self.assertEqual([], reply.check(body, **options))
+            for suffix in [TOPIC, coverage, TOPIC+'\n'+coverage, coverage.replace('this update', 'this final draft')]:
+                self.assertTrue(reply.check(body+'\n'+suffix, **options))
 
     def test_question_coverage_counts_and_partial_reply(self):
         base = r'\(\huge\text{👉}\) One answer is still pending.'+'\n\n'+TOPIC+'\n'
