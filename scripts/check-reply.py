@@ -32,6 +32,8 @@ WORKING_CARET = '⌄'
 MAX_PROSE_CHARACTERS = 64
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 MANUAL_CHECKS_HEADING = re.compile(r'\s*(?:\\\(.*?\\\)\s*)*(?:#{1,6}\s+)?(?:\*\*)?Manual checks\b', re.IGNORECASE)  # User request — 2026-10-04: Manual checks sections use the computer emoji.
+# Structural bounds only: real question/answer coverage is checked by the author.
+QUESTION_COVERAGE = re.compile(r'Questions: (\d+) detected across (\d+) user messages?; (\d+) replied to in (this final draft|this update); (\d+) carried over from earlier messages\.\Z')
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
 
@@ -197,11 +199,12 @@ def annotation_errors(text, require_context=False):
     return errors
 
 
-def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True, require_annotation_context=False):
+def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True, require_annotation_context=False, require_question_coverage=False):
     errors = math_validation.check_math(text)
     if not commentary:
         errors.extend(annotation_errors(text, require_annotation_context))
     topic_lines = []
+    coverage_lines = []
     last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
     has_pointer = False
@@ -227,6 +230,22 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         line = re.sub(r'(`+).*?\1', '', raw)
         def fail(message):
             errors.append(f'Line {number}: {message}')
+        if raw.strip().startswith('Questions:'):
+            coverage_lines.append(number)
+            coverage = QUESTION_COVERAGE.fullmatch(raw.strip())
+            if not coverage:
+                fail('Use the question-coverage line with detected questions, user messages, replies in this draft and earlier carried-over questions.')
+            else:
+                detected, messages, answered, phase, carried = coverage.groups()
+                detected, messages, answered, carried = map(int, (detected, messages, answered, carried))
+                if answered > detected or carried > detected or (detected and not messages):
+                    fail('Question counts are inconsistent: replies and carried-over questions cannot exceed detected questions; asks need a source message.')
+                if phase != ('this update' if commentary else 'this final draft'):
+                    fail('Use this update for commentary and this final draft for a final reply.')
+            if not topic_lines or previous != text.splitlines()[topic_lines[-1] - 1]:
+                fail('Put question coverage immediately below the About reminder.')
+            if number != last_line:
+                fail('Put question coverage at the end, below About.')
         for expression in INLINE_MATH.finditer(line):
             if UNESCAPED_PERCENT.search(expression.group(1)):
                 fail(r'Bare % inside LaTeX starts a TeX comment and breaks the expression, even in phrases like 100% sure. Reword the cue or move the percentage into ordinary Markdown; escape it as \% only when it must be styled.')
@@ -313,8 +332,9 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('Use muted lavender only for one closing About: reminder, split into short normal-size text chunks when needed.')
                 if number not in topic_lines:
                     topic_lines.append(number)
-                if number != last_line:
-                    fail('Put the topic reminder at the very end, after all other message content.')
+                following = [s.strip() for s in text.splitlines()[number:] if s.strip()]
+                if following and not (len(following) == 1 and following[0].startswith('Questions:')):
+                    fail('Put the topic reminder at the end, followed only by its question-coverage line.')
             elif colour not in PALETTE or font not in {'textsf', 'text'}:
                 fail('Use an approved highlight colour with normal-size text.')
         for expression in INLINE_MATH.finditer(line):
@@ -346,10 +366,12 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     fail('The local link destination does not exist: ' + path)
         if line.strip():
             previous = line
-    if commentary and topic_lines:
-        errors.append('Reserve the About: topic reminder for the final reply, not working commentary.')
-    elif not commentary and require_topic and len(topic_lines) != 1:
+    if commentary and topic_lines and not coverage_lines:
+        errors.append('A commentary About reminder needs its question-coverage line underneath.')
+    if require_topic and (not commentary or require_question_coverage) and len(topic_lines) != 1:
         errors.append('End the final reply with exactly one muted-lavender About: topic reminder.')
+    if len(coverage_lines) > 1 or (require_question_coverage and len(coverage_lines) != 1):
+        errors.append('Include exactly one question-coverage line below About.')
     if require_pointer and not has_pointer:
         errors.append('Include 🫵 for a real user action, or 👉 before the main reading takeaway.')
     return errors
@@ -358,12 +380,13 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reply', type=Path)
-    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers except an enlarged ⮑ answer; attention fingers and About reminders are forbidden.')
+    parser.add_argument('--commentary', action='store_true', help='Check a work update: plain normal-size markers except an enlarged ⮑ answer, no attention fingers, and this update in question coverage.')
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
     parser.add_argument('--require-annotation-context', action='store_true', help='Require the three nonempty quoted context fields before the first answer, including Agent Flow selections without native annotation references.')
+    parser.add_argument('--require-question-coverage', action='store_true', help='Require the closing question counts under About; validates structure and numeric bounds, not semantic coverage.')
     args = parser.parse_args()
-    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary, hover_contexts=args.hover_context, require_annotation_context=args.require_annotation_context)
+    errors = check(args.reply.read_text(encoding='utf-8'), not args.skip_path_check, args.approved_project_marker, require_pointer=not args.commentary, commentary=args.commentary, hover_contexts=args.hover_context, require_annotation_context=args.require_annotation_context, require_question_coverage=args.require_question_coverage)
     print('\n'.join(errors) if errors else 'Reply structure passed. Meaning, coverage and visual appearance still need review.')
     raise SystemExit(bool(errors))

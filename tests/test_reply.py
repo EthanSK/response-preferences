@@ -12,6 +12,27 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_question_coverage_under_about_in_both_phases(self):
+        for commentary, body, phase in [(False, r'\(\huge\text{👉}\) The rename is complete.', 'this final draft'), (True, '🐌 Checking the rename.', 'this update')]:
+            coverage = f'Questions: 3 detected across 2 user messages; 3 replied to in {phase}; 1 carried over from earlier messages.'
+            draft = body+'\n\n'+TOPIC+'\n'+coverage
+            options = dict(commentary=commentary, require_pointer=not commentary, require_question_coverage=True)
+            self.assertEqual([], reply.check(draft, **options))
+            self.assertTrue(reply.check(body+'\n\n'+TOPIC, **options))
+            self.assertTrue(reply.check(body+'\n'+coverage+'\n'+TOPIC, **options))
+            self.assertTrue(reply.check(draft+'\nMore content.', **options))
+            self.assertTrue(reply.check(draft+'\n'+coverage, **options))
+            self.assertTrue(reply.check(draft.replace(phase, 'this final draft' if commentary else 'this update'), **options))
+
+    def test_question_coverage_counts_and_partial_reply(self):
+        base = r'\(\huge\text{👉}\) One answer is still pending.'+'\n\n'+TOPIC+'\n'
+        partial = 'Questions: 3 detected across 2 user messages; 2 replied to in this final draft; 1 carried over from earlier messages.'
+        self.assertEqual([], reply.check(base+partial, require_question_coverage=True))
+        for broken in [partial.replace('2 replied', '4 replied'), partial.replace('1 carried', '4 carried'), partial.replace('2 user', '0 user'), 'Questions: all answered.']:
+            self.assertTrue(reply.check(base+broken, require_question_coverage=True))
+        # A valid line cannot prove the underlying semantic count or answers.
+        self.assertEqual([], reply.check(base+partial.replace('3 detected', '0 detected').replace('2 user', '0 user').replace('2 replied', '0 replied').replace('1 carried', '0 carried')))
+
     def test_short_sans_serif_underlines_and_separate_colour(self):
         good = (r'\(\huge\text{👉}\) The \(\underline{\textsf{Zapp app is ready}}\). '
                 r'\(\textsf{\color{#22c55e}The sign-in finished.}\)' + '\n\n'
