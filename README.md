@@ -16,6 +16,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 
 | Feature | Behaviour |
 | --- | --- |
+| Every question answered | Checks every meaningful authored question, including earlier unanswered follow-ups, against the actual final draft. Each gets an explicit answer, verified action or stated unknown/blocker. When a question seems missed, reads the original message and actual earlier reply before making claims, then answers plainly again. No automatic repair hook or guarantee of model obedience. |
 | Working versus final replies | Working updates use normal-size markers, including 🧠, and short underlined cues; a ⮑ answer aimed at you stays large so it stands out. Final replies use enlarged markers, selected colour and underlined scanning cues. |
 | Deterministic markers | Uses a closed vocabulary: the same marker always means the same thing. Only user-approved project mappings may extend it; no arbitrary emoji additions. |
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
