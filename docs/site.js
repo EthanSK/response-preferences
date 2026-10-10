@@ -22,7 +22,7 @@ const M={
 '\u2696':['Trade-offs','Trade-offs between options.'],
 '⛔':['External blocker','A blocker outside the task that stops progress.'],
 '🧠':['Skill use','A skill-use announcement: Skill use, the skill name in upright magenta serif, a brief reason, and a separate ↗ that opens the full skill. The response-preferences skill itself is applied silently unless you ask about it.'],
-'➕➕':['Added beyond your request','Work added beyond what you asked for. Always the doubled marker, never a single ➕.']
+'➕➕❗':['Added beyond your request','Work added beyond what you asked for. Both pluses are followed by an exclamation mark so this important section is easier to notice.']
 };
 const $=s=>d.querySelector(s),$$=s=>[...d.querySelectorAll(s)];
 const app=$('#app'),side=$('#sidebar'),menu=$('#menu-toggle'),pane=$('#pane'),paneTitle=$('#pane-title'),chatTitle=$('#chat-title'),note=$('#focus-note'),frame=$('#frame'),frameCap=$('#frame-cap'),frameOpen=$('#frame-open');
