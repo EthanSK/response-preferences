@@ -23,7 +23,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Other-model contributions | Each other-model invocation gets a short cyan `Models:` sentence once at its start and once at its end, naming the model and its role; repeated progress/polling updates and later reuse of the same result omit it. Chat-only work omits it. The line precedes required final footers and the lavender About reminder, and does not authorize model calls. |
 | Closing topic reminder | Only the final assistant reply ends with a muted-lavender (`#b8a4d9`) `About:` reminder and the question-coverage line immediately below it. Working commentary, progress updates and skill announcements have neither footer; final replies count “this final draft”. The relevant questions above the answers stay in place. |
 | Sentence scanning | Uses a short useful underlined clue in each substantive working and final prose sentence, not just the first sentence of a paragraph. A self-contained coloured sentence already serves as a scanning cue. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
-| Computer Use | 🖥️ for manual browser/app interaction and every Manual checks section, with explicit status wording. Successful manual tests may use green; automated tests and lint remain ordinary text. |
+| Computer Use | 🖥️ for manual browser/app interaction and every Manual checks section, with explicit status wording. Manual checks only lists what the agent actually checked or tested. Checks for you to run go under a separate Manual checks for you heading, marked 🖥️🫵 together. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
 | Context above answers | Shows a short question reminder in a rainbow blockquote, naming the subject when dictated pronouns would be unclear later, above the direct-answer arrow, in main and side chats, alongside applicable annotation context; read-only side chats use the existing helper without updating shared state. The reminder can retain around 60–80 visible characters and wrap naturally; a fixed 24-colour cycle keeps agents from reinventing the format. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
@@ -74,10 +74,11 @@ Orange warnings explain the affected feature, expected and observed behaviour, p
 | ❓ | Missing information | 💡 | Recommendation |
 | ⚖️ | Trade-offs | ⛔ | External blocker |
 | 🧠 | Skill use | ➕➕❗ | Added beyond your request |
-| 🖥️ | Computer Use, manual browser/app tests and Manual checks | 👉 | Main takeaway |
+| 🖥️ | Computer Use, manual browser/app tests and Manual checks the agent ran | 👉 | Main takeaway |
 | 🛠️ | Planning and brainstorming | 🧪 | Tests |
+| 🖥️🫵 | Manual checks for you to run | | |
 
-Test-related information uses **🧪**: setup, coverage, progress, results and limitations. State the actual status in words; the icon does not mean a test passed. Automated results remain uncoloured. **🖥️** still marks actual Computer Use/manual browser or app tests and every Manual checks section, and **🐞** still reports actual bugs.
+Test-related information uses **🧪**: setup, coverage, progress, results and limitations. State the actual status in words; the icon does not mean a test passed. Automated results remain uncoloured. **🖥️** still marks actual Computer Use/manual browser or app tests and every Manual checks section of checks the agent ran; **🖥️🫵** marks only the Manual checks for you heading, and **🐞** still reports actual bugs.
 
 Planning and brainstorming share **🛠️**: exploring options, proposing an approach and outlining next steps. Use it instead of information for plans; **🐌** remains execution underway and **💡** remains a recommendation. For example: `🛠️ Install the skill, try it on a real reply, then change the markers to suit you.`
 

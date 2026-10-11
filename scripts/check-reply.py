@@ -10,10 +10,14 @@ math_validation = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(math_validation)
 
 MARKERS = {'🧪', '🛠️', '⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🧠', '➕➕❗', '🖥️', '👉'}
+# The one approved pairing of two existing markers, not a new meaning: it marks
+# only a Manual checks for you heading. User correction — 2026-10-11.
+MANUAL_CHECKS_FOR_YOU_MARKER = '🖥️🫵'
 MARKER = re.compile(r'\\\((?:\\([a-zA-Z]+))?\\text\{([^{}]+)\}\\\)')
 # Match plain leading markers too, so commentary still checks vocabulary and placement.
 # The empty first group keeps the same (size, symbol) shape as wrapped markers.
-PLAIN_MARKER = re.compile(r'()(➕➕❗|➕➕|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕⚖❓][\ufe0f]?)')
+# The paired marker comes first so its finger is still seen in commentary.
+PLAIN_MARKER = re.compile(r'()(➕➕❗|➕➕|🖥️?🫵|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕⚖❓][\ufe0f]?)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 COLOUR_SWITCH = re.compile(r'\\\(\\(textsf|textrm)\{\\color\{([^{}]+)\}(?:[^{}]|\{[^{}]*\})*\}\\\)')
@@ -31,7 +35,13 @@ WORKING_CARET = '⌄'
 # real spaces between expressions where it can wrap.
 MAX_PROSE_CHARACTERS = 64
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
-MANUAL_CHECKS_HEADING = re.compile(r'\s*(?:\\\(.*?\\\)\s*)*(?:#{1,6}\s+)?(?:\*\*)?Manual checks\b', re.IGNORECASE)  # User request — 2026-10-04: Manual checks sections use the computer emoji.
+# Manual checks lists checks the agent ran; Manual checks for you lists checks
+# for the user. User correction — 2026-10-11. Headings are matched on their
+# visible text, so plain, bold, Markdown and underlined LaTeX headings all count.
+HEADING_SYNTAX = re.compile(r'\\(?:huge|Large|LARGE|underline|textsf|textbf|text)\b|\\[()]|[{}*#]')
+# One linear [^\w]* prefix (markers, spaces, punctuation) avoids nested
+# repetition; emoji and variation selectors are not word characters.
+MANUAL_CHECKS_HEADING = re.compile(r'([^\w]*)Manual checks( for you)?\b', re.IGNORECASE)
 # Structural bounds only: real question/answer coverage is checked by the author.
 QUESTION_COVERAGE = re.compile(r'Questions: (\d+) detected across (\d+) user messages?; (\d+) replied to in (this final draft|this update); (\d+) carried over from earlier messages\.\Z')
 # An even run of backslashes does not escape TeX's comment character.
@@ -260,8 +270,15 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         # Ordinary Markdown prose is the preferred companion to short styled
         # cues. Keep checking the expressions themselves, not the surrounding
         # sentence for LaTeX coverage.
-        if MANUAL_CHECKS_HEADING.match(line) and '🖥' not in line:
-            fail('Start every Manual checks section with the 🖥️ computer marker, including checks proposed for the user to run.')
+        heading = MANUAL_CHECKS_HEADING.match(HEADING_SYNTAX.sub('', line))
+        if heading:
+            markers, for_you = heading.group(1), heading.group(2)
+            if for_you and not ('🖥' in markers and '🫵' in markers):
+                fail('Start every Manual checks for you section with the computer and pointing-at-you markers together: 🖥️🫵.')
+            elif not for_you and '🖥' not in markers:
+                fail('Start every Manual checks section with the 🖥️ computer marker.')
+            elif not for_you and '🫵' in markers:
+                fail('Manual checks lists only checks the agent ran; put checks for the user under a 🖥️🫵 Manual checks for you heading.')
         if '<!--' in line:
             fail('Keep hidden comments and notification metadata out of the reply.')
         if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):
@@ -276,7 +293,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                     has_direct_answer = True
                 elif has_direct_answer and match.re is PLAIN_MARKER and line[match.end():].strip():
                     continue  # Small follow-up reply within an already contextualized answer.
-            if match.group(2) in {'🫵', '👉'}:
+            # The paired Manual checks for you marker also points at the user.
+            if '🫵' in match.group(2) or match.group(2) == '👉':
                 has_pointer = True
                 if commentary:
                     fail('Reserve attention fingers for the final reply, not working commentary.')
@@ -292,7 +310,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail('Use plain normal-size markers in working commentary, without LaTeX size wrappers.')
             elif not commentary and match.group(1) != 'huge':
                 fail('Use lowercase \\huge for section markers.')
-            if match.group(2) not in MARKERS | set(approved_project_markers):
+            if match.group(2) not in MARKERS | {MANUAL_CHECKS_FOR_YOU_MARKER} | set(approved_project_markers):
                 fail('Use an approved marker without substitutions or combinations.')
             if match.group(2) != '👉' and (line[:match.start()].strip() or raw.startswith((' ', '\t'))):
                 fail('Place the marker first and left-aligned, before its text.')
