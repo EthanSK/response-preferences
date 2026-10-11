@@ -290,6 +290,30 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([],check_fragment(example, approved_project_markers=['🧬']))
         self.assertTrue(check_fragment(example))
 
+    def test_manual_checks_for_you_pairs_computer_and_finger(self):
+        # User correction — 2026-10-11: Manual checks is only what the agent
+        # ran; checks for the user go under Manual checks for you with 🖥️🫵.
+        steps = '\n\n1. Open the page.'
+        for heading in [r'\(\huge\text{🖥️🫵}\) **Manual checks for you**',
+                        r'\(\huge\text{🖥️🫵}\) \(\underline{\textsf{\textbf{Manual checks for you}}}\) on stack 11']:
+            with self.subTest(heading=heading):
+                self.assertEqual([], check_fragment(heading + steps))
+        self.assertEqual([], check_fragment(r'\(\huge\text{🖥️}\) \(\underline{\textsf{\textbf{Manual checks}}}\)' + steps))
+        for broken in [r'\(\huge\text{🖥️}\) **Manual checks for you**',
+                       r'\(\huge\text{🫵}\) **Manual checks for you**',
+                       '**Manual checks for you**',
+                       r'\(\huge\text{🖥️🫵}\) **Manual checks**',
+                       r'\(\huge\text{🖥️}\) \(\huge\text{🫵}\) **Manual checks**',
+                       r'\(\underline{\textsf{\textbf{Manual checks}}}\)',
+                       r'\(\huge\text{🫵🖥️}\) **Manual checks for you**']:
+            with self.subTest(broken=broken):
+                self.assertTrue(check_fragment(broken + steps))
+        # The paired heading is the reply's finger, and fingers stay out of commentary.
+        self.assertEqual([], check_message(r'\(\huge\text{🖥️🫵}\) **Manual checks for you**' + steps))
+        self.assertTrue(check_message('🖥️🫵 **Manual checks for you**' + steps, require_pointer=False, commentary=True))
+        # Quoted earlier replies are context, not a new heading.
+        self.assertEqual([], check_fragment('> Manual checks for you' + steps))
+
     def test_every_reply_needs_an_attention_finger(self):
         self.assertTrue(check_message(r'\(\huge\text{✅}\) Saved.'))
         self.assertEqual([], check_message(r'\(\huge\text{👉}\) The change is saved.'))

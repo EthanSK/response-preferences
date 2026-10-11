@@ -36,7 +36,7 @@ Keep label, conjunctions and explanation ordinary. Respect other explicit silent
 
 ## Closed marker vocabulary
 
-Use only these meanings; do not invent, swap or combine markers. User-approved project extensions stay scoped to that project. Pass their exact symbols with `--approved-project-marker` to the draft checker; the flag does not grant approval.
+Use only these meanings; do not invent, swap or combine markers, except the approved 🖥️🫵 pairing below. User-approved project extensions stay scoped to that project. Pass their exact symbols with `--approved-project-marker` to the draft checker; the flag does not grant approval.
 
 | Marker | Meaning |
 |---|---|
@@ -46,7 +46,8 @@ Use only these meanings; do not invent, swap or combine markers. User-approved p
 | 👀 | Starting to inspect, check or review |
 | 🐌 | Work starting or actively underway; not historical or completed work |
 | 🧪 | Test setup, coverage, progress, results and limitations |
-| 🖥️ | Actual Computer Use, including manual browser/app tests, and every **Manual checks** section |
+| 🖥️ | Actual Computer Use, including manual browser/app tests, and every **Manual checks** section of checks the agent actually ran |
+| 🖥️🫵 | Every **Manual checks for you** section: checks for the user to run |
 | 🐞 | Reporting an actual bug; not looking for one or incomplete verification |
 | 🛠️ | Planning and brainstorming together: options, approach, next steps |
 | ⓘ | Information, explanations and historical status |
@@ -60,7 +61,11 @@ Use only these meanings; do not invent, swap or combine markers. User-approved p
 
 User request — 2026-10-10: add an exclamation mark after the plus-plus marker so extra work is easy to notice. Use the complete `➕➕❗` marker and a short bold, underlined “Added beyond your request” label; keep its phase-dependent marker size and existing chevron placement. The exclamation belongs only to this marker, not to every section.
 
-Prefer the specific scenario over generic information/activity/results. 🧪 takes precedence for tests; 🖥️ for actual manual Computer Use and every **Manual checks** section; 🐞 for actual bugs. Use the computer emoji for manual checks: start each **Manual checks** section with 🖥️, including checks proposed for the user to run; it labels the section and never claims the agent ran them. Before sending, check every Manual checks heading has it. User request — 2026-10-04. State test/Computer Use status explicitly: planned, starting, running, passed, failed, incomplete, not run or unverified. Their icons never imply success. A review finding a bug is not a failed review. Completed checks outside these specific sections use the outcome, not 👀 or 🐌. Minor non-bug observations use ⓘ or 💡. ⮑ and skill announcements keep their structural roles. If no approved meaning fits, leave content unmarked rather than guessing.
+Prefer the specific scenario over generic information/activity/results. 🧪 takes precedence for tests; 🖥️ for actual manual Computer Use and every **Manual checks** section; 🐞 for actual bugs.
+
+**Manual checks** is only for telling the user what the agent manually checked or tested: start it with 🖥️ and give each check's actual status. **Checks for the user to run go under a separate “Manual checks for you” heading**, started with the computer emoji and the finger pointing at the user together: `\(\huge\text{🖥️🫵}\)` in a final reply. Never list the user's checks under plain **Manual checks**, including when a project or another skill asks for a Manual checks section of checks for the user. That heading's 🫵 is the reply's attention finger for those checks; do not add a separate 🫵 line that only points at them. Before sending, check each Manual checks heading matches who ran, or will run, the checks. User correction — 2026-10-11: “this whole manual checks response preference thing is only for you to tell me what you've manually checked, tested … If you want to tell me what to do well call it manual checks for you, the title. And then use the computer emoji and the pointing arrow finger at me together.” This supersedes the 2026-10-04 rule that put the user's checks under **Manual checks**.
+
+State test/Computer Use status explicitly: planned, starting, running, passed, failed, incomplete, not run or unverified. Their icons never imply success. A review finding a bug is not a failed review. Completed checks outside these specific sections use the outcome, not 👀 or 🐌. Minor non-bug observations use ⓘ or 💡. ⮑ and skill announcements keep their structural roles. If no approved meaning fits, leave content unmarked rather than guessing.
 
 ## Phase and placement
 
@@ -70,7 +75,7 @@ Prefer the specific scenario over generic information/activity/results. 🧪 tak
 - **The main ⮑ stays beside the opening answer**, even with a table/list/code block below; never alone and never with a caret.
 - User request — 2026-10-09: When answering several things I asked, dot small plain `⮑` reply markers through the paragraph or list beside the individual direct answers, so I can see that each question was answered. Keep the large arrow for the main opening answer; these smaller inline reply markers do not need another rainbow quote or annotation block when the surrounding answer already supplies the context. Do not mark unrelated explanation as a direct reply.
 - Start a new marker when purpose changes; a success marker does not cover later explanation or cautions. Consecutive content with the same purpose shares its marker.
-- **Final replies normally have one attention finger:** favour 🫵 when the message requires something from the user or it is their turn next; favour 👉 when it mainly says “here is the main information”. These are tendencies to skew the choice, not absolute rules; use judgment in context. Two only for distinct important items. Neither appears in commentary. Never invent a user action or isolate a finger after the content. 👉 can follow a semantic marker as an explicit placement exception, but never has a caret.
+- **Final replies normally have one attention finger:** favour 🫵 when the message requires something from the user or it is their turn next; favour 👉 when it mainly says “here is the main information”. These are tendencies to skew the choice, not absolute rules; use judgment in context. Two only for distinct important items. The 🖥️🫵 **Manual checks for you** heading counts as a 🫵. Neither appears in commentary. Never invent a user action or isolate a finger after the content. 👉 can follow a semantic marker as an explicit placement exception, but never has a caret.
 - Use approved status/category emojis in tables when grouping helps; keep the wording beside them, group related rows where sensible, preserve meaningful ranking/order, and avoid decoration in every cell. Table formatting is not a preference to use tables everywhere.
 - Whenever giving a table, colour-code its important rows using the existing meanings: cyan for useful information that should stand out, red for critical errors or must-read problems, orange for warnings/caveats, and green for confirmed success (never routine automated checks). Colour the meaningful text in the important cells and underline the key words so the reader knows where to look; keep routine rows neutral, wording short, and existing order/grouping intact. Do not invent an error or force every colour into a table. Before sending, scan only the coloured and underlined cells and check that they convey the main distinctions, including negatives and limitations. This applies to compact table values too. User correction — 2026-09-23.
 
