@@ -36,12 +36,13 @@ WORKING_CARET = '⌄'
 MAX_PROSE_CHARACTERS = 64
 INLINE_MATH = re.compile(r'\\\((.*?)\\\)')
 # Manual checks lists checks the agent ran; Manual checks for you lists checks
-# for the user. User correction — 2026-10-11. Headings are matched on their
-# visible text, so plain, bold, Markdown and underlined LaTeX headings all count.
-HEADING_SYNTAX = re.compile(r'\\(?:huge|Large|LARGE|underline|textsf|textbf|text)\b|\\[()]|[{}*#]')
-# One linear [^\w]* prefix (markers, spaces, punctuation) avoids nested
-# repetition; emoji and variation selectors are not word characters.
-MANUAL_CHECKS_HEADING = re.compile(r'([^\w]*)Manual checks( for you)?\b', re.IGNORECASE)
+# for the user. User correction — 2026-10-11. LaTeX wrappers are stripped first,
+# so plain, bold, Markdown and underlined LaTeX headings all count.
+HEADING_SYNTAX = re.compile(r'\\(?:huge|Large|LARGE|underline|textsf|textbf|text)\b|\\[()]|[{}]')
+# Only marker symbols and spaces may precede the heading, so a list item or
+# sentence that merely mentions Manual checks is not treated as a heading.
+# A single character class keeps the match linear.
+MANUAL_CHECKS_HEADING = re.compile(r'([\s\u2190-\u2bff\U0001F300-\U0001FAFF\ufe0f]*)(?:#{1,6}\s+)?(?:\*\*)?Manual checks( for you)?\b', re.IGNORECASE)
 # Structural bounds only: real question/answer coverage is checked by the author.
 QUESTION_COVERAGE = re.compile(r'Questions: (\d+) detected across (\d+) user messages?; (\d+) replied to in (this final draft|this update); (\d+) carried over from earlier messages\.\Z')
 # An even run of backslashes does not escape TeX's comment character.

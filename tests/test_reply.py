@@ -313,6 +313,11 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(check_message('🖥️🫵 **Manual checks for you**' + steps, require_pointer=False, commentary=True))
         # Quoted earlier replies are context, not a new heading.
         self.assertEqual([], check_fragment('> Manual checks for you' + steps))
+        # A list item or sentence that only mentions the heading is not one.
+        for mention in [r'- ⮑ \(\underline{\textsf{“Manual checks” is only what I checked}}\).',
+                        '* Manual checks for you now use both emojis.']:
+            with self.subTest(mention=mention):
+                self.assertEqual([], check_fragment(mention))
 
     def test_every_reply_needs_an_attention_finger(self):
         self.assertTrue(check_message(r'\(\huge\text{✅}\) Saved.'))
