@@ -118,6 +118,8 @@ When important words are bold, underline those same words too: bold alone is not
 
 Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\textsf{not uploaded}}\)` or `\(\underline{\textsf{after restarting}}\)`. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
 
+Sometimes I read all the text for a deeper understanding; sometimes I read **just the underlined bits back to back**. Make that second reading flow as a brief explanation, with verbs and useful connecting words, not only nouns. Keep the subject, action, result, negatives and conditions clear. For example, “backup finished → the upload is still pending → Reconnect to finish the upload” explains more than “backup → upload → connection”. Read the underlines alone in order before sending. [My exact wording and the worked example](references/style-reference.md#how-i-read-underlines).
+
 Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\textsf{not uploaded}}\).` or `The \(\underline{\textsf{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; keep both forms short and fully closed. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
 
 ## Generate a viewer
