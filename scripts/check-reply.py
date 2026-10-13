@@ -44,7 +44,7 @@ HEADING_SYNTAX = re.compile(r'\\(?:huge|Large|LARGE|underline|textsf|textbf|text
 # A single character class keeps the match linear.
 MANUAL_CHECKS_HEADING = re.compile(r'([\s\u2190-\u2bff\U0001F300-\U0001FAFF\ufe0f]*)(?:#{1,6}\s+)?(?:\*\*)?Manual checks( for you)?\b', re.IGNORECASE)
 # Structural bounds only: real question/answer coverage is checked by the author.
-QUESTION_COVERAGE = re.compile(r'Questions: (\d+) detected across (\d+) user messages?; (\d+) replied to in (this final draft|this update); (\d+) carried over from earlier messages\.\Z')
+QUESTION_COVERAGE = re.compile(r'Requests: (\d+) across (\d+) user messages?; (\d+) addressed in (this reply|this update); (\d+) from earlier messages\.\Z')
 # An even run of backslashes does not escape TeX's comment character.
 UNESCAPED_PERCENT = re.compile(r'(?<!\\)(?:\\\\)*%')
 
@@ -241,20 +241,20 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         line = re.sub(r'(`+).*?\1', '', raw)
         def fail(message):
             errors.append(f'Line {number}: {message}')
-        if raw.strip().startswith('Questions:'):
+        if raw.strip().startswith('Requests:'):
             coverage_lines.append(number)
             if commentary:
                 fail('Questions coverage counts belong only in the final reply, never commentary.')
             coverage = QUESTION_COVERAGE.fullmatch(raw.strip())
             if not coverage:
-                fail('Use the question-coverage line with detected questions, user messages, replies in this draft and earlier carried-over questions.')
+                fail('Use the question-coverage line with distinct requests, user messages, requests addressed in this reply and requests from earlier messages.')
             else:
                 detected, messages, answered, phase, carried = coverage.groups()
                 detected, messages, answered, carried = map(int, (detected, messages, answered, carried))
                 if answered > detected or carried > detected or (detected and not messages):
-                    fail('Question counts are inconsistent: replies and carried-over questions cannot exceed detected questions; asks need a source message.')
-                if phase != 'this final draft':
-                    fail('Use this final draft for final question coverage; commentary has no coverage footer.')
+                    fail('Request counts are inconsistent: addressed and earlier requests cannot exceed the total requests; asks need a source message.')
+                if phase != 'this reply':
+                    fail('Use this reply for final question coverage; commentary has no coverage footer.')
             if not topic_lines or previous != text.splitlines()[topic_lines[-1] - 1]:
                 fail('Put question coverage immediately below the About reminder.')
             if number != last_line:
@@ -354,7 +354,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 if number not in topic_lines:
                     topic_lines.append(number)
                 following = [s.strip() for s in text.splitlines()[number:] if s.strip()]
-                if following and not (len(following) == 1 and following[0].startswith('Questions:')):
+                if following and not (len(following) == 1 and following[0].startswith('Requests:')):
                     fail('Put the topic reminder at the end, followed only by its question-coverage line.')
             elif colour not in PALETTE or font not in {'textsf', 'text'}:
                 fail('Use an approved highlight colour with normal-size text.')
