@@ -232,8 +232,8 @@ test('every final example closes with a distinct topic reminder followed by scop
   const reminder=reminders[0],coverage=msg.querySelector('.question-coverage');
   assert.equal(reminder.nextElementSibling,coverage);
   assert.equal(msg.lastElementChild,coverage);
-  assert.match(coverage.textContent,/^Questions: \d+ detected across \d+ user messages?; \d+ replied to in this final draft; \d+ carried over from earlier messages\.$/);
-  assert(coverage.textContent.includes('this final draft'));
+  assert.match(coverage.textContent,/^Requests: \d+ across \d+ user messages?; \d+ addressed in this reply; \d+ from earlier messages\.$/);
+  assert(coverage.textContent.includes('this reply'));
   assert.match(reminder.textContent,/^About: .+/);
   assert.equal(reminder.querySelectorAll('u,a,.mk').length,0);
   assert.equal(dom.window.getComputedStyle(reminder).color,'var(--topic)');
@@ -243,7 +243,7 @@ test('every final example closes with a distinct topic reminder followed by scop
  assert(d.querySelector('#backup .final .topic-reminder').textContent.includes('release decision'));
  const shared=d.querySelector('#setup-u3').nextElementSibling;
  assert.deepEqual([...shared.querySelectorAll('.coverage-question-list li')].map(i=>i.textContent),['Can I change the style?','Will it update itself?']);
- assert.equal(shared.querySelector('.question-coverage').textContent,'Questions: 2 detected across 1 user message; 2 replied to in this final draft; 0 carried over from earlier messages.');
+ assert.equal(shared.querySelector('.question-coverage').textContent,'Requests: 2 across 1 user message; 2 addressed in this reply; 0 from earlier messages.');
  assert.equal(shared.querySelectorAll('.reply-inline').length,1);
  dom.window.close();
 });

@@ -14,29 +14,29 @@ def check_fragment(*args, **kwargs):
 class ReplyChecks(unittest.TestCase):
     def test_final_question_coverage_under_about(self):
         body = r'\(\huge\text{👉}\) The rename is complete.'
-        coverage = 'Questions: 3 detected across 2 user messages; 3 replied to in this final draft; 1 carried over from earlier messages.'
+        coverage = 'Requests: 3 across 2 user messages; 3 addressed in this reply; 1 from earlier messages.'
         draft = body+'\n\n'+TOPIC+'\n'+coverage
         self.assertEqual([], reply.check(draft, require_question_coverage=True))
-        for broken in [body+'\n'+TOPIC, body+'\n'+coverage+'\n'+TOPIC, draft+'\nMore content.', draft+'\n'+coverage, draft.replace('this final draft', 'this update')]:
+        for broken in [body+'\n'+TOPIC, body+'\n'+coverage+'\n'+TOPIC, draft+'\nMore content.', draft+'\n'+coverage, draft.replace('this reply', 'this update')]:
             self.assertTrue(reply.check(broken, require_question_coverage=True))
 
     def test_commentary_has_neither_closing_footer(self):
         body = '🐌 Checking the rename.'
-        coverage = 'Questions: 1 detected across 1 user message; 0 replied to in this update; 0 carried over from earlier messages.'
+        coverage = 'Requests: 1 across 1 user message; 0 addressed in this update; 0 from earlier messages.'
         for required in [False, True]:
             options = dict(commentary=True, require_pointer=False, require_question_coverage=required)
             self.assertEqual([], reply.check(body, **options))
-            for suffix in [TOPIC, coverage, TOPIC+'\n'+coverage, coverage.replace('this update', 'this final draft')]:
+            for suffix in [TOPIC, coverage, TOPIC+'\n'+coverage, coverage.replace('this update', 'this reply')]:
                 self.assertTrue(reply.check(body+'\n'+suffix, **options))
 
     def test_question_coverage_counts_and_partial_reply(self):
         base = r'\(\huge\text{👉}\) One answer is still pending.'+'\n\n'+TOPIC+'\n'
-        partial = 'Questions: 3 detected across 2 user messages; 2 replied to in this final draft; 1 carried over from earlier messages.'
+        partial = 'Requests: 3 across 2 user messages; 2 addressed in this reply; 1 from earlier messages.'
         self.assertEqual([], reply.check(base+partial, require_question_coverage=True))
-        for broken in [partial.replace('2 replied', '4 replied'), partial.replace('1 carried', '4 carried'), partial.replace('2 user', '0 user'), 'Questions: all answered.']:
+        for broken in [partial.replace('2 addressed', '4 addressed'), partial.replace('1 from', '4 from'), partial.replace('2 user', '0 user'), 'Requests: all answered.']:
             self.assertTrue(reply.check(base+broken, require_question_coverage=True))
         # A valid line cannot prove the underlying semantic count or answers.
-        self.assertEqual([], reply.check(base+partial.replace('3 detected', '0 detected').replace('2 user', '0 user').replace('2 replied', '0 replied').replace('1 carried', '0 carried')))
+        self.assertEqual([], reply.check(base+partial.replace('Requests: 3 across', 'Requests: 0 across').replace('2 user', '0 user').replace('2 addressed', '0 addressed').replace('1 from', '0 from')))
 
     def test_short_sans_serif_underlines_and_separate_colour(self):
         good = (r'\(\huge\text{👉}\) The \(\underline{\textsf{Zapp app is ready}}\). '
