@@ -14,29 +14,29 @@ def check_fragment(*args, **kwargs):
 class ReplyChecks(unittest.TestCase):
     def test_final_question_coverage_under_about(self):
         body = r'\(\huge\text{👉}\) The rename is complete.'
-        coverage = 'Requests: 3 across 2 user messages; 3 addressed in this reply; 1 from earlier messages.'
+        coverage = 'Coverage since last final reply: 2 user messages; 3/3 requests and steers addressed.'
         draft = body+'\n\n'+TOPIC+'\n'+coverage
         self.assertEqual([], reply.check(draft, require_question_coverage=True))
-        for broken in [body+'\n'+TOPIC, body+'\n'+coverage+'\n'+TOPIC, draft+'\nMore content.', draft+'\n'+coverage, draft.replace('this reply', 'this update')]:
+        for broken in [body+'\n'+TOPIC, body+'\n'+coverage+'\n'+TOPIC, draft+'\nMore content.', draft+'\n'+coverage, draft.replace('since last final reply', 'across task history')]:
             self.assertTrue(reply.check(broken, require_question_coverage=True))
 
     def test_commentary_has_neither_closing_footer(self):
         body = '🐌 Checking the rename.'
-        coverage = 'Requests: 1 across 1 user message; 0 addressed in this update; 0 from earlier messages.'
+        coverage = 'Coverage since last final reply: 1 user message; 0/1 requests and steers addressed.'
         for required in [False, True]:
             options = dict(commentary=True, require_pointer=False, require_question_coverage=required)
             self.assertEqual([], reply.check(body, **options))
-            for suffix in [TOPIC, coverage, TOPIC+'\n'+coverage, coverage.replace('this update', 'this reply')]:
+            for suffix in [TOPIC, coverage, TOPIC+'\n'+coverage]:
                 self.assertTrue(reply.check(body+'\n'+suffix, **options))
 
     def test_question_coverage_counts_and_partial_reply(self):
         base = r'\(\huge\text{👉}\) One answer is still pending.'+'\n\n'+TOPIC+'\n'
-        partial = 'Requests: 3 across 2 user messages; 2 addressed in this reply; 1 from earlier messages.'
+        partial = 'Coverage since last final reply: 2 user messages; 2/3 requests and steers addressed.'
         self.assertEqual([], reply.check(base+partial, require_question_coverage=True))
-        for broken in [partial.replace('2 addressed', '4 addressed'), partial.replace('1 from', '4 from'), partial.replace('2 user', '0 user'), 'Requests: all answered.']:
+        for broken in [partial.replace('2/3', '4/3'), partial.replace('2 user', '0 user'), 'Coverage since last final reply: all answered.']:
             self.assertTrue(reply.check(base+broken, require_question_coverage=True))
-        # A valid line cannot prove the underlying semantic count or answers.
-        self.assertEqual([], reply.check(base+partial.replace('Requests: 3 across', 'Requests: 0 across').replace('2 user', '0 user').replace('2 addressed', '0 addressed').replace('1 from', '0 from')))
+        # Syntax checks cannot infer which user messages or answers belong to the window.
+        self.assertEqual([], reply.check(base+partial.replace('2 user', '0 user').replace('2/3', '0/0')))
 
     def test_short_sans_serif_underlines_and_separate_colour(self):
         good = (r'\(\huge\text{👉}\) The \(\underline{\textsf{Zapp app is ready}}\). '
