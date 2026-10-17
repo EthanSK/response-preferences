@@ -65,6 +65,9 @@ let live = data.live ? new URLSearchParams(location.search).get('doc') : null;
 let liveRevision = null, externalChange = false, polling = false;
 let images = data.images || {}, links = data.links || {}, currentMode = /\.(md|markdown)$/i.test(name) ? 'preview' : 'edit';
 let targetLine = Number(data.line) || 1, renderTimer, sourceEol = data.source.includes('\r\n') ? '\r\n' : '\n', sourceBom = data.source.startsWith('\ufeff');
+// Whole-file links have no selected passage. Only an explicit line/hash or Go
+// action owns the yellow highlight; metadata is not a warning or special route.
+let hasTarget = Number(data.line) > 0 || /^#L\d+$/.test(location.hash);
 const normalise = text => text.replace(/^\ufeff/, '').replace(/\r\n?/g, '\n');
 baseline = normalise(baseline);
 function say(message) {$('status').textContent = message;}
@@ -94,7 +97,7 @@ function render() {
 function jump(value, fromHash = false) {
   const line=Number(value), total=editor.state.doc.lines;
   if (!Number.isInteger(line) || line<1 || line>total) {say(`Enter a line from 1 to ${total}.`);return;}
-  targetLine=line;$('line').value=line;
+  hasTarget=true;targetLine=line;$('line').value=line;
   if(!fromHash) {try {history.replaceState(null,'','#L'+line);} catch { /* file viewers can disable history */ }}
   const pos=editor.state.doc.line(line).from;
   editor.dispatch({effects:[targetEffect.of(pos),EditorView.scrollIntoView(pos,{y:'center'})],selection:{anchor:pos}});
@@ -106,14 +109,14 @@ function jump(value, fromHash = false) {
 function setMode(mode) {
   currentMode=mode;$('workspace').dataset.mode=mode;
   document.querySelectorAll('[data-mode]').forEach(el=>{if(el.tagName==='BUTTON')el.setAttribute('aria-pressed',String(el.dataset.mode===mode));});
-  render();requestAnimationFrame(()=>{editor.requestMeasure();jump(Math.min(targetLine,editor.state.doc.lines),true);});
+  render();requestAnimationFrame(()=>{editor.requestMeasure();if(hasTarget)jump(Math.min(targetLine,editor.state.doc.lines),true);});
 }
 function confirmDiscard() {return !isDirty() || confirm('You have unsaved changes that opening another file will discard.');}
 async function loadFile(file, handle=null) {
   if(file.size>5*1024*1024) throw Error('This file is larger than 5 MB. Open a smaller text file.');
   const text=decodeText(await file.arrayBuffer());
   name=file.name;rawBaseline=text;baseline=normalise(text);sourceEol=text.includes('\r\n')?'\r\n':'\n';sourceBom=text.startsWith('\ufeff');
-  live=null;fileHandle=handle;images={};links={};tableWidths.clear();$('reload').hidden=true;
+  live=null;hasTarget=false;fileHandle=handle;images={};links={};tableWidths.clear();$('reload').hidden=true;
   editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
   $('filename').textContent=name;$('filename').title=name;$('file-note').textContent='Opened from disk · does not update automatically';
   $('snapshot-note').textContent=handle?'Save writes to the file you picked. Download copy creates a separate file.':'Download copy to keep your edits. The file you opened is unchanged.';
@@ -162,7 +165,7 @@ async function refreshLive(force=false) {
     document.title=name+' · Live file viewer';
     if(first && next.appearance)installAppearance(document.documentElement,$('theme'),next.appearance);
     if(first)currentMode=/\.(md|markdown)$/i.test(name)?'preview':'edit';
-    setMode(currentMode);updateDirty();
+    setMode(currentMode);updateDirty();if(!hasTarget)say('File opened');
   } catch(error) {say('Could not read the original file. '+error.message);}
   finally {polling=false;}
 }

@@ -135,13 +135,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source')
     parser.add_argument('--output')
-    parser.add_argument('--line', type=int, default=1)
+    parser.add_argument('--line', type=int)
     parser.add_argument('--no-images', action='store_true')
     parser.add_argument('--public', action='store_true', help='Do not embed local links or images; source text must already be suitable for publication')
     parser.add_argument('--snapshot', action='store_true', help='Explicit standalone export; normal links use the live source')
     args = parser.parse_args()
     if args.snapshot or args.public or args.output:
-        print(create_viewer(args.source, args.output, args.line, not args.no_images, args.public))
+        print(create_viewer(args.source, args.output, args.line or 1, not args.no_images, args.public))
     else:
         import runpy
         live = runpy.run_path(str(ROOT / 'scripts/live-viewer.py'))

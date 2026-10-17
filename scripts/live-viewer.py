@@ -251,19 +251,19 @@ def ensure_server():
     raise RuntimeError('Live viewer did not start.')
 
 
-def open_viewer(source, line=1):
+def open_viewer(source, line=None):
     source = Path(source).expanduser().resolve(strict=True)
     _, text = read_text(source)
-    if not 1 <= line <= len(text.splitlines()) + 1: raise ValueError('Line is outside this file.')
+    if line is not None and not 1 <= line <= len(text.splitlines()) + 1: raise ValueError('Line is outside this file.')
     key = register(source)
     ensure_server()
-    return 'http://127.0.0.1:%d/index.html?' % PORT + urlencode({'doc': key}) + '#L' + str(line)
+    return 'http://127.0.0.1:%d/index.html?' % PORT + urlencode({'doc': key}) + ('#L' + str(line) if line is not None else '')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', nargs='?')
-    parser.add_argument('--line', type=int, default=1)
+    parser.add_argument('--line', type=int)
     parser.add_argument('--serve', action='store_true')
     args = parser.parse_args()
     if args.serve: ViewerServer(('127.0.0.1', PORT)).serve_forever()
