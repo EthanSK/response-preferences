@@ -153,7 +153,7 @@ The context helper preserves exact message text and copies available attachments
 - Normal local links use a loopback-only file service. Document contents stay on your machine; no analytics or external uploads. HTML in Markdown is escaped and remote images do not load. The public demo remains a browser-only synthetic snapshot.
 - A generated HTML file **contains its document text and any embedded images**. Keep it private when its source is private. `--public` removes local image/link embeddings; it does not redact the source text.
 - Text is limited to 5 MB. PNG/JPEG/GIF/WebP images can be embedded up to 20 MB each, 40 MB total. Complex image destinations and local links are best effort. Linked Markdown trees are not recursively copied.
-- The editor highlights Markdown, JavaScript/TypeScript/JSX, Python, JSON, HTML, CSS, SQL, YAML, shell, Rust and Go. Other text opens without language-specific highlighting. Explicit line jumps use a thin yellow gutter line in both preview and editor, without a coloured text background or wider gutter; whole-file links start unselected. There is no code execution, terminal or language server.
+- The editor highlights Markdown, JavaScript/TypeScript/JSX, Python, JSON, HTML, CSS, SQL, YAML, shell, Rust and Go. Other text opens without language-specific highlighting. Explicit line jumps softly highlight the complete block in yellow, with a thin yellow gutter line separated from the content, without a wider gutter; whole-file links start unselected. There is no code execution, terminal or language server.
 
 See [viewer instructions](references/viewer.md) for details. User clicks and automated browser access have separate permissions: an automation restriction does not mean a local link is broken.
 

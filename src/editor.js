@@ -91,7 +91,21 @@ const extensions = () => [
 const editor = new EditorView({parent:$('editor'), state:EditorState.create({doc:baseline, extensions:extensions()})});
 const tableWidths = new Map();
 let cleanupTableResize = () => {};
+const passageObserver = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(positionPassageRail);
+function positionPassageRail() {
+  const preview = $('preview'), passage = preview.querySelector('.selected');
+  let rail = preview.querySelector('#passage-rail');
+  if (!passage) {rail?.remove();return;}
+  // The rail stays outside content and overflow wrappers without changing layout.
+  const target = passage.closest('.table-scroll') || passage;
+  const box = target.getBoundingClientRect(), pane = preview.getBoundingClientRect();
+  if (!rail) {rail=document.createElement('div');rail.id='passage-rail';rail.setAttribute('aria-hidden','true');preview.append(rail);}
+  rail.style.left=`${parseFloat(getComputedStyle(preview).paddingLeft)-10}px`;
+  rail.style.top=`${box.top-pane.top+preview.scrollTop}px`;
+  rail.style.height=`${Math.max(2,box.height)}px`;
+}
 function render() {
+  passageObserver?.disconnect();
   cleanupTableResize();
   if (/\.(md|markdown)$/i.test(name)) $('preview').innerHTML = renderMarkdown(editor.state.doc.toString(), {images,links,live:!!live});
   else {const pre=document.createElement('pre');pre.textContent=editor.state.doc.toString();$('preview').replaceChildren(pre);}
@@ -107,7 +121,11 @@ function jump(value, fromHash = false) {
   editor.dispatch({effects:[targetEffect.of(pos),EditorView.scrollIntoView(pos,{y:'center'})],selection:{anchor:pos}});
   $('preview').querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));
   const passage=selectPassage($('preview'),line);
-  if(passage) {passage.classList.add('selected');if(currentMode!=='edit') requestAnimationFrame(()=>passage.scrollIntoView({block:'center',behavior:'instant'}));}
+  if(passage) {
+    passage.classList.add('selected');positionPassageRail();
+    passageObserver?.disconnect();passageObserver?.observe($('preview'));passageObserver?.observe(passage);
+    if(currentMode!=='edit') requestAnimationFrame(()=>{passage.scrollIntoView({block:'center',behavior:'instant'});positionPassageRail();});
+  }
   say(`Line ${line}${passage && currentMode!=='edit' ? ` · passage spans lines ${passage.dataset.start}–${passage.dataset.end}` : ''}`);
 }
 function setMode(mode) {
@@ -188,6 +206,10 @@ $('reload').onclick=()=>{if(!isDirty() || confirm('Reload file and discard your 
 $('file-input').onchange=async()=>{const file=$('file-input').files[0];if(file)try{await loadFile(file);}catch(error){say('Could not open this file. '+error.message);}finally{$('file-input').value='';}};
 installAppearance(document.documentElement, $('theme'), data.appearance);
 $('preview').onclick=event=>{const unavailable=event.target.closest('[data-unavailable]');if(unavailable){event.preventDefault();say('Open the linked file from disk. It is not included in this viewer.');}};
+$('preview').addEventListener('load',positionPassageRail,true);
+$('preview').addEventListener('toggle',positionPassageRail,true);
+addEventListener('resize',positionPassageRail);
+document.fonts?.ready.then(positionPassageRail);
 addEventListener('beforeunload',event=>{if(isDirty()){event.preventDefault();event.returnValue='';}});
 addEventListener('hashchange',()=>{const match=location.hash.match(/^#L(\d+)$/);if(match)jump(+match[1],true);});
 const hash=location.hash.match(/^#L(\d+)$/);if(hash)targetLine=+hash[1];

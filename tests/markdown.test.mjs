@@ -41,6 +41,8 @@ test('fenced code gets syntax tokens and source mapping; embedded images only us
   const doc=new JSDOM(renderMarkdown('```js\nconst x = "hello";\n```\n\n![example](image.png)',{images:{'image.png':'data:image/png;base64,aGVsbG8='}})).window.document;
   assert.ok(doc.querySelector('.hljs-keyword'));
   assert.equal(selectPassage(doc,2).dataset.start,'1');
+  assert.equal(selectPassage(doc,2).tagName,'DIV');
+  assert.ok(selectPassage(doc,2).classList.contains('code-block'));
   assert.ok(doc.querySelector('img[src^="data:image/png"]'));
 });
 test('reference links, duplicate heading anchors, table and CRLF line mapping remain usable',()=>{
