@@ -1,6 +1,6 @@
 /* Response Preferences viewer: a compact document reading and editing utility.
    Layout: fixed-height shell (header, workspace, status bar); each pane scrolls on its own.
-   Colour: neutral chrome, one accent for focus/links/selection; amber is reserved for warnings and search. */
+   Colour: neutral chrome, theme accent for focus/links; yellow gutter rails mark source targets. */
 :root{
   color-scheme:dark;
   /* Linear Dark: the chrome seed and syntax palette used by Codex. */
@@ -9,7 +9,7 @@
   --text:#e3e4e6;--muted:#8e8f91;
   --accent:#606acc;--link:#949bd6;--accent-soft:rgba(96,106,204,.18);--accent-strong:rgba(96,106,204,.4);--selection:rgba(96,106,204,.28);
   --code:#17181d;--code-text:#e6e9ef;--active-line:rgba(255,255,255,.035);
-  --target:rgba(233,183,84,.13);--target-rail:#d9a441;--warn:#e6b45a;
+  --target:rgba(233,183,84,.13);--target-rail:#e9b754;--warn:#e6b45a;
   --syn-keyword:#8c97ff;--syn-string:#7ad9c0;--syn-number:#f5c56a;--syn-comment:#636b7b;--syn-function:#c2a1ff;--syn-type:#73b7ff;--syn-invalid:#ff7e78;
   --ui:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
@@ -97,7 +97,8 @@ header button svg{width:15px;height:15px;flex:none}
 #editor .cm-foldGutter .cm-gutterElement{color:var(--muted);opacity:.75}
 #editor .cm-activeLine{background:var(--active-line)}
 #editor .cm-activeLineGutter{background:transparent;color:var(--text)}
-#editor .cm-target-line{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
+/* Paint inside the existing number gutter: no extra column or layout width. */
+#editor .cm-lineNumbers .cm-target-gutter{box-shadow:inset -2px 0 0 var(--target-rail)}
 #editor .cm-cursor,#editor .cm-dropCursor{border-left:1.5px solid var(--text)}
 #editor .cm-editor .cm-selectionBackground{background:var(--selection)!important}
 #editor .cm-selectionMatch{background:var(--accent-soft)}
@@ -174,11 +175,13 @@ header button svg{width:15px;height:15px;flex:none}
 #preview details pre{border:0;border-top:1px solid var(--line);border-radius:0}
 .image-note{color:var(--muted);font-style:italic;font-size:.92em}
 
-/* Target passage: soft wash, left rail, brief ring on arrival; persists after the ring fades */
+/* Mark the complete passage with a thin yellow rail in its existing left margin.
+   An outset shadow does not widen the gutter or tint the document contents. */
 #preview .passage{scroll-margin:24px}
-#preview .selected{background:var(--accent-soft);border-radius:4px;box-shadow:-3px 0 0 var(--accent)}
-#preview .pulse{animation:passage-pulse .55s ease-out}
-@keyframes passage-pulse{from{background:var(--selection)}to{background:var(--accent-soft)}}
+#preview .selected{box-shadow:-2px 0 0 var(--target-rail)}
+/* Tables scroll inside a wrapper, which would clip the table's outside rail. */
+#preview .table-scroll:has(>.selected){box-shadow:-2px 0 0 var(--target-rail)}
+#preview .table-scroll>.selected{box-shadow:none}
 
 /* Status bar: live messages on the left, the source-of-truth note on the right */
 footer{flex:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 16px;padding:5px 12px;border-top:1px solid var(--line);background:var(--chrome);font-size:11px;line-height:1.5;color:var(--muted)}
@@ -193,7 +196,6 @@ footer{flex:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 16px;p
   #preview{padding-top:26px;font-size:15px}
 }
 @media(prefers-reduced-motion:reduce){
-  #preview .pulse{animation:none}
   *{scroll-behavior:auto!important;transition:none!important}
 }
 

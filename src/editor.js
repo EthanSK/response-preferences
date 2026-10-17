@@ -1,6 +1,6 @@
 import {basicSetup} from 'codemirror';
-import {EditorState, StateField, StateEffect, Compartment} from '@codemirror/state';
-import {EditorView, Decoration, keymap, scrollPastEnd} from '@codemirror/view';
+import {EditorState, StateField, StateEffect, Compartment, RangeSet} from '@codemirror/state';
+import {EditorView, Decoration, GutterMarker, gutterLineClass, keymap, scrollPastEnd} from '@codemirror/view';
 import {indentWithTab} from '@codemirror/commands';
 import {openSearchPanel} from '@codemirror/search';
 import {HighlightStyle, syntaxHighlighting, StreamLanguage} from '@codemirror/language';
@@ -25,6 +25,7 @@ const $ = id => document.getElementById(id);
 const data = JSON.parse($('document-data').textContent);
 const language = new Compartment();
 const targetEffect = StateEffect.define();
+const targetGutter = new class extends GutterMarker {elementClass = 'cm-target-gutter';}();
 const selectedLine = StateField.define({
   create: () => Decoration.none,
   update(value, transaction) {
@@ -32,7 +33,10 @@ const selectedLine = StateField.define({
     for (const effect of transaction.effects) if (effect.is(targetEffect)) value = Decoration.set([Decoration.line({class: 'cm-target-line'}).range(effect.value)]);
     return value;
   },
-  provide: field => EditorView.decorations.from(field)
+  provide: field => [EditorView.decorations.from(field), gutterLineClass.compute([field], state => {
+    const target = state.field(field).iter();
+    return target.value ? RangeSet.of([targetGutter.range(target.from)]) : RangeSet.empty;
+  })]
 });
 // Class-based so viewer.css can theme tokens per light/dark palette alongside highlight.js fences.
 const colours = HighlightStyle.define([
@@ -101,9 +105,9 @@ function jump(value, fromHash = false) {
   if(!fromHash) {try {history.replaceState(null,'','#L'+line);} catch { /* file viewers can disable history */ }}
   const pos=editor.state.doc.line(line).from;
   editor.dispatch({effects:[targetEffect.of(pos),EditorView.scrollIntoView(pos,{y:'center'})],selection:{anchor:pos}});
-  $('preview').querySelectorAll('.selected').forEach(el=>el.classList.remove('selected','pulse'));
+  $('preview').querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));
   const passage=selectPassage($('preview'),line);
-  if(passage) {passage.classList.add('selected');void passage.offsetWidth;passage.classList.add('pulse');if(currentMode!=='edit') requestAnimationFrame(()=>passage.scrollIntoView({block:'center',behavior:'instant'}));}
+  if(passage) {passage.classList.add('selected');if(currentMode!=='edit') requestAnimationFrame(()=>passage.scrollIntoView({block:'center',behavior:'instant'}));}
   say(`Line ${line}${passage && currentMode!=='edit' ? ` · passage spans lines ${passage.dataset.start}–${passage.dataset.end}` : ''}`);
 }
 function setMode(mode) {

@@ -152,8 +152,10 @@ test('compact chrome keeps accessible names, theme toggle, save state and status
     assert.equal(root.dataset.theme,'dark');
     d.querySelector('#theme').click();assert.equal(root.dataset.theme,'light');
     d.querySelector('#theme').click();assert.equal(root.dataset.theme,'dark');
-    // The initial line highlight is applied with its arrival animation and reported in the status bar.
-    assert.ok(d.querySelector('#preview .selected.pulse'));
+    // The source target stays marked without tinting or animating the passage.
+    assert.ok(d.querySelector('#preview .selected'));
+    assert.equal(d.querySelector('#preview .pulse'),null);
+    assert.equal(d.querySelector('.cm-lineNumbers .cm-target-gutter').textContent,'3');
     assert.match(d.querySelector('#status').textContent,/^Line 3/);
     // Three lines plus the trailing newline give CodeMirror four lines; out-of-range jumps report that bound.
     d.querySelector('#line').value='99';d.querySelector('#jump-form').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));

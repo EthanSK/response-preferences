@@ -156,6 +156,12 @@ Moving a canonical checkout also moves its Git common directory. Repair linked w
 
 Ethan requested metadata expanded by default. It is ordinary frontmatter rendered by the shared Markdown/code engine, not a separate skill viewer. Defaulting every whole-file URL to `#L1` selected the metadata and made the navigation colour look like a warning. Keep whole-file links without a selected passage; preserve explicit line-1 jumps and source-line mapping. User-requested.
 
-## Keep navigation highlights within the viewer palette — 2026-10-17
+## Superseded: keep navigation highlights within the viewer palette — 2026-10-17
 
 Ethan found the amber selected-passage halo out of place. Preview passages and editor target lines now reuse the existing theme accent with a quiet tint and thin edge; navigation no longer flashes an outline or borrows warning colours. Keep whole-file views unselected and honour reduced motion. This is a shared viewer style, not a skill-specific override. User-requested.
+
+## Yellow gutter targets and per-answer context — 2026-10-17
+
+Ethan clarified that a target passage needs only a thin yellow line from its start to end in the existing gutter, without a blue fill or extra gutter width. This supersedes the theme-accent wash above. A table's overflow wrapper clips an outside shadow on the table itself; place that rail on the wrapper. CodeMirror can mark the existing line-number gutter through `gutterLineClass`, without adding a new gutter. Manual dark/light checks and equal before/after gutter measurements verify the result.
+
+Every actual main and inline answer arrow now has its original-question hover link immediately afterward. A rainbow question above the answer does not remove that requirement; distinct sub-answers need matching source questions. This reuses the existing hover convention, with no automatic enforcement hook. User-requested.
