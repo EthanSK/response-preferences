@@ -28,6 +28,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Context above answers | Shows a short question reminder in a rainbow blockquote, naming the subject when dictated pronouns would be unclear later, above the direct-answer arrow, in main and side chats, alongside applicable annotation context; read-only side chats use the existing helper without updating shared state. The reminder can retain around 60–80 visible characters and wrap naturally; a fixed 24-colour cycle keeps agents from reinventing the format. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
+| Answer context | Every main or inline ⮑ is immediately followed by a one-character ↗ link containing the original question/request for hover, even when a rainbow reminder is also present. |
 | Markdown viewer | One shared live viewer reads original Markdown/code files, with line highlighting, automatic refresh and conflict-aware saves. |
 | Code editor | CodeMirror provides syntax highlighting, line numbers, search/replace, undo/redo and bracket matching. Preview, edit and split views. |
 | Scannable tables | Colours important rows using the existing meanings: cyan for useful highlights, red for critical errors, orange for caveats and green for confirmed success. Underlines key words, keeps routine rows neutral and wording short, and uses approved category markers when helpful. |
@@ -152,7 +153,7 @@ The context helper preserves exact message text and copies available attachments
 - Normal local links use a loopback-only file service. Document contents stay on your machine; no analytics or external uploads. HTML in Markdown is escaped and remote images do not load. The public demo remains a browser-only synthetic snapshot.
 - A generated HTML file **contains its document text and any embedded images**. Keep it private when its source is private. `--public` removes local image/link embeddings; it does not redact the source text.
 - Text is limited to 5 MB. PNG/JPEG/GIF/WebP images can be embedded up to 20 MB each, 40 MB total. Complex image destinations and local links are best effort. Linked Markdown trees are not recursively copied.
-- The editor highlights Markdown, JavaScript/TypeScript/JSX, Python, JSON, HTML, CSS, SQL, YAML, shell, Rust and Go. Other text opens without language-specific highlighting. Explicit line jumps use a quiet accent tint and thin edge in both preview and editor; whole-file links start unselected. There is no code execution, terminal or language server.
+- The editor highlights Markdown, JavaScript/TypeScript/JSX, Python, JSON, HTML, CSS, SQL, YAML, shell, Rust and Go. Other text opens without language-specific highlighting. Explicit line jumps use a thin yellow gutter line in both preview and editor, without a coloured text background or wider gutter; whole-file links start unselected. There is no code execution, terminal or language server.
 
 See [viewer instructions](references/viewer.md) for details. User clicks and automated browser access have separate permissions: an automation restriction does not mean a local link is broken.
 
