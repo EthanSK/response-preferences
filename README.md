@@ -22,13 +22,13 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Meaningful emphasis | Red for critical text, green for confirmed success, orange for warnings, cyan for important information. Every coloured highlight makes sense on its own from its first word, using enough subject and context—even a complete short sentence. Highlight selectively; cyan does not colour a whole information section. |
 | Other-model contributions | Each other-model invocation gets a short cyan `Models:` sentence once at its start and once at its end, naming the model and its role; repeated progress/polling updates and later reuse of the same result omit it. Chat-only work omits it. The line precedes required final footers and the lavender About reminder, and does not authorize model calls. |
 | Closing topic reminder | Only the final assistant reply ends with a muted-lavender (`#b8a4d9`) `About:` reminder and the question-coverage line immediately below it. Working commentary, progress updates and skill announcements have neither footer; each final reply closes one message window. The relevant questions above the answers stay in place. |
-| Sentence scanning | Uses a short useful underlined clue in each substantive working and final prose sentence, not just the first sentence of a paragraph. A self-contained coloured sentence already serves as a scanning cue. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
+| Sentence scanning | Uses a short useful underlined clue in each substantive working and final prose sentence, not just the first sentence of a paragraph. A self-contained coloured sentence already serves as a scanning cue. Includes the verb or relationship when needed to carry the claim, without highlighting every verb mechanically. Keeps negatives and conditions so scanning does not change the meaning. Exact quotes, code and links remain intact. |
 | Computer Use | 🖥️ for manual browser/app interaction and every Manual checks section, with explicit status wording. Manual checks only lists what the agent actually checked or tested. Checks for you to run go under a separate Manual checks for you heading, marked 🖥️🫵 together. Successful manual tests may use green; automated tests and lint remain ordinary text. |
 | Project extensions | Additional user-approved mappings apply only in their project; global meanings stay consistent. |
 | Context above answers | Shows a short question reminder in a rainbow blockquote, naming the subject when dictated pronouns would be unclear later, above the direct-answer arrow, in main and side chats, alongside applicable annotation context; read-only side chats use the existing helper without updating shared state. The reminder can retain around 60–80 visible characters and wrap naturally; a fixed 24-colour cycle keeps agents from reinventing the format. |
 | Original-message links | Opens a document headed **Your message** with the exact original wording and attached images underneath. |
 | Clickable references | Links skills, files and specific passages. Colour stays outside the adjacent ↗ link. |
-| Markdown viewer | Generates a self-contained HTML page for Markdown links, with source-line mapping and animated passage highlighting. |
+| Markdown viewer | One shared live viewer reads original Markdown/code files, with line highlighting, automatic refresh and conflict-aware saves. |
 | Code editor | CodeMirror provides syntax highlighting, line numbers, search/replace, undo/redo and bracket matching. Preview, edit and split views. |
 | Scannable tables | Colours important rows using the existing meanings: cyan for useful highlights, red for critical errors, orange for caveats and green for confirmed success. Underlines key words, keeps routine rows neutral and wording short, and uses approved category markers when helpful. |
 | Annotation context | Uses **Problem at hand**, **Earlier response** and **Your annotation** for native and genuine custom annotations, then the short rainbow question and answer. Includes Agent Flow code selections and coloured/escaped context tags; identifies the real source in **Earlier response**. Before sending, checks all three fields for each relevant selection and comment; ignores reading-only highlights. Replaces square-bracket context notes without inventing native annotation links. |
@@ -40,7 +40,7 @@ The response-preference skill itself is used silently. Other skill announcements
 
 On the [website’s installation walkthrough](https://ethansk.github.io/response-preferences/#setup), choose **Copy installation prompt** and paste it into your Codex task. The prompt asks your agent to check for an existing installation, preserve local edits, add the activation line without duplicating it and demonstrate the installed format. You can also [read the exact prompt](docs/install-prompt.txt) or install manually below.
 
-Requirements: Codex with local skills support and **Python 3.9+** for generated viewers and message-context files. The built viewer is included; no Node installation or build step is needed to use it.
+Requirements: Codex with local skills support and **Python 3.9+** for live viewers and message-context files on macOS/Linux. The built viewer is included; no Node installation or build step is needed to use it.
 
 ```sh
 git clone https://github.com/EthanSK/response-preferences.git ~/.codex/skills/response-preferences
@@ -116,13 +116,11 @@ When important words are bold, underline those same words too: bold alone is not
 \(\underline{\textsf{\textbf{Neither automatically wins}}}\)
 ```
 
-Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\textsf{not uploaded}}\)` or `\(\underline{\textsf{after restarting}}\)`. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
-
-Sometimes I read all the text for a deeper understanding; sometimes I read **just the underlined bits back to back**. Make that second reading flow as a brief explanation, with verbs and useful connecting words, not only nouns. Keep the subject, action, result, negatives and conditions clear. For example, “backup finished → the upload is still pending → Reconnect to finish the upload” explains more than “backup → upload → connection”. Read the underlines alone in order before sending. [My exact wording and the worked example](references/style-reference.md#how-i-read-underlines).
+Prefer a short underlined clue in working and final prose sentences: the subject, action, result or qualification that gives away their meaning at a glance. A self-contained coloured sentence already serves as a scanning cue. Make the first underlined clue in a paragraph name its concrete subject. Keep crucial negatives or limits, such as `\(\underline{\textsf{not uploaded}}\)` or `\(\underline{\textsf{after restarting}}\)`. Choose the shortest phrase that carries the claim: “audit covers every enabled API’s visible quotas” explains more than the topic “every enabled API’s visible quotas”. Include the relationship when needed, without highlighting every verb or adding prominence to a routine fact. Avoid filler and whole-sentence underlining. Exact quotations, code, paths and link labels stay intact.
 
 Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\textsf{not uploaded}}\).` or `The \(\underline{\textsf{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; keep both forms short and fully closed. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
 
-## Generate a viewer
+## Open a live file viewer
 
 Drag table header dividers to resize columns; double-click to reset. This changes only the view, not the Markdown source.
 
@@ -130,10 +128,11 @@ Drag table header dividers to resize columns; double-click to reset. This change
 python3 ~/.codex/skills/response-preferences/scripts/create-viewer.py /absolute/path/to/document.md --line 45
 ```
 
-The command prints the generated HTML path. Link that file in a reply using an absolute Markdown file link. The requested line is embedded into the page; `#L45` also works inside browsers. The same command accepts source code and other UTF-8 text files.
+The command prints a stable local URL. One shared viewer reads the original file, refreshes clean views after external edits, and saves edits back to that file. Unsaved work survives an external change; stale saves are rejected. The real path appears in the header. No document-specific HTML is created.
 
-Use `--output /absolute/new-viewer.html` for an explicit destination. Existing explicit outputs are never overwritten. Default outputs are cached by content/template/line under `~/.codex/outputs/viewers/` (or `$CODEX_HOME/outputs/viewers/`). Use the exact printed path and confirm that file exists before linking it; do not guess its fingerprint. Regenerate after changing the source. The page is a snapshot, not a live file watcher.
+The loopback-only service starts automatically. On macOS it is a user LaunchAgent, so links continue working after login. Only files registered by the local helper are accessible; there is no arbitrary-path web endpoint. No document data goes to an external service. [File access, installation and export details](references/viewer.md).
 
+Use `--snapshot` only for an intentional standalone export, or `--public --output /absolute/new.html` for a synthetic/public demo. These are explicitly frozen exports, not another editable source.
 For original-message context, create JSON containing `text` and optional `images` (absolute paths), then run:
 
 ```sh
@@ -141,7 +140,7 @@ python3 scripts/create-reply-context.py /absolute/message.json /absolute/new-con
 python3 scripts/create-viewer.py /absolute/new-context.md
 ```
 
-The context helper preserves exact message text and copies available attachments so temporary clipboard paths can expire without breaking earlier links. Keep context and generated viewers for the task's lifetime.
+The context helper preserves exact message text and copies available attachments so temporary clipboard paths can expire without breaking earlier links. Keep the context source for the task's lifetime; its live link reads that source.
 
 ## Editing and privacy
 
@@ -150,7 +149,7 @@ The context helper preserves exact message text and copies available attachments
 - **Open file** lets you choose a file on disk. Browsers supporting the File System Access API can then enable **Save** for that picked file. Otherwise, download the copy.
 - Saving checks for external edits first and refuses a conflicting write. This is not an atomic lock against other applications; use a copy for files being edited concurrently.
 - Unsaved edits get an indicator and navigation warning. Browser policies can suppress unload prompts; save or download before closing.
-- Files remain in the browser. The viewer has no server, analytics, remote scripts or upload endpoint. Markdown HTML is escaped, and remote images do not load.
+- Normal local links use a loopback-only file service. Document contents stay on your machine; no analytics or external uploads. HTML in Markdown is escaped and remote images do not load. The public demo remains a browser-only synthetic snapshot.
 - A generated HTML file **contains its document text and any embedded images**. Keep it private when its source is private. `--public` removes local image/link embeddings; it does not redact the source text.
 - Text is limited to 5 MB. PNG/JPEG/GIF/WebP images can be embedded up to 20 MB each, 40 MB total. Complex image destinations and local links are best effort. Linked Markdown trees are not recursively copied.
 - The editor highlights Markdown, JavaScript/TypeScript/JSX, Python, JSON, HTML, CSS, SQL, YAML, shell, Rust and Go. Other text opens without language-specific highlighting. There is no code execution, terminal or language server.

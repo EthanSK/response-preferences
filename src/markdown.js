@@ -1,7 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js/lib/common';
 
-export function renderMarkdown(source, {images = {}, links = {}} = {}) {
+export function renderMarkdown(source, {images = {}, links = {}, live = false} = {}) {
   const md = new MarkdownIt({html: false, linkify: false, typographer: false, highlight(code, language) {
     return language && hljs.getLanguage(language) ? hljs.highlight(code, {language}).value : '';
   }});
@@ -36,7 +36,8 @@ export function renderMarkdown(source, {images = {}, links = {}} = {}) {
     const alt = md.utils.escapeHtml(token.content);
     // Only generator-embedded raster images. No remote tracking or arbitrary data URLs.
     const embedded = Object.hasOwn(images, href) && images[href];
-    if (!embedded || !/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/]*={0,2}$/.test(embedded)) return `<span class="image-note">${alt || 'Image'} (not included)</span>`;
+    const allowed = embedded && (/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/]*={0,2}$/.test(embedded) || (live && /^\/api\/resource\?doc=[A-Za-z0-9_-]{43}$/.test(embedded)));
+    if (!allowed) return `<span class="image-note">${alt || 'Image'} (not included)</span>`;
     return `<img src="${embedded}" alt="${alt}" loading="lazy">`;
   };
   const fence = md.renderer.rules.fence;
@@ -49,6 +50,7 @@ export function renderMarkdown(source, {images = {}, links = {}} = {}) {
     const t = tokens[index], href = t.attrGet('href');
     const resolved = Object.hasOwn(links, href) ? links[href] : href;
     if (/^(https?:|mailto:|#)/i.test(resolved || '')) t.attrSet('href', resolved);
+    else if (live && Object.hasOwn(links, href) && /^\/index\.html\?doc=[A-Za-z0-9_-]{43}(?:#[\w-]+)?$/.test(resolved)) t.attrSet('href', resolved);
     else if (/^file:/i.test(resolved || '') && Object.hasOwn(links, href)) t.attrSet('href', resolved);
     else {t.attrSet('href', '#');t.attrSet('data-unavailable', 'true');}
     t.attrSet('rel', 'noopener noreferrer');

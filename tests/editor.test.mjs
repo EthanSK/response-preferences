@@ -18,6 +18,42 @@ function boot(document, setup = () => {}) {
   return {dom,errors};
 }
 
+test('live source refreshes clean views and preserves unsaved edits on conflicts',async()=>{
+  let disk='# First\n', revision='one', writes=0;
+  const {dom}=boot({source:'',live:true},window=>{
+    window.history.replaceState(null,'','?doc=registered#L1');
+    window.fetch=async(url,options={})=>{
+      if(options.method==='POST'){
+        const payload=JSON.parse(options.body);
+        if(payload.revision!==revision)return {ok:false,status:409,json:async()=>({error:'This file changed somewhere else.'})};
+        disk=payload.source;revision='save-'+(++writes);
+        return {ok:true,status:200,json:async()=>({revision})};
+      }
+      if(options.headers?.['If-None-Match']==='"'+revision+'"')return {status:304};
+      return {ok:true,status:200,json:async()=>({source:disk,name:'live.md',path:'/canonical/live.md',revision,images:{},links:{}})};
+    };
+  });
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  try{
+    await wait(200);const d=dom.window.document;
+    assert.match(d.querySelector('#preview').textContent,/First/);
+    assert.equal(d.querySelector('#dirty').textContent,'Live file');
+    disk='# External\n';revision='two';dom.window.dispatchEvent(new dom.window.Event('focus'));await wait(200);
+    assert.match(d.querySelector('#preview').textContent,/External/);
+    d.querySelector('#search').click();
+    for(const [name,value] of [['search','External'],['replace','Draft']]){
+      const input=d.querySelector(`.cm-search input[name="${name}"]`);input.value=value;input.dispatchEvent(new dom.window.Event('change',{bubbles:true}));
+    }
+    [...d.querySelectorAll('.cm-search button')].find(b=>b.textContent==='replace all').click();await wait(220);
+    disk='# Conflicting\n';revision='three';dom.window.dispatchEvent(new dom.window.Event('focus'));await wait(200);
+    assert.match(d.querySelector('#preview').textContent,/Draft/);
+    assert.match(d.querySelector('#status').textContent,/changed somewhere else/);
+    d.querySelector('#save').click();await wait(100);
+    assert.equal(writes,0);assert.equal(disk,'# Conflicting\n');
+    assert.equal(d.querySelector('#dirty').textContent,'Unsaved changes');
+  }finally{dom.window.close();}
+});
+
 test('bundled editor boots, changes views, jumps to line and opens search without a browser',async()=>{
   const {dom,errors}=boot({name:'example.md',source:'# Heading\n\n- first\n- second\n',line:4,images:{},links:{}});
   try {

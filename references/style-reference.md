@@ -30,7 +30,7 @@ Use the complete short underline and colour patterns in `SKILL.md` while draftin
 
 ## Approved mappings and placement
 
-- Use 🧠 (brain) for skill-use announcements, followed by **Skill use:**, the invoked skill name(s), and a brief reason. Colour only the skill names magenta, using normal-size serif LaTeX text: `\(\textrm{\color{magenta}skill-creator}\)`. Keep the label, conjunctions, and reason in ordinary Markdown. Put the generated viewer’s `[↗](absolute-viewer.html)` link immediately after each coloured skill name. This is an explicit exception to the sans-serif colour-highlight rule below; use upright serif text, not math italics. Preserve explicit silent-use exceptions.
+- Use 🧠 (brain) for skill-use announcements, followed by **Skill use:**, the invoked skill name(s), and a brief reason. Colour only the skill names magenta, using normal-size serif LaTeX text: `\(\textrm{\color{magenta}skill-creator}\)`. Keep the label, conjunctions, and reason in ordinary Markdown. Put the live viewer’s `[↗](actual-live-viewer-url)` link immediately after each coloured skill name. This is an explicit exception to the sans-serif colour-highlight rule below; use upright serif text, not math italics. Preserve explicit silent-use exceptions.
 - Treat the approved mappings below as a closed, deterministic vocabulary Ethan can learn. Never invent or use a section emoji or symbol absent from this list and the applicable user-approved project extensions, substitute a similar-looking marker, combine markers into an unlisted marker (the only approved pairing is 🖥️🫵 for **Manual checks for you**), or assign an approved marker a new meaning. Use the same marker for the same scenario every time; do not vary markers for tone, novelty, or decoration. Only Ethan's explicit approval can add or change a mapping. Suggestions remain proposals and must not be used as section markers before approval.
 - Use ✅ for confirmed success or completion, and ❌ for actual failure. Use them sparingly for straightforward result sections, not as a general acknowledgement or default prefix.
 - Use 👀 only when starting to look, check, inspect, or review. Never use it for a completed review, historical check, or final results heading.
@@ -134,7 +134,7 @@ User-requested — 2026-10-13. Preserve my wording word for word; this is the re
 
 I clarified the dictated ending: “Add that word for word is what I meant to say at the end.”
 
-Choose short prose phrases with verbs and enough connecting words to explain what happened or what to do. Keep the main point, negatives and conditions understandable when only those phrases are read, while the full prose supplies detail. This is a semantic drafting check, not an automatic checker or a requirement to underline a whole paragraph.
+Choose short prose phrases with verbs and enough connecting words to explain what happened or what to do. Keep the main point, negatives and conditions understandable when only those phrases are read, while the full prose supplies detail. This is a semantic drafting check, not an automatic checker or a requirement to underline a whole paragraph. User-requested clarification — 2026-10-16: include the verb or relationship when omitting it leaves only a topic; choose the shortest phrase that carries the claim, not every verb by rule. Underline selection makes the skim understandable; colour and placement still control how much attention the point receives.
 
 For example:
 
@@ -143,6 +143,8 @@ The \(\underline{\textsf{backup finished}}\) after copying the files. However, \
 ```
 
 Reading only the underlines gives: “backup finished → the upload is still pending → Reconnect to finish the upload”. Avoid a disconnected sequence such as “backup → upload → connection”.
+
+For a coverage statement, write `The expanded \(\underline{\textsf{audit covers every enabled API’s visible quotas}}\).` Underlining only “every enabled API’s visible quotas” names a topic but omits what the audit does. Keep “covers” with that phrase; do not underline “covers” alone or expand every other cue mechanically.
 
 ## End-of-message topic reminder
 
@@ -153,16 +155,16 @@ Reading only the underlines gives: “backup finished → the upload is still pe
 ## Clickable references
 
 - Make anything mentioned that can meaningfully be opened clickable when its actual destination is known: files, skills, folders, reports, code locations, and web pages. Link the relevant words rather than making Ethan copy a path.
-- Definitely provide a link for every skill used or mentioned, opening its full `SKILL.md` through the bundled HTML viewer. Use ordinary Markdown links with real absolute HTML paths so Codex handles them naturally. Include a verified target line when generating a viewer for a specific passage.
-- When a reply refers to a specific section, instruction, or code statement, link its verified current line. For Markdown, generate the HTML viewer with `--line 57` and link the returned HTML path; the target is embedded so the link does not depend on Codex preserving a URL fragment. For other files, use `[↗](/absolute/path:57)` or the viewer when it helps. Name the target passage in the preceding prose. Do not claim a destination was visually verified unless that was observed.
+- Provide a link for every skill used or mentioned, opening its actual `SKILL.md` through the shared live viewer. Use the exact URL returned by the helper; it reads the current source, not a document-specific copy.
+- For a specific section or code statement, verify its current line, run `create-viewer.py <source> --line N` and use the returned live URL. Name the passage beside the link. Do not claim visual verification without observing it.
 - Ordinary uncoloured text about a code result or file can itself be a link label. The destination must support the statement; never invent a target or imply that a formatting example is a real result.
 - For coloured skill names and coloured statements tied to a file, preserve the approved LaTeX colours/fonts outside the link and put `[↗](absolute-viewer.html)` immediately after them (or the actual source target for non-Markdown files). Use only the opening icon, never `open`, `Open skill`, or another word label. LaTeX inside a link label renders as raw text; do not put Markdown inside LaTeX or rely on a LaTeX hyperlink.
 - The adjacent ↗ controls its preceding reference; it is not a section marker. Keep the section’s approved marker first and left-aligned.
 
 ## Markdown viewer by default
 
-- Use the bundled HTML viewer from now on for all Markdown files linked in replies, including skills, reports and original-message context. First run `python3 /absolute/path/to/response-preferences/scripts/create-viewer.py /absolute/source.md --line N`, then link the actual returned HTML path. Resolve the skill directory from this installed file; never hard-code another user's home directory. Read [references/viewer.md](viewer.md) when generating links or changing viewer behavior.
-- Keep the Markdown source and generated viewer. Generate from the latest source and embed the verified one-based target line; do not reuse a stale viewer after editing. Omit `--line` when linking the whole document. If generation is unavailable, say so briefly and provide the ordinary source link as a fallback; never invent an HTML path.
+- Use `python3 <skill-dir>/scripts/create-viewer.py <source> --line N` for normal Markdown/text links. Read [viewer guidance](viewer.md); the command registers the file with one local viewer and returns a stable URL.
+- Keep the original source. Normal viewing creates no HTML copy; clean views refresh after external edits and Save updates that file. Use explicit snapshot export only for a requested offline/shareable artifact or synthetic public demo, clearly labelled as an export. If the live service is unavailable, disclose it and link the source directly.
 - Native source links remain available as a fallback or on explicit request. This changes assistant-authored links; it does not patch Codex's own file-opening behavior. Use the same viewer for source code when preview/editing helps, with plain source links still allowed for code.
 
 ## Notification summary

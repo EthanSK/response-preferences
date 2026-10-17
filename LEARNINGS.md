@@ -143,3 +143,9 @@ Generator whitelist/privacy and fingerprint tests, editor theme-switch tests, an
 ## Distinguish colour declaration endings from underline endings
 
 A fully delimited coloured percentage with an extra closing brace failed in an emitted table despite a complete recent skill read containing the correct colour pattern and symbol lookup. The existing checker rejected the exact cell; removing only the extra brace passed and preserved `100%`. `\color{#67e8f9}` closes its own argument immediately, leaving only the text group open at the end of the value, whereas an underline has two groups still open. Keep a complete compact-value recipe beside that explanation rather than adding a symbol restriction or another parser rule. The source trace proves the available instructions and absence of a logged draft check, not why the model missed the ending. The checker stays optional, and no repair continuation is introduced. Renderer and complete-table regression coverage are documented in `references/verification.md`, “Colour declaration and closing braces”.
+
+## One live file source, one installed source owner — 2026-10-17
+
+Embedding Markdown in per-document HTML made old links depend on manual regeneration. Normal `create-viewer.py` links now use the shared loopback app and original file; explicit exports remain snapshots. Verify same-link freshness, original-file saves, preserved drafts and stale-write rejection, not just page generation. Browser file origins remain restricted even for neighbouring files; do not weaken browser flags. Keep registration outside the public source and never log capability URLs or document contents.
+
+Separate editable project/install folders drifted after a locally applied response-rule clarification. Reconcile verified local changes first, then use an installation symlink to the canonical checkout. Archived prior installations are recovery material, not another active owner.
