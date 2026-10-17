@@ -2,6 +2,7 @@ import {build} from 'esbuild';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
 
 const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 await build({entryPoints:[path.join(root,'src/render-math.js')],bundle:true,minify:true,platform:'node',format:'cjs',target:'node18',outfile:path.join(root,'scripts/render-math.cjs'),legalComments:'inline'});
@@ -16,3 +17,6 @@ const template=fs.readFileSync(path.join(root,'src/viewer.html'),'utf8').replace
 fs.mkdirSync(path.join(root,'assets'),{recursive:true});
 fs.writeFileSync(path.join(root,'assets/viewer.html'),template);
 console.log(`Built standalone viewer template (${Buffer.byteLength(template)} bytes)`);
+// Public demos are explicit exports of synthetic/canonical sources. Build them
+// together so publishing never depends on an agent remembering another step.
+execFileSync('python3',[path.join(root,'scripts/build-demos.py')],{stdio:'inherit'});

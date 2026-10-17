@@ -3,6 +3,19 @@ import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
 import {renderMarkdown,selectPassage} from '../src/markdown.js';
 
+test('live resources require explicit registration and never enable arbitrary relative fetches',()=>{
+  const capability='a'.repeat(43);
+  const source='[Reference](notes.md)\n\n![Local](image.png)\n\n![Unregistered](other.png)';
+  const options={live:true,links:{'notes.md':'/index.html?doc='+capability},images:{'image.png':'/api/resource?doc='+capability}};
+  const doc=new JSDOM(renderMarkdown(source,options)).window.document;
+  assert.equal(doc.querySelector('a').getAttribute('href'),options.links['notes.md']);
+  assert.equal(doc.querySelectorAll('img').length,1);
+  assert.equal(doc.querySelector('img').getAttribute('src'),options.images['image.png']);
+  const snapshot=new JSDOM(renderMarkdown(source,{...options,live:false})).window.document;
+  assert.equal(snapshot.querySelector('a').getAttribute('href'),'#');
+  assert.equal(snapshot.querySelectorAll('img').length,0);
+});
+
 test('skill frontmatter stays compact without shifting document source lines',()=>{
   const doc=new JSDOM(renderMarkdown('---\nname: example\ndescription: A skill\n---\n\n# Example\n')).window.document;
   assert.equal(doc.querySelector('details summary').textContent,'Skill metadata');

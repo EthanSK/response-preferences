@@ -1,44 +1,37 @@
-# Markdown and code viewer
+# Live Markdown and code viewer
 
-Read this when generating a file link, editing the viewer, or explaining its limits.
+Read this when linking a file, maintaining the viewer or explaining file access.
 
-## Generate a link
+## Normal links read the original
 
-The installed template is already built. Only Python 3.9 or later is required:
+Run `python3 <skill-dir>/scripts/create-viewer.py /absolute/document.md --line 45` and link the exact HTTP URL printed. Omit `--line` for the whole document. This uses one shared `index.html` application, not an HTML file generated for each document. Opening the same URL reads the current original file. The header shows its canonical path.
 
-```sh
-python3 /absolute/path/to/response-preferences/scripts/create-viewer.py /absolute/document.md --line 45
-```
+The original Markdown/code file is the sole editable document. Clean views check for external changes every 1.5 seconds while visible, and when focused. Unsaved edits remain intact if the disk changes. Save writes the original, preserving BOM/newlines/permissions, and rejects stale revisions. Reload file explicitly discards a draft only after confirmation; Download copy preserves a separate user-requested export.
 
-The command prints a real absolute HTML path. Use `[↗](that-absolute-path)` in the response. The full original document is included, with line 45 highlighted. Omit `--line` for a whole-file reference. Text/code files work too. Generate a new viewer after changing the source; the snapshot does not watch disk changes. No local server is required.
+Preview/Edit/Split, syntax colours, line jumps, search/replace, undo, table resizing and saved Codex appearance reuse existing components. Local referenced text/image files present during registration receive scoped links; new references need another helper invocation. This does not recursively grant a document tree.
 
-For reply context, first run `scripts/create-reply-context.py` with the original user text and attachments. Then pass the resulting Markdown file to `scripts/create-viewer.py`. The HTML includes supported local images best effort.
+## Local file service
 
-Generated files default to `$CODEX_HOME/outputs/viewers/YYYY-MM-DD/` (or `~/.codex/outputs/viewers/`). Their names include a content/template fingerprint and line number. Equivalent invocations reuse the existing file. Keep them for the life of the task. `--output /absolute/new.html` chooses another destination and refuses to overwrite any existing file.
+`scripts/live-viewer.py` provides the shared app and read/save API at `127.0.0.1:59343`. Python 3.9+ on macOS/Linux is sufficient; the app bundle is included. There are no external uploads, remote scripts or analytics. macOS installs the user LaunchAgent `com.ethansk.codex-live-viewer`; other supported POSIX systems start a detached process. An updated server is restarted by the next helper invocation on macOS. No administrator permission is required.
 
-## What the viewer does
+Registrations live under `$CODEX_HOME/state/live-viewer/` (default `~/.codex/state/live-viewer/`), outside the published skill. Random document capabilities map to explicitly registered canonical paths. The browser cannot register a new arbitrary path. Host/origin checks, save headers, no-store responses and no-referrer policy protect the API. Capability URLs grant local read/write access to their registered file: keep them local and private. Requests and document contents are not logged. Missing files/services produce errors, not embedded stale fallback content.
 
-- Preview Markdown; edit source; use split view. CodeMirror provides line numbers, search/replace, undo/redo, bracket matching and syntax highlighting.
-- Compact chrome for a side panel: file name, snapshot note and save state in the header; a Preview / Edit / Split control, a line field and icon actions (Search, Open file, Save, Download copy, Light / dark) with tooltips and accessible names; live messages in the bottom status bar. Each pane scrolls on its own.
-- Match the saved Codex appearance when generating a local viewer: read only the light/dark surface, text, accent, contrast, fonts and appearance mode from `$CODEX_HOME/config.toml`. The built-in dark palette is Linear Dark, with Inter embedded for offline use and matching code colours. Public demos omit local settings. If settings are unavailable, use the built-in palette and system appearance. The toggle still switches light/dark; a manual choice stops system-mode changes for that page. Existing snapshots retain their original theme; generate a fresh link to apply changed settings. User-requested — 2026-10-03.
-- Highlight Markdown, JavaScript/TypeScript/JSX, Python, JSON, HTML, CSS, SQL, YAML, shell, Rust and Go. Other UTF-8 text opens as plain text. Fenced Markdown code also has syntax colours.
-- Jump to a one-based line using the control or `#L45`. The smallest mapped Markdown passage receives an animated and persistent highlight. Source mode highlights the exact line. Reduced-motion preferences disable the animation.
-- Open a different file using the browser picker. Download copy exports edits. Save writes only to a file explicitly opened through the browser's File System Access API, when supported. A generated snapshot never silently gains write access to its original path.
-- Warn before leaving/opening another document with unsaved changes. Check the picked file for external edits before saving; refuse a conflicting write and keep the edited copy available. Browsers can suppress unload prompts, so download/save before closing.
+Atomic replacement and revision checks reject observed concurrent edits. Like ordinary editors, the service cannot provide a filesystem-wide compare-and-swap against another app that ignores locks in the tiny interval before rename; coordinate truly simultaneous writers. Files are UTF-8 text up to 5 MB. Registered PNG/JPEG/GIF/WebP images are limited to 20 MB each. HTML/script execution and remote images remain blocked.
 
-- Resize table columns by dragging a header divider. Arrow keys adjust a focused divider; Shift makes one-pixel adjustments. Double-click a divider to reset the table. Widths survive Preview/Edit/Split changes in the current document but do not alter the Markdown or persist after reload.
+Browsers restrict scripts reading `file://` documents, including neighbouring files in the same directory. A browser file picker is an alternative with a user gesture/permission; the local service supports direct file links without a picker each time. Never weaken browser security flags to work around this boundary.
 
-## Boundaries
+To stop the macOS service: `launchctl bootout gui/$(id -u)/com.ethansk.codex-live-viewer`. Remove its matching file in `~/Library/LaunchAgents/` to uninstall autostart. Registered source files are untouched. The next normal helper invocation reinstalls the service.
 
-- This is a document editor, not an IDE: no shell, code execution, language server, project search or terminal.
-- Browser support controls native save access and file-link opening. If Save is unavailable, use Download copy. Do not claim a download overwrote the source file.
-- Saving checks disk contents before writing, but the browser API cannot provide an atomic compare-and-swap against another application writing in the same moment. Save a copy for concurrently edited files.
-- Source text is capped at 5 MB. Only UTF-8 text is supported. Local PNG/JPEG/GIF/WebP images are embedded, up to 20 MB each and 40 MB total. Unsupported/missing/remote images show a note. Relative image discovery is best effort; complex Markdown destinations can require simpler paths.
-- HTML in Markdown is escaped. Remote images, network requests and script execution from documents are blocked. The generated HTML contains the document and any embedded images: treat it as private if the source is private. Never commit generated private viewers or message context to the public repository.
-- Local links inside a document remain best-effort file links; assistant-authored Markdown references must use generated viewers. The helper does not recursively copy a linked document tree.
-- `--public` omits local links and images. It does not redact private source text; only use it with already-public or synthetic content.
-- A user opening a local HTML link and an automation tool being allowed to open that URL are separate capabilities. Respect tool restrictions; do not describe an automated inspection restriction as proof the user's link is broken.
+## Explicit snapshots and public examples
+
+Use `--snapshot` for a requested frozen offline artifact. `--output new.html` or `--public --output new.html` also select explicit export. Public mode omits local links/images/appearance; it does not redact source text. Only export already-public or synthetic content to the public repository. Existing old snapshot links remain frozen historical exports; new normal links use the live viewer.
+
+The public website's demo is synthetic and browser-only; it is not connected to a visitor's local service. Pick a file there to use supported browser saving, or download a copy. Public demos are reproducibly rebuilt from their named canonical example files by the build command. They are not additional editable skill sources.
+
+## Installation ownership
+
+For a developer-owned local install, keep one project checkout as the editable source and make the skill installation path a directory symlink to it. Preserve and reconcile existing local edits before replacing a separate installation. Other users can install the published package normally; build artifacts are derived, never edited independently. Private state/configuration stays outside the shared source.
 
 ## Maintain and verify
 
-Run `npm ci`, `npm run check`, then the static-site validator before publishing changes. `npm run build` bundles the editor into `assets/viewer.html`; this generated template is included so recipients need no Node build step. Regenerate public demos after a template change. Test source line mapping, hostile Markdown, text round-tripping, save conflicts and unsaved state. Load screenshots into vision before claiming visual correctness. Never bypass browser automation restrictions to obtain a screenshot.
+`npm run check` rebuilds the shared app and public examples, then runs tests. Validate the skill, source-line mapping, hostile Markdown, live read/save, stale writes, clean refresh and preserved drafts. Manually test the installed runtime and inspect actual screenshots. Builds do not prove visual correctness. Do not bypass browser automation restrictions.

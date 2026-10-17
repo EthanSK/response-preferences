@@ -61,6 +61,8 @@ function modeFor(name) {
   return modes[ext]?.() || [];
 }
 let name = data.name || 'document.md', baseline = data.source, rawBaseline = data.source, fileHandle = null, busy = false;
+let live = data.live ? new URLSearchParams(location.search).get('doc') : null;
+let liveRevision = null, externalChange = false, polling = false;
 let images = data.images || {}, links = data.links || {}, currentMode = /\.(md|markdown)$/i.test(name) ? 'preview' : 'edit';
 let targetLine = Number(data.line) || 1, renderTimer, sourceEol = data.source.includes('\r\n') ? '\r\n' : '\n', sourceBom = data.source.startsWith('\ufeff');
 const normalise = text => text.replace(/^\ufeff/, '').replace(/\r\n?/g, '\n');
@@ -68,12 +70,13 @@ baseline = normalise(baseline);
 function say(message) {$('status').textContent = message;}
 function isDirty() {return editor.state.doc.toString() !== baseline;}
 function updateDirty() {
-  const dirty = isDirty(); $('dirty').textContent = dirty ? 'Unsaved changes' : fileHandle ? 'File opened' : 'Snapshot';
-  $('dirty').classList.toggle('unsaved', dirty); $('save').disabled = !fileHandle || busy || !dirty;
-  $('save').title = !fileHandle ? 'Open a file with browser saving support first' : busy ? 'Saving…' : dirty ? 'Save changes to the opened file' : 'No unsaved changes';
+  const writable = fileHandle || (live && liveRevision);
+  const dirty = isDirty(); $('dirty').textContent = dirty ? 'Unsaved changes' : live ? 'Live file' : fileHandle ? 'File opened' : 'Snapshot';
+  $('dirty').classList.toggle('unsaved', dirty); $('save').disabled = !writable || busy || !dirty;
+  $('save').title = !writable ? 'Open a file with browser saving support first' : busy ? 'Saving…' : dirty ? 'Save changes to the opened file' : 'No unsaved changes';
 }
 const extensions = () => [
-  basicSetup, keymap.of([indentWithTab, {key:'Mod-s', run:() => {fileHandle ? saveFile() : downloadFile(); return true;}}]),
+  basicSetup, keymap.of([indentWithTab, {key:'Mod-s', run:() => {(fileHandle || live) ? saveFile() : downloadFile(); return true;}}]),
   language.of(modeFor(name)), syntaxHighlighting(colours), selectedLine, scrollPastEnd(),
   EditorView.contentAttributes.of({'aria-label':'Document source'}),
   EditorView.updateListener.of(update => {if (update.docChanged) {updateDirty();clearTimeout(renderTimer);renderTimer=setTimeout(render,180);}})
@@ -83,7 +86,7 @@ const tableWidths = new Map();
 let cleanupTableResize = () => {};
 function render() {
   cleanupTableResize();
-  if (/\.(md|markdown)$/i.test(name)) $('preview').innerHTML = renderMarkdown(editor.state.doc.toString(), {images,links});
+  if (/\.(md|markdown)$/i.test(name)) $('preview').innerHTML = renderMarkdown(editor.state.doc.toString(), {images,links,live:!!live});
   else {const pre=document.createElement('pre');pre.textContent=editor.state.doc.toString();$('preview').replaceChildren(pre);}
   cleanupTableResize = resizeTables($('preview'), tableWidths);
   $('line').max=editor.state.doc.lines;
@@ -110,7 +113,7 @@ async function loadFile(file, handle=null) {
   if(file.size>5*1024*1024) throw Error('This file is larger than 5 MB. Open a smaller text file.');
   const text=decodeText(await file.arrayBuffer());
   name=file.name;rawBaseline=text;baseline=normalise(text);sourceEol=text.includes('\r\n')?'\r\n':'\n';sourceBom=text.startsWith('\ufeff');
-  fileHandle=handle;images={};links={};tableWidths.clear();
+  live=null;fileHandle=handle;images={};links={};tableWidths.clear();$('reload').hidden=true;
   editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
   $('filename').textContent=name;$('filename').title=name;$('file-note').textContent='Opened from disk · does not update automatically';
   $('snapshot-note').textContent=handle?'Save writes to the file you picked. Download copy creates a separate file.':'Download copy to keep your edits. The file you opened is unchanged.';
@@ -124,15 +127,44 @@ async function openFile() {
 }
 function outputText() {return (sourceBom?'\ufeff':'') + editor.state.doc.toString().replace(/\n/g,sourceEol);}
 async function saveFile() {
-  if(!fileHandle || busy || !isDirty()) return;
+  if((!fileHandle && !live) || busy || !isDirty()) return;
   busy=true;updateDirty();say('Saving...');
   try {
     // Capture the revision being saved: edits made during the write stay marked unsaved.
     const savedRevision=editor.state.doc.toString(), savedText=outputText();
-    await writeIfUnchanged(fileHandle,rawBaseline,savedText);
+    if(live) {
+      const response=await fetch('/api/document?doc='+encodeURIComponent(live),{method:'POST',headers:{'Content-Type':'application/json','X-Viewer-Document':live},body:JSON.stringify({source:savedText,revision:liveRevision})});
+      const result=await response.json();if(!response.ok)throw Error(result.error || 'Could not save this file.');
+      liveRevision=result.revision;externalChange=false;
+    } else await writeIfUnchanged(fileHandle,rawBaseline,savedText);
     rawBaseline=savedText;baseline=savedRevision;say('Saved');
   } catch(error) {say('Failed to save. '+error.message);}
   finally {busy=false;updateDirty();}
+}
+async function refreshLive(force=false) {
+  if(!live || polling || busy)return;
+  polling=true;
+  try {
+    const response=await fetch('/api/document?doc='+encodeURIComponent(live),{headers:!force && liveRevision?{'If-None-Match':'"'+liveRevision+'"'}:{},cache:'no-store'});
+    if(response.status===304)return;
+    const next=await response.json();if(!response.ok)throw Error(next.error || 'Could not open this file.');
+    if(busy)return;
+    if(isDirty() && !force) {
+      externalChange=true;say('This file changed somewhere else. Download your edits, then reload the file.');return;
+    }
+    const first=liveRevision===null;
+    if(first)targetLine=Number(location.hash.match(/^#L(\d+)$/)?.[1] || data.line) || 1;
+    name=next.name;rawBaseline=next.source;baseline=normalise(next.source);liveRevision=next.revision;externalChange=false;
+    sourceEol=next.source.includes('\r\n')?'\r\n':'\n';sourceBom=next.source.startsWith('\ufeff');images=next.images;links=next.links;
+    editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
+    $('filename').textContent=name;$('filename').title=next.path;$('file-note').textContent=next.path;
+    $('snapshot-note').textContent='Live file · Save writes to the original file.';
+    document.title=name+' · Live file viewer';
+    if(first && next.appearance)installAppearance(document.documentElement,$('theme'),next.appearance);
+    if(first)currentMode=/\.(md|markdown)$/i.test(name)?'preview':'edit';
+    setMode(currentMode);updateDirty();
+  } catch(error) {say('Could not read the original file. '+error.message);}
+  finally {polling=false;}
 }
 function downloadFile() {
   const url=URL.createObjectURL(new Blob([outputText()],{type:'text/plain;charset=utf-8'}));
@@ -144,6 +176,8 @@ document.querySelectorAll('button[data-mode]').forEach(button=>button.onclick=()
 $('jump-form').onsubmit=event=>{event.preventDefault();jump($('line').value);};
 $('search').onclick=()=>{if(currentMode==='preview')setMode('edit');openSearchPanel(editor);editor.focus();};
 $('open').onclick=openFile;$('save').onclick=saveFile;$('download').onclick=downloadFile;
+$('reload').hidden=!live;
+$('reload').onclick=()=>{if(!isDirty() || confirm('Reload file and discard your unsaved changes?'))refreshLive(true);};
 $('file-input').onchange=async()=>{const file=$('file-input').files[0];if(file)try{await loadFile(file);}catch(error){say('Could not open this file. '+error.message);}finally{$('file-input').value='';}};
 installAppearance(document.documentElement, $('theme'), data.appearance);
 $('preview').onclick=event=>{const unavailable=event.target.closest('[data-unavailable]');if(unavailable){event.preventDefault();say('Open the linked file from disk. It is not included in this viewer.');}};
@@ -151,3 +185,7 @@ addEventListener('beforeunload',event=>{if(isDirty()){event.preventDefault();eve
 addEventListener('hashchange',()=>{const match=location.hash.match(/^#L(\d+)$/);if(match)jump(+match[1],true);});
 const hash=location.hash.match(/^#L(\d+)$/);if(hash)targetLine=+hash[1];
 targetLine=Math.min(Math.max(targetLine,1),editor.state.doc.lines);render();setMode(currentMode);updateDirty();
+if(data.live) {
+  if(!live)say('No file selected. Open a live file link.');
+  else {refreshLive();setInterval(()=>{if(!document.hidden)refreshLive();},1500);addEventListener('focus',()=>refreshLive());}
+}
