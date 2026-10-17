@@ -99,6 +99,7 @@ header button svg{width:15px;height:15px;flex:none}
 #editor .cm-activeLineGutter{background:transparent;color:var(--text)}
 /* Paint inside the existing number gutter: no extra column or layout width. */
 #editor .cm-lineNumbers .cm-target-gutter{box-shadow:inset -2px 0 0 var(--target-rail)}
+#editor .cm-target-line{background:var(--target)}
 #editor .cm-cursor,#editor .cm-dropCursor{border-left:1.5px solid var(--text)}
 #editor .cm-editor .cm-selectionBackground{background:var(--selection)!important}
 #editor .cm-selectionMatch{background:var(--accent-soft)}
@@ -141,7 +142,7 @@ header button svg{width:15px;height:15px;flex:none}
 .tok-invalid,.hljs-deletion{color:var(--syn-invalid)}
 
 /* Preview: the document is the point. Comfortable measure, quiet chrome. */
-#preview{min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;padding:18px max(18px,calc((100% - 760px)/2)) 45vh;font-size:14.5px;line-height:1.62;overflow-wrap:anywhere}
+#preview{position:relative;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;padding:18px max(18px,calc((100% - 760px)/2)) 45vh;font-size:14.5px;line-height:1.62;overflow-wrap:anywhere}
 #preview:focus-visible{outline-offset:-2px}
 #preview>:first-child{margin-top:0}
 #preview h1,#preview h2,#preview h3,#preview h4,#preview h5,#preview h6{margin:1.5em 0 .5em;font-weight:650;letter-spacing:-.012em;line-height:1.25}
@@ -175,13 +176,12 @@ header button svg{width:15px;height:15px;flex:none}
 #preview details pre{border:0;border-top:1px solid var(--line);border-radius:0}
 .image-note{color:var(--muted);font-style:italic;font-size:.92em}
 
-/* Mark the complete passage with a thin yellow rail in its existing left margin.
-   An outset shadow does not widen the gutter or tint the document contents. */
+/* Yellow marks every kind of source passage. The separate rail has an
+   eight-pixel gap and cannot overlap text or be clipped by a table wrapper. */
 #preview .passage{scroll-margin:24px}
-#preview .selected{box-shadow:-2px 0 0 var(--target-rail)}
-/* Tables scroll inside a wrapper, which would clip the table's outside rail. */
-#preview .table-scroll:has(>.selected){box-shadow:-2px 0 0 var(--target-rail)}
-#preview .table-scroll>.selected{box-shadow:none}
+#preview .selected{background-color:var(--target);border-radius:4px}
+#preview .selected pre{background:linear-gradient(var(--target),var(--target)),var(--code)}
+#passage-rail{position:absolute;width:2px;border-radius:1px;background:var(--target-rail);pointer-events:none}
 
 /* Status bar: live messages on the left, the source-of-truth note on the right */
 footer{flex:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 16px;padding:5px 12px;border-top:1px solid var(--line);background:var(--chrome);font-size:11px;line-height:1.5;color:var(--muted)}

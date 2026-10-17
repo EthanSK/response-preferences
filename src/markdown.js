@@ -18,7 +18,9 @@ export function renderMarkdown(source, {images = {}, links = {}, live = false} =
     const names = new Map();
     for (let i = 0; i < state.tokens.length; i++) {
       const token = state.tokens[i];
-      if (token.map && (token.nesting === 1 || ['fence', 'code_block', 'hr'].includes(token.type))) {
+      // Fences get their source map on the block wrapper below. Adding it to
+      // the token too marks the inline <code> instead of the complete block.
+      if (token.map && (token.nesting === 1 || ['code_block', 'hr'].includes(token.type))) {
         token.attrSet('data-start', String(token.map[0] + 1));
         token.attrSet('data-end', String(token.map[1]));
         token.attrJoin('class', 'passage');
