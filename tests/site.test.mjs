@@ -105,10 +105,8 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
  for(const colour of ['c-cyan','c-green','c-orange','c-red'])assert(d.querySelector('.conversation .'+colour+' u'),'Each colour also demonstrates scanning cues');
  const cues=[...d.querySelectorAll('.conversation .assistant u')].map(x=>x.textContent);
  for(const clue of ['packed but not uploaded','no off-site copy from tonight','after restarting the app','cannot guarantee that a model always follows them'])assert(cues.includes(clue),'Retain decisive qualification: '+clue);
- for(const p of d.querySelectorAll('.conversation .assistant p')){
-  if(p.closest('blockquote')||p.matches('.topic-reminder,.question-coverage')||p.textContent==='Added beyond your request')continue;
-  assert(p.querySelector('u'),'Assistant prose has scanning cues: '+p.textContent);
- }
+ const supporting=d.querySelector('.conversation .assistant .welcome-example-note');
+ assert(supporting && !supporting.querySelector('u'),'Routine supporting prose stays readable without forced emphasis');
  const u=d.querySelector('.conversation .assistant u');
  assert.equal(dom.window.getComputedStyle(u).textDecorationLine,'underline');
  assert.equal(u.closest('a'),null,'Underlines do not invent links');
