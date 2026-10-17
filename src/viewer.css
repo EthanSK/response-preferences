@@ -1,6 +1,6 @@
 /* Response Preferences viewer: a compact document reading and editing utility.
    Layout: fixed-height shell (header, workspace, status bar); each pane scrolls on its own.
-   Colour: neutral chrome, one accent for focus/links/selection, a quiet amber wash for the target passage. */
+   Colour: neutral chrome, one accent for focus/links/selection; amber is reserved for warnings and search. */
 :root{
   color-scheme:dark;
   /* Linear Dark: the chrome seed and syntax palette used by Codex. */
@@ -97,7 +97,7 @@ header button svg{width:15px;height:15px;flex:none}
 #editor .cm-foldGutter .cm-gutterElement{color:var(--muted);opacity:.75}
 #editor .cm-activeLine{background:var(--active-line)}
 #editor .cm-activeLineGutter{background:transparent;color:var(--text)}
-#editor .cm-target-line{background:var(--target);box-shadow:inset 2px 0 0 var(--target-rail)}
+#editor .cm-target-line{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
 #editor .cm-cursor,#editor .cm-dropCursor{border-left:1.5px solid var(--text)}
 #editor .cm-editor .cm-selectionBackground{background:var(--selection)!important}
 #editor .cm-selectionMatch{background:var(--accent-soft)}
@@ -176,9 +176,9 @@ header button svg{width:15px;height:15px;flex:none}
 
 /* Target passage: soft wash, left rail, brief ring on arrival; persists after the ring fades */
 #preview .passage{scroll-margin:24px}
-#preview .selected{background:var(--target);border-radius:4px;box-shadow:0 0 0 6px var(--target),-9px 0 0 0 var(--target-rail);outline:2px solid transparent;outline-offset:9px}
-#preview .pulse{animation:passage-pulse .9s ease-out 2}
-@keyframes passage-pulse{from{outline-color:var(--target-rail)}to{outline-color:transparent}}
+#preview .selected{background:var(--accent-soft);border-radius:4px;box-shadow:-3px 0 0 var(--accent)}
+#preview .pulse{animation:passage-pulse .55s ease-out}
+@keyframes passage-pulse{from{background:var(--selection)}to{background:var(--accent-soft)}}
 
 /* Status bar: live messages on the left, the source-of-truth note on the right */
 footer{flex:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 16px;padding:5px 12px;border-top:1px solid var(--line);background:var(--chrome);font-size:11px;line-height:1.5;color:var(--muted)}

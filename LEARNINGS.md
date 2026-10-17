@@ -153,3 +153,7 @@ Separate editable project/install folders drifted after a locally applied respon
 ## Skill metadata and whole-file navigation — 2026-10-17
 
 Ethan requested metadata expanded by default. It is ordinary frontmatter rendered by the shared Markdown/code engine, not a separate skill viewer. Defaulting every whole-file URL to `#L1` selected the metadata and made the navigation colour look like a warning. Keep whole-file links without a selected passage; preserve explicit line-1 jumps and source-line mapping. User-requested.
+
+## Keep navigation highlights within the viewer palette — 2026-10-17
+
+Ethan found the amber selected-passage halo out of place. Preview passages and editor target lines now reuse the existing theme accent with a quiet tint and thin edge; navigation no longer flashes an outline or borrows warning colours. Keep whole-file views unselected and honour reduced motion. This is a shared viewer style, not a skill-specific override. User-requested.

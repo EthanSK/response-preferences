@@ -4,7 +4,7 @@ Read this when linking a file, maintaining the viewer or explaining file access.
 
 ## Normal links read the original
 
-Run `python3 <skill-dir>/scripts/create-viewer.py /absolute/document.md --line 45` and link the exact HTTP URL printed. Omit `--line` for the whole document. This uses one shared `index.html` application, not an HTML file generated for each document. Opening the same URL reads the current original file. The header shows its canonical path. Skill metadata is expanded by default. Whole-file links select no passage; only an explicit `--line N`, `#LN` or Go action produces the yellow line highlight. It is a navigation cue, not a metadata warning.
+Run `python3 <skill-dir>/scripts/create-viewer.py /absolute/document.md --line 45` and link the exact HTTP URL printed. Omit `--line` for the whole document. This uses one shared `index.html` application, not an HTML file generated for each document. Opening the same URL reads the current original file. The header shows its canonical path. Skill metadata is expanded by default. Whole-file links select no passage; only an explicit `--line N`, `#LN` or Go action highlights a passage. Its quiet tint and thin edge follow the viewer accent in both themes, without a flashing outline or warning colour. The code editor uses the same accent for its target line.
 
 The original Markdown/code file is the sole editable document. Clean views check for external changes every 1.5 seconds while visible, and when focused. Unsaved edits remain intact if the disk changes. Save writes the original, preserving BOM/newlines/permissions, and rejects stale revisions. Reload file explicitly discards a draft only after confirmation; Download copy preserves a separate user-requested export.
 
