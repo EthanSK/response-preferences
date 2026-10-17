@@ -18,6 +18,24 @@ function boot(document, setup = () => {}) {
   return {dom,errors};
 }
 
+test('whole-file skill view opens metadata without a highlight, while Go still selects line one',async()=>{
+  const {dom,errors}=boot({source:'',live:true},window=>{
+    window.history.replaceState(null,'','?doc=registered');
+    window.fetch=async()=>({ok:true,status:200,json:async()=>({name:'SKILL.md',path:'/canonical/SKILL.md',source:'---\nname: example\ndescription: Example skill\n---\n\n# Example\n',revision:'one',images:{},links:{}})});
+  });
+  try{
+    await new Promise(resolve=>setTimeout(resolve,100));const d=dom.window.document;
+    assert.equal(d.querySelector('#preview details').open,true);
+    assert.equal(d.querySelector('#preview .selected'),null);
+    assert.equal(dom.window.location.hash,'');
+    assert.equal(d.querySelector('#status').textContent,'File opened');
+    d.querySelector('#line').value='1';d.querySelector('#jump-form').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));
+    assert.equal(dom.window.location.hash,'#L1');
+    assert.equal(d.querySelector('#preview details.selected').open,true);
+    assert.deepEqual(errors,[]);
+  }finally{dom.window.close();}
+});
+
 test('live source refreshes clean views and preserves unsaved edits on conflicts',async()=>{
   let disk='# First\n', revision='one', writes=0;
   const {dom}=boot({source:'',live:true},window=>{

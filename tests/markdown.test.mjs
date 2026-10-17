@@ -16,9 +16,10 @@ test('live resources require explicit registration and never enable arbitrary re
   assert.equal(snapshot.querySelectorAll('img').length,0);
 });
 
-test('skill frontmatter stays compact without shifting document source lines',()=>{
+test('skill metadata starts expanded without shifting document source lines',()=>{
   const doc=new JSDOM(renderMarkdown('---\nname: example\ndescription: A skill\n---\n\n# Example\n')).window.document;
   assert.equal(doc.querySelector('details summary').textContent,'Skill metadata');
+  assert.equal(doc.querySelector('details').open,true);
   assert.equal(selectPassage(doc,3).dataset.start,'1');
   assert.equal(selectPassage(doc,6).textContent,'Example');
 });

@@ -149,3 +149,7 @@ A fully delimited coloured percentage with an extra closing brace failed in an e
 Embedding Markdown in per-document HTML made old links depend on manual regeneration. Normal `create-viewer.py` links now use the shared loopback app and original file; explicit exports remain snapshots. Verify same-link freshness, original-file saves, preserved drafts and stale-write rejection, not just page generation. Browser file origins remain restricted even for neighbouring files; do not weaken browser flags. Keep registration outside the public source and never log capability URLs or document contents.
 
 Separate editable project/install folders drifted after a locally applied response-rule clarification. Reconcile verified local changes first, then use an installation symlink to the canonical checkout. Archived prior installations are recovery material, not another active owner.
+
+## Skill metadata and whole-file navigation — 2026-10-17
+
+Ethan requested metadata expanded by default. It is ordinary frontmatter rendered by the shared Markdown/code engine, not a separate skill viewer. Defaulting every whole-file URL to `#L1` selected the metadata and made the navigation colour look like a warning. Keep whole-file links without a selected passage; preserve explicit line-1 jumps and source-line mapping. User-requested.

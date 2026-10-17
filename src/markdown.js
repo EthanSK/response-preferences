@@ -12,7 +12,7 @@ export function renderMarkdown(source, {images = {}, links = {}, live = false} =
     if(silent)return true;
     const token=state.push('front_matter','',0);token.map=[0,stop+1];token.content=state.getLines(1,stop,0,false);state.line=stop+1;return true;
   });
-  md.renderer.rules.front_matter=(tokens,index)=>`<details class="passage" data-start="1" data-end="${tokens[index].map[1]}"><summary>Skill metadata</summary><pre><code>${hljs.highlight(tokens[index].content,{language:'yaml'}).value}</code></pre></details>`;
+  md.renderer.rules.front_matter=(tokens,index)=>`<details open class="passage" data-start="1" data-end="${tokens[index].map[1]}"><summary>Skill metadata</summary><pre><code>${hljs.highlight(tokens[index].content,{language:'yaml'}).value}</code></pre></details>`;
   // Source maps come from the parser, including repeated and nested list items.
   md.core.ruler.push('source_lines', state => {
     const names = new Map();
