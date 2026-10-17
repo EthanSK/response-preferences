@@ -122,10 +122,10 @@ For compact coloured values, copy `\(\textsf{\color{#67e8f9}100\%}\)`. The colou
 
 ## Underlined scanning cues
 
-- Choose underlines intelligently for skimming: if I skim just the underlined bits, give me the important details that matter, not a clue in every sentence. Routine supporting sentences can stay plain; no sentence or paragraph has an underline quota. Keep the main answer, meaningful results, important caveats and next actions easy to find. A self-contained colour highlight can carry a key point without repeating it as an underline. User-requested relaxation — 2026-10-17.
+- Let the agent decide which words to underline and how much emphasis suits the response, guided by the important details I need when skimming. Let the content determine the amount, with no fixed quota per sentence or paragraph. The main answer, meaningful results, relevant caveats and next actions are useful cues; underlines and self-contained colour highlights both support the reading goal. User-requested neutral wording — 2026-10-17.
 - Use `\(\underline{\textsf{not uploaded}}\)` inside ordinary prose. Keep the cue short, with `not`, `only` and other conditions when omitting them would reverse its meaning. A properly closed `\underline{\textsf{...}}` preserves spaces and the preferred font. The red examples omitted a closing brace; keep the whole short pattern intact. Colour and About stay in separate expressions.
 - When I use bold to emphasize important words, underline those same words too; bold alone is not a scanning cue. This includes important opening answers, conclusions and list lead-ins. Prefer a short underline without bold when bold adds nothing. Copy `\(\underline{\textsf{\textbf{Neither automatically wins}}}\)` when both are wanted, keeping the existing short-expression and escaping rules. Preserve exact quotations, code, paths and link labels. User-requested — 2026-10-09.
-- When a cue is useful, make its concrete subject clear; do not add one just because a paragraph starts. Later cues can give method, result or qualification. Read them alone in sequence before sending; do not underline filler or whole sentences mechanically.
+- Make the concrete subject of a cue clear. Cues can give method, result or qualification; read them together and use judgment about their usefulness and flow.
 - A selected colour highlight is a separate complete expression such as `\(\textsf{\color{#67e8f9}The viewer is a snapshot.}\)`. Preserve exact quotations, original-message reminders, source text, code, URLs, paths and link labels. Important compact table values still follow the table scanning rule. Assistant replies must not emit raw HTML `<u>` tags.
 
 ### How I read underlines
@@ -136,7 +136,7 @@ User-requested — 2026-10-13. Preserve my wording word for word; this is the re
 
 I clarified the dictated ending: “Add that word for word is what I meant to say at the end.”
 
-Choose short prose phrases with verbs and enough connecting words to explain what happened or what to do. Keep the main point, negatives and conditions understandable when only those phrases are read, while the full prose supplies detail. This is a semantic drafting check, not an automatic checker or a requirement to underline a whole paragraph. User-requested clarification — 2026-10-16: include the verb or relationship when omitting it leaves only a topic; choose the shortest phrase that carries the claim, not every verb by rule. Underline selection makes the skim understandable; colour and placement still control how much attention the point receives.
+Choose prose phrases with verbs and useful connecting words to explain what happened or what to do. Keep the main point, negatives and conditions understandable when the phrases are read together, while the full prose supplies detail. Use judgment about the amount and placement that best supports both reading modes. This is a semantic drafting check; the existing expression-size and wrapping limits still apply. User-requested neutral wording — 2026-10-17.
 
 For example:
 
@@ -144,9 +144,9 @@ For example:
 The \(\underline{\textsf{backup finished}}\) after copying the files. However, \(\underline{\textsf{the upload is still pending}}\) because the connection dropped. \(\underline{\textsf{Reconnect to finish the upload}}\); the saved backup remains available.
 ```
 
-Reading only the underlines gives: “backup finished → the upload is still pending → Reconnect to finish the upload”. Avoid a disconnected sequence such as “backup → upload → connection”.
+Reading only the underlines gives: “backup finished → the upload is still pending → Reconnect to finish the upload”. The verbs connect the results and next action into an understandable skim.
 
-For a coverage statement, write `The expanded \(\underline{\textsf{audit covers every enabled API’s visible quotas}}\).` Underlining only “every enabled API’s visible quotas” names a topic but omits what the audit does. Keep “covers” with that phrase; do not underline “covers” alone or expand every other cue mechanically.
+For a coverage statement, write `The expanded \(\underline{\textsf{audit covers every enabled API’s visible quotas}}\).` The phrase includes the audit’s action and scope, so it reads as a claim when skimmed. Use the same judgment to choose useful wording for each cue.
 
 ## End-of-message topic reminder
 
