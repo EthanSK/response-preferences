@@ -148,7 +148,9 @@ A fully delimited coloured percentage with an extra closing brace failed in an e
 
 Embedding Markdown in per-document HTML made old links depend on manual regeneration. Normal `create-viewer.py` links now use the shared loopback app and original file; explicit exports remain snapshots. Verify same-link freshness, original-file saves, preserved drafts and stale-write rejection, not just page generation. Browser file origins remain restricted even for neighbouring files; do not weaken browser flags. Keep registration outside the public source and never log capability URLs or document contents.
 
-Separate editable project/install folders drifted after a locally applied response-rule clarification. Reconcile verified local changes first, then use an installation symlink to the canonical checkout. Archived prior installations are recovery material, not another active owner.
+Separate editable project/install folders drifted after a locally applied response-rule clarification. Reconcile verified local changes before consolidating ownership. The initial repair used an installation symlink; Ethan subsequently chose the repository itself directly inside the skills directory, without a Projects copy or symlink. Archived prior installations are recovery material, not another active owner.
+
+Moving a canonical checkout also moves its Git common directory. Repair linked worktrees, update registered viewer paths while preserving their tokens, and restart the file service from its new path. Rebind any ledger server inside the moved checkout to its new canonical path while preserving its existing link. Verify old links against the original files after migration, not just that the new folder exists. User-requested direct repositories and verified migration — 2026-10-17.
 
 ## Skill metadata and whole-file navigation — 2026-10-17
 
