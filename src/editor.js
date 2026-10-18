@@ -30,12 +30,13 @@ const selectedLine = StateField.define({
   create: () => Decoration.none,
   update(value, transaction) {
     value = value.map(transaction.changes);
-    for (const effect of transaction.effects) if (effect.is(targetEffect)) value = Decoration.set([Decoration.line({class: 'cm-target-line'}).range(effect.value)]);
+    for (const effect of transaction.effects) if (effect.is(targetEffect)) value = Decoration.set(effect.value.map(position=>Decoration.line({class: 'cm-target-line'}).range(position)));
     return value;
   },
   provide: field => [EditorView.decorations.from(field), gutterLineClass.compute([field], state => {
-    const target = state.field(field).iter();
-    return target.value ? RangeSet.of([targetGutter.range(target.from)]) : RangeSet.empty;
+    const markers=[];
+    for(const target=state.field(field).iter();target.value;target.next())markers.push(targetGutter.range(target.from));
+    return RangeSet.of(markers);
   })]
 });
 // Class-based so viewer.css can theme tokens per light/dark palette alongside highlight.js fences.
@@ -68,10 +69,11 @@ let name = data.name || 'document.md', baseline = data.source, rawBaseline = dat
 let live = data.live ? new URLSearchParams(location.search).get('doc') : null;
 let liveRevision = null, externalChange = false, polling = false;
 let images = data.images || {}, links = data.links || {}, currentMode = /\.(md|markdown)$/i.test(name) ? 'preview' : 'edit';
-let targetLine = Number(data.line) || 1, renderTimer, sourceEol = data.source.includes('\r\n') ? '\r\n' : '\n', sourceBom = data.source.startsWith('\ufeff');
+let targetLine = Number(data.line) || 1, targetEndLine = Number(data.endLine || data.line) || 1, renderTimer, sourceEol = data.source.includes('\r\n') ? '\r\n' : '\n', sourceBom = data.source.startsWith('\ufeff');
+const lineHashPattern=/^#L(\d+)(?:-L(\d+))?$/;
 // Whole-file links have no selected passage. Only an explicit line/hash or Go
 // action owns the yellow highlight; metadata is not a warning or special route.
-let hasTarget = Number(data.line) > 0 || /^#L\d+$/.test(location.hash);
+let hasTarget = Number(data.line) > 0 || lineHashPattern.test(location.hash);
 const normalise = text => text.replace(/^\ufeff/, '').replace(/\r\n?/g, '\n');
 baseline = normalise(baseline);
 function say(message) {$('status').textContent = message;}
@@ -112,13 +114,14 @@ function render() {
   cleanupTableResize = resizeTables($('preview'), tableWidths);
   $('line').max=editor.state.doc.lines;
 }
-function jump(value, fromHash = false) {
-  const line=Number(value), total=editor.state.doc.lines;
-  if (!Number.isInteger(line) || line<1 || line>total) {say(`Enter a line from 1 to ${total}.`);return;}
-  hasTarget=true;targetLine=line;$('line').value=line;
-  if(!fromHash) {try {history.replaceState(null,'','#L'+line);} catch { /* file viewers can disable history */ }}
+function jump(value, fromHash = false, endValue = value) {
+  const line=Number(value), endLine=Number(endValue), total=editor.state.doc.lines;
+  if (!Number.isInteger(line) || line<1 || line>total || !Number.isInteger(endLine) || endLine<line || endLine>total) {say(`Enter a line from 1 to ${total}.`);return;}
+  hasTarget=true;targetLine=line;targetEndLine=endLine;$('line').value=line;
+  if(!fromHash) {try {history.replaceState(null,'','#L'+line+(endLine>line?'-L'+endLine:''));} catch { /* file viewers can disable history */ }}
   const pos=editor.state.doc.line(line).from;
-  editor.dispatch({effects:[targetEffect.of(pos),EditorView.scrollIntoView(pos,{y:'center'})],selection:{anchor:pos}});
+  const positions=Array.from({length:endLine-line+1},(_,index)=>editor.state.doc.line(line+index).from);
+  editor.dispatch({effects:[targetEffect.of(positions),EditorView.scrollIntoView(pos,{y:'center'})],selection:{anchor:pos}});
   $('preview').querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));
   const passage=selectPassage($('preview'),line);
   if(passage) {
@@ -131,7 +134,7 @@ function jump(value, fromHash = false) {
 function setMode(mode) {
   currentMode=mode;$('workspace').dataset.mode=mode;
   document.querySelectorAll('[data-mode]').forEach(el=>{if(el.tagName==='BUTTON')el.setAttribute('aria-pressed',String(el.dataset.mode===mode));});
-  render();requestAnimationFrame(()=>{editor.requestMeasure();if(hasTarget)jump(Math.min(targetLine,editor.state.doc.lines),true);});
+  render();requestAnimationFrame(()=>{editor.requestMeasure();if(hasTarget)jump(Math.min(targetLine,editor.state.doc.lines),true,Math.min(targetEndLine,editor.state.doc.lines));});
 }
 function confirmDiscard() {return !isDirty() || confirm('You have unsaved changes that opening another file will discard.');}
 async function loadFile(file, handle=null) {
@@ -142,7 +145,7 @@ async function loadFile(file, handle=null) {
   editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
   $('filename').textContent=name;$('filename').title=name;$('file-note').textContent='Opened from disk · does not update automatically';
   $('snapshot-note').textContent=handle?'Save writes to the file you picked. Download copy creates a separate file.':'Download copy to keep your edits. The file you opened is unchanged.';
-  targetLine=1;setMode(/\.(md|markdown)$/i.test(name)?'preview':'edit');updateDirty();
+  targetLine=targetEndLine=1;setMode(/\.(md|markdown)$/i.test(name)?'preview':'edit');updateDirty();
 }
 async function openFile() {
   if(busy || !confirmDiscard()) return;
@@ -178,7 +181,7 @@ async function refreshLive(force=false) {
       externalChange=true;say('This file changed somewhere else. Download your edits, then reload the file.');return;
     }
     const first=liveRevision===null;
-    if(first)targetLine=Number(location.hash.match(/^#L(\d+)$/)?.[1] || data.line) || 1;
+    if(first){const target=location.hash.match(lineHashPattern);targetLine=Number(target?.[1] || data.line) || 1;targetEndLine=Number(target?.[2] || data.endLine) || targetLine;}
     name=next.name;rawBaseline=next.source;baseline=normalise(next.source);liveRevision=next.revision;externalChange=false;
     sourceEol=next.source.includes('\r\n')?'\r\n':'\n';sourceBom=next.source.startsWith('\ufeff');images=next.images;links=next.links;
     editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
@@ -211,9 +214,9 @@ $('preview').addEventListener('toggle',positionPassageRail,true);
 addEventListener('resize',positionPassageRail);
 document.fonts?.ready.then(positionPassageRail);
 addEventListener('beforeunload',event=>{if(isDirty()){event.preventDefault();event.returnValue='';}});
-addEventListener('hashchange',()=>{const match=location.hash.match(/^#L(\d+)$/);if(match)jump(+match[1],true);});
-const hash=location.hash.match(/^#L(\d+)$/);if(hash)targetLine=+hash[1];
-targetLine=Math.min(Math.max(targetLine,1),editor.state.doc.lines);render();setMode(currentMode);updateDirty();
+addEventListener('hashchange',()=>{const match=location.hash.match(lineHashPattern);if(match)jump(+match[1],true,Number(match[2] || match[1]));});
+const hash=location.hash.match(lineHashPattern);if(hash){targetLine=+hash[1];targetEndLine=Number(hash[2] || hash[1]);}
+targetLine=Math.min(Math.max(targetLine,1),editor.state.doc.lines);targetEndLine=Math.min(Math.max(targetEndLine,targetLine),editor.state.doc.lines);render();setMode(currentMode);updateDirty();
 if(data.live) {
   if(!live)say('No file selected. Open a live file link.');
   else {refreshLive();setInterval(()=>{if(!document.hidden)refreshLive();},1500);addEventListener('focus',()=>refreshLive());}

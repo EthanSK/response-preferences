@@ -251,21 +251,25 @@ def ensure_server():
     raise RuntimeError('Live viewer did not start.')
 
 
-def open_viewer(source, line=None):
+def open_viewer(source, line=None, end_line=None):
     source = Path(source).expanduser().resolve(strict=True)
     _, text = read_text(source)
     if line is not None and not 1 <= line <= len(text.splitlines()) + 1: raise ValueError('Line is outside this file.')
+    if end_line is not None and (line is None or not line <= end_line <= len(text.splitlines()) + 1): raise ValueError('End line must be within the file and at or after the start line.')
     key = register(source)
     ensure_server()
-    return 'http://127.0.0.1:%d/index.html?' % PORT + urlencode({'doc': key}) + ('#L' + str(line) if line is not None else '')
+    fragment = '#L' + str(line) if line is not None else ''
+    if end_line is not None: fragment += '-L' + str(end_line)
+    return 'http://127.0.0.1:%d/index.html?' % PORT + urlencode({'doc': key}) + fragment
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', nargs='?')
     parser.add_argument('--line', type=int)
+    parser.add_argument('--end-line', type=int)
     parser.add_argument('--serve', action='store_true')
     args = parser.parse_args()
     if args.serve: ViewerServer(('127.0.0.1', PORT)).serve_forever()
-    elif args.source: print(open_viewer(args.source, args.line))
+    elif args.source: print(open_viewer(args.source, args.line, args.end_line))
     else: parser.error('Choose a source file.')

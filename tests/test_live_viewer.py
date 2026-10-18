@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -14,6 +15,15 @@ spec.loader.exec_module(live)
 
 
 class LiveViewerTests(unittest.TestCase):
+    def test_range_links_use_the_same_registered_source_and_reject_invalid_bounds(self):
+        self.file.write_text('one\ntwo\nthree\n')
+        with patch.object(live, 'ensure_server'), patch.object(live, 'register', return_value=self.key):
+            self.assertTrue(live.open_viewer(self.file, 2, 3).endswith('#L2-L3'))
+            self.assertTrue(live.open_viewer(self.file, 2).endswith('#L2'))
+            for start, end in [(None, 2), (3, 2), (1, 99)]:
+                with self.assertRaises(ValueError): live.open_viewer(self.file, start, end)
+        self.assertEqual(self.file.read_text(), 'one\ntwo\nthree\n')
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)

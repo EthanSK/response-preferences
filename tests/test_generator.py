@@ -12,6 +12,15 @@ spec.loader.exec_module(generator)
 
 
 class GeneratorTests(unittest.TestCase):
+    def test_code_range_is_retained_in_snapshot_without_changing_the_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source=Path(tmp)/'example.ts';source.write_text('one\ntwo\nthree\n')
+            page=generator.create_viewer(source,Path(tmp)/'range.html',2,end_line=3).read_text()
+            payload=json.loads(re.search(r'<script id="document-data" type="application/json">(.*?)</script>',page,re.S).group(1))
+            self.assertEqual((payload['line'],payload['endLine']),(2,3))
+            self.assertEqual(source.read_text(),'one\ntwo\nthree\n')
+            with self.assertRaises(ValueError):generator.create_viewer(source,Path(tmp)/'invalid.html',3,end_line=2)
+
     def test_appearance_is_whitelisted_private_and_changes_snapshot_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
             home=Path(tmp); source=home/'theme.md';source.write_text('# Theme\n')
