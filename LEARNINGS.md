@@ -169,3 +169,8 @@ Every actual main and inline answer arrow now has its original-question hover li
 ## Yellow block fill with a separated gutter rail — 2026-10-17
 
 Ethan clarified that the previous gutter-only interpretation was insufficient: restore the soft yellow fill for every selected text block, not just a table, with a thin full-height rail separated from content in the existing gutter. Keep one rail attached to the preview container, measured from the selected block; this avoids clipping in table/code wrappers and keeps nested-list bullets clear. Resize, image loading and disclosure changes must realign it. Fenced-code source maps belong on the block wrapper only: mapping the inner `<code>` selects and paints inline fragments rather than the complete fence. This supersedes the gutter-only appearance above. User-requested; verified with paragraphs, headings, lists, nested lists, quotations, code and tables.
+
+
+## Escape angle brackets inside hover destinations
+
+Markdown angle-wrapped link destinations still reject unescaped internal `<` and `>`; a type expression can therefore make the entire hover link render as raw text. Escape the destination rather than stripping source characters. `scripts/hover-link.py` also preserves backslashes, entities, URL punctuation and literal percent escapes; `tests/hover-link.test.mjs` checks one parsed link and exact decoded text. Multiline/control-character input falls back to the real context viewer. Parser success is separate from native popup appearance. User-requested prevention — 2026-10-18.
