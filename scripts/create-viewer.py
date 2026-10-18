@@ -74,7 +74,7 @@ def destinations(text):
         yield match.group(1) or match.group(2)
 
 
-def create_viewer(source, output=None, line=1, embed_images=True, public=False):
+def create_viewer(source, output=None, line=1, embed_images=True, public=False, end_line=None):
     source = Path(source).expanduser().resolve(strict=True)
     if source.stat().st_size > MAX_TEXT:
         raise ValueError('File exceeds the 5 MB text limit')
@@ -87,8 +87,11 @@ def create_viewer(source, output=None, line=1, embed_images=True, public=False):
     count = len(text.replace('\r\n', '\n').replace('\r', '\n').split('\n'))
     if not 1 <= line <= count:
         raise ValueError(f'Line must be between 1 and {count}')
+    if end_line is not None and not line <= end_line <= count:
+        raise ValueError(f'End line must be between {line} and {count}')
     template = (ROOT / 'assets/viewer.html').read_text(encoding='utf-8')
     data = {'name': source.name, 'source': text, 'line': line, 'generated': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'), 'images': {}, 'links': {}}
+    if end_line is not None: data['endLine'] = end_line
     if not public:
         data['appearance'] = codex_appearance()
     used = 0
@@ -112,7 +115,7 @@ def create_viewer(source, output=None, line=1, embed_images=True, public=False):
                 data['images'][href] = f'data:{mime};base64,' + base64.b64encode(image_bytes).decode('ascii')
                 used += len(image_bytes)
     payload = json.dumps(data, ensure_ascii=False).replace('&', '\\u0026').replace('<', '\\u003c').replace('>', '\\u003e')
-    fingerprint = hashlib.sha256(str(source).encode() + raw + template.encode() + str(line).encode() + json.dumps(data['images'], sort_keys=True).encode() + json.dumps(data.get('appearance', {}), sort_keys=True).encode() + str(public).encode()).hexdigest()[:16]
+    fingerprint = hashlib.sha256(str(source).encode() + raw + template.encode() + str(line).encode() + str(end_line).encode() + json.dumps(data['images'], sort_keys=True).encode() + json.dumps(data.get('appearance', {}), sort_keys=True).encode() + str(public).encode()).hexdigest()[:16]
     if output is None:
         codex = Path(os.environ.get('CODEX_HOME', Path.home() / '.codex'))
         folder = codex / 'outputs' / 'viewers' / datetime.now().strftime('%Y-%m-%d')
@@ -136,13 +139,15 @@ if __name__ == '__main__':
     parser.add_argument('source')
     parser.add_argument('--output')
     parser.add_argument('--line', type=int)
+    parser.add_argument('--end-line', type=int)
     parser.add_argument('--no-images', action='store_true')
     parser.add_argument('--public', action='store_true', help='Do not embed local links or images; source text must already be suitable for publication')
     parser.add_argument('--snapshot', action='store_true', help='Explicit standalone export; normal links use the live source')
     args = parser.parse_args()
+    if args.end_line is not None and args.line is None: parser.error('--end-line requires --line')
     if args.snapshot or args.public or args.output:
-        print(create_viewer(args.source, args.output, args.line or 1, not args.no_images, args.public))
+        print(create_viewer(args.source, args.output, args.line or 1, not args.no_images, args.public, args.end_line))
     else:
         import runpy
         live = runpy.run_path(str(ROOT / 'scripts/live-viewer.py'))
-        print(live['open_viewer'](args.source, args.line))
+        print(live['open_viewer'](args.source, args.line, args.end_line))

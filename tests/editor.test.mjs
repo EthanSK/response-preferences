@@ -36,6 +36,48 @@ test('whole-file skill view opens metadata without a highlight, while Go still s
   }finally{dom.window.close();}
 });
 
+test('code range links mark every requested line and gutter through view changes, while Go selects one line',async()=>{
+  const {dom,errors}=boot({name:'example.ts',source:'const one = 1;\nconst two = 2;\nconst three = 3;\nconst four = 4;\nconst five = 5;\n',images:{},links:{}},window=>{
+    window.history.replaceState(null,'','#L2-L4');
+  });
+  try{
+    await new Promise(resolve=>setTimeout(resolve,100));const d=dom.window.document;
+    const lines=()=>Array.from(d.querySelectorAll('.cm-lineNumbers .cm-target-gutter'),element=>element.textContent);
+    assert.deepEqual(lines(),['2','3','4']);
+    assert.equal(d.querySelectorAll('.cm-target-line').length,3);
+    d.querySelector('[data-mode="split"]').click();
+    await new Promise(resolve=>setTimeout(resolve,80));
+    assert.deepEqual(lines(),['2','3','4']);
+    dom.window.location.hash='#L3-L5';
+    await new Promise(resolve=>setTimeout(resolve,80));
+    assert.deepEqual(lines(),['3','4','5']);
+    d.querySelector('#line').value='1';d.querySelector('#jump-form').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));
+    await new Promise(resolve=>setTimeout(resolve,80));
+    assert.deepEqual(lines(),['1']);
+    assert.equal(dom.window.location.hash,'#L1');
+    assert.equal(d.querySelector('#dirty').textContent,'Snapshot');
+    assert.deepEqual(errors,[]);
+  }finally{dom.window.close();}
+});
+
+test('a live code range survives clean external refresh without changing the source',async()=>{
+  let source='const a = 1;\nconst b = 2;\nconst c = 3;\n',revision='one';
+  const {dom,errors}=boot({source:'',live:true},window=>{
+    window.history.replaceState(null,'','?doc=registered#L2-L3');
+    window.fetch=async()=>({ok:true,status:200,json:async()=>({name:'example.ts',path:'/canonical/example.ts',source,revision,images:{},links:{}})});
+  });
+  try{
+    await new Promise(resolve=>setTimeout(resolve,100));const d=dom.window.document;
+    source=source.replace('b = 2','b = 20');revision='two';
+    dom.window.dispatchEvent(new dom.window.Event('focus'));
+    await new Promise(resolve=>setTimeout(resolve,100));
+    assert.deepEqual(Array.from(d.querySelectorAll('.cm-lineNumbers .cm-target-gutter'),element=>element.textContent),['2','3']);
+    assert.match(d.querySelector('.cm-editor').textContent,/b = 20/);
+    assert.equal(d.querySelector('#dirty').textContent,'Live file');
+    assert.deepEqual(errors,[]);
+  }finally{dom.window.close();}
+});
+
 test('live source refreshes clean views and preserves unsaved edits on conflicts',async()=>{
   let disk='# First\n', revision='one', writes=0;
   const {dom}=boot({source:'',live:true},window=>{

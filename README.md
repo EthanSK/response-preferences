@@ -127,9 +127,10 @@ Drag table header dividers to resize columns; double-click to reset. This change
 
 ```sh
 python3 ~/.codex/skills/response-preferences/scripts/create-viewer.py /absolute/path/to/document.md --line 45
+python3 ~/.codex/skills/response-preferences/scripts/create-viewer.py /absolute/path/to/code.ts --line 65 --end-line 85
 ```
 
-The command prints a stable local URL. One shared viewer reads the original file, refreshes clean views after external edits, and saves edits back to that file. Unsaved work survives an external change; stale saves are rejected. The real path appears in the header. Skill metadata starts expanded. Whole-file links have no yellow selection; explicit line jumps highlight the requested passage. No document-specific HTML is created.
+The command prints a stable local URL. One shared viewer reads the original file, refreshes clean views after external edits, and saves edits back to that file. Unsaved work survives an external change; stale saves are rejected. The real path appears in the header. Skill metadata starts expanded. Whole-file links have no yellow selection; explicit line jumps highlight the requested passage. Code links can highlight an inclusive range with `--line` and `--end-line`, including every selected line's gutter. No document-specific HTML is created.
 
 The loopback-only service starts automatically. On macOS it is a user LaunchAgent, so links continue working after login. Only files registered by the local helper are accessible; there is no arbitrary-path web endpoint. No document data goes to an external service. [File access, installation and export details](references/viewer.md).
 
