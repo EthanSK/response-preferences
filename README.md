@@ -111,7 +111,7 @@ Projects can list additional user-approved emoji meanings in their existing inst
 
 ## Underlines for scanning
 
-When important words are bold, underline those same words too: bold alone is not a scanning cue. This applies to opening answers, conclusions and list lead-ins. Use a plain short underline if bold adds nothing. Exact quotations, code, paths and link labels keep their original formatting.
+When important words are bold, underline those same words too: bold alone is not a scanning cue. This applies to opening answers, conclusions and list lead-ins. Use a plain short underline if bold adds nothing. Check the actual explanatory body for important details that lost useful underline cues; labels or a footer alone do not make the explanation skimmable. This is a judgment-based draft check, not a quota or mandatory checker run. Exact quotations, code, paths and link labels keep their original formatting.
 
 ```latex
 \(\underline{\textsf{\textbf{Neither automatically wins}}}\)
@@ -176,7 +176,7 @@ It checks mechanical syntax and some structural rules. It is not a required acti
 
 GitHub Actions runs the test suite on every push and pull request, including regression cases for the reply checker and the website's marker, colour, quote and skill-link presentation.
 
-The always-read skill is a compact core; [the detailed reference](references/style-reference.md) retains the complete preferences. Read the core separately and retrieve missing ranges if a tool truncates it. Reread at task start, after compaction or a style correction, at least every five assistant messages (including commentary), and immediately before each final reply. Review replies also refresh the installed global and project review contracts. This is an agent instruction, not a background counter or a guarantee of model obedience. For an Agent Flow annotation without a native reference, `check-reply.py reply.md --require-annotation-context` diagnoses missing or late context fields before the first answer.
+The always-read skill is a compact core; [the detailed reference](references/style-reference.md) retains the complete preferences. Read the core separately and retrieve missing ranges if a tool truncates it. Reread at task start, after compaction or a style correction, at least every 10 assistant messages (including commentary), and immediately before each final reply. Review replies also refresh the installed global and project review contracts. This is an agent instruction, not a background counter or a guarantee of model obedience. For an Agent Flow annotation without a native reference, `check-reply.py reply.md --require-annotation-context` diagnoses missing or late context fields before the first answer.
 
 Automatic reply repair is not part of this workflow. Follow the simple complete patterns; use the draft checker only when a diagnostic helps. The old guard and exemption helpers were removed; do not add a completion-hook repair or wake another task to fix formatting.
 
