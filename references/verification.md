@@ -115,6 +115,8 @@ Ordinary Markdown surrounds short complete style expressions. The optional check
 
 ## Viewer link existence
 
+For a read-only instruction audit, point to a specific paragraph in the original Markdown with the live viewer's verified `#L...` target. Check that the service returns that original source and that the link selects the intended passage; an ordinary file-and-line link or an underlined reply heading is not passage highlighting. Keep the audited source unchanged. User-requested — 2026-10-20.
+
 Self-improved — 2026-10-04: a skill announcement linked a guessed fingerprint path that did not exist. Regenerating the viewer returned an existing file. Copy the helper’s exact output and check `Path(returned_path).is_file()` before posting; this verifies link existence, not document accuracy or browser permission. A nonexistent synthetic path must fail the same check.
 
 ## Prices in styled prose
