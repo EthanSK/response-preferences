@@ -101,3 +101,50 @@ def check_math(text):
         if error:
             errors.append(f'Line {line}: {error}. Keep literal names/numbers in Markdown or inline code, or correct the TeX and recheck.')
     return errors
+
+
+# Claude desktop's Markdown parser passes \(...\) to KaTeX only when an inline
+# guard accepts it; otherwise the source shows as plain text such as
+# "(\textsf{...})". These rules mirror that guard as read from claude.ai asset
+# ce044ea01-CdYn2J6_.js on 2026-10-21. Its remaining conditions always hold for
+# the \textsf, \underline and \color expressions this skill writes. Re-read the
+# guard if Claude starts showing other expressions raw.
+CLAUDE_MAX_BODY_CHARACTERS = 200
+CLAUDE_REJECTED_BODY = re.compile(r'[$`]|\\[(|.+*?0-9]')
+CLAUDE_REJECTED_FIXES = {
+    '$': r'a dollar sign, even escaped as \$. Write \textdollar{}500 inside the expression, or keep $500 in ordinary Markdown',
+    '`': 'a backtick. Keep code in ordinary inline code outside the expression',
+}
+
+
+def claude_raw_errors(text):
+    """List expressions Claude desktop would show as raw text, including blockquoted reminders."""
+    errors = []
+    fence = None
+    for number, raw in enumerate(text.splitlines(), 1):
+        token = re.match(r'(`{3,}|~{3,})', raw.lstrip())
+        if token:
+            mark = token.group(1)
+            if fence is None:
+                fence = mark
+            elif mark[0] == fence[0] and len(mark) >= len(fence):
+                fence = None
+            continue
+        if fence is not None:
+            continue
+        # Claude strips blockquote markers before the guard sees the line.
+        line = re.sub(r'(`+).*?\1', lambda m: ' ' * len(m[0]), re.sub(r'^\s*(?:>\s?)+', '', raw))
+        for match in re.finditer(r'\\\((.*?)\\\)', line):
+            body = match.group(1)
+            # Emphasis markers may sit between the expression and its required boundary.
+            before = line[:match.start()].rstrip('*_~')
+            if before and before[-1] not in ' \t([':
+                errors.append(f'Line {number}: Claude shows this expression as raw text because "{before[-1]}" touches its opening \\(. Put a space, ( or [ before \\(.')
+            if len(body) > CLAUDE_MAX_BODY_CHARACTERS:
+                errors.append(f'Line {number}: Claude shows this {len(body)}-character expression as raw text; its limit is {CLAUDE_MAX_BODY_CHARACTERS} characters between \\( and \\). Shorten it or split it into separate expressions.')
+            rejected = CLAUDE_REJECTED_BODY.search(body)
+            if rejected:
+                found = rejected.group(0)
+                fix = CLAUDE_REJECTED_FIXES.get(found, f'{found}. Remove that backslash or keep the text in ordinary Markdown')
+                errors.append(f'Line {number}: Claude shows this expression as raw text because it contains {fix}.')
+    return errors

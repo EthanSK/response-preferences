@@ -187,5 +187,27 @@ class RainbowQuotes(unittest.TestCase):
             self.assertEqual(0, result.returncode, result.stderr)
             self.assertEqual('2', state.read_text().strip())
 
+    def test_cli_claude_mode_keeps_reminders_renderable_in_claude(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'question.txt'
+            state = Path(self.home.name)/'state/response-preferences/rainbow-next-index.txt'
+            def run(text):
+                path.write_text(text)
+                return subprocess.run(
+                    ['python3', str(ROOT/'scripts/rainbow-quote.py'), '--claude', str(path)],
+                    text=True, capture_output=True, env={**os.environ, 'CODEX_HOME': self.home.name})
+            result = run('Did we discuss running worktree code in the cloud?')
+            self.assertNotEqual(0, result.returncode)
+            self.assertIn('8 words or fewer', result.stderr)
+            self.assertFalse(state.exists(), 'A rejected word count must not advance the palette')
+            result = run('Is $8 from unusually heavy testing?')
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertIn(r'{\textdollar{}8}', result.stdout)
+            self.assertNotIn('$', result.stdout)
+            result = run('Should parallel worktree deployments share one staging project?')
+            self.assertNotEqual(0, result.returncode)
+            self.assertIn('208-character', result.stderr)
+            self.assertEqual('', result.stdout)
+
 if __name__ == '__main__':
     unittest.main()

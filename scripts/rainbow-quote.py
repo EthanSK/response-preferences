@@ -16,6 +16,11 @@ MAX_QUOTE_CHARS = 80
 ESCAPES = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}', '#': r'\#',
            '%': r'\%', '_': r'\_', '&': r'\&', '$': r'\$',
            '^': r'\textasciicircum{}', '~': r'\textasciitilde{}'}
+# Claude desktop shows any expression containing $ as raw text, even escaped,
+# and any expression over 200 source characters. Eight coloured words stay
+# under that limit; math-validation.py checks the exact rules.
+CLAUDE_ESCAPES = {**ESCAPES, '$': r'\textdollar{}'}
+CLAUDE_MAX_WORDS = 8
 
 
 def reserve_start_indices(count):
@@ -56,11 +61,16 @@ def chunks(text):
     return text.split()
 
 
-def validate_short_quote(text):
+def validate_short_quote(text, claude=False):
     """Reject long reminder excerpts before reserving any palette positions."""
     visible = ' '.join(chunks(text))
     if not visible:
         raise ValueError('Provide the relevant question or excerpt as plain text.')
+    if claude and len(chunks(text)) > CLAUDE_MAX_WORDS:
+        raise ValueError(
+            f'Rainbow reminder has {len(chunks(text))} words; Claude desktop shows longer reminders as raw text. '
+            f'Choose an exact relevant excerpt of {CLAUDE_MAX_WORDS} words or fewer.'
+        )
     if len(visible) > MAX_QUOTE_CHARS:
         raise ValueError(
             f'Rainbow reminder is {len(visible)} characters; choose an exact relevant excerpt '
@@ -69,8 +79,9 @@ def validate_short_quote(text):
     return visible
 
 
-def tex(text):
-    return ''.join(ESCAPES.get(char, char) for char in text)
+def tex(text, claude=False):
+    escapes = CLAUDE_ESCAPES if claude else ESCAPES
+    return ''.join(escapes.get(char, char) for char in text)
 
 
 def inline_code(text):
@@ -78,7 +89,7 @@ def inline_code(text):
     return fence + ' ' + text + ' ' + fence
 
 
-def render(text, format='markdown', start_index=None):
+def render(text, format='markdown', start_index=None, claude=False):
     if not text.strip():
         raise ValueError('Provide the relevant question or excerpt as plain text.')
     if start_index is None:
@@ -110,7 +121,7 @@ def render(text, format='markdown', start_index=None):
             needed = len(chunk) + (1 if group else 0)
             if group and group_chars + needed > MAX_GROUP_CHARS:
                 flush_group()
-            group.append(r'\color{' + colour + '}{' + tex(chunk) + '}')
+            group.append(r'\color{' + colour + '}{' + tex(chunk, claude) + '}')
             group_chars += len(chunk) + (1 if group_chars else 0)
     if format == 'markdown':
         flush_group()
@@ -123,22 +134,25 @@ def main():
     parser.add_argument('source', type=Path, nargs='+', help='One or more UTF-8 plain-text question files; never shell-interpolated messages.')
     parser.add_argument('--format', choices=['markdown', 'html'], default='markdown')
     parser.add_argument('--start-index', type=int, choices=range(len(PALETTE)), help='Pin the offset without advancing the counter, for reproducible examples/tests.')
+    parser.add_argument('--claude', action='store_true', help='Claude desktop output: at most 8 words, \\textdollar{} for $, and Claude raw-text checks.')
     args = parser.parse_args()
     try:
         texts = [source.read_text(encoding='utf-8') for source in args.source]
         if any(not text.strip() for text in texts):
             raise ValueError('Provide each relevant question or excerpt as plain text.')
         if args.format == 'markdown':
-            texts = [validate_short_quote(text) for text in texts]
+            texts = [validate_short_quote(text, args.claude) for text in texts]
         starts = ([((args.start_index + offset) % len(PALETTE)) for offset in range(len(texts))]
                   if args.start_index is not None else reserve_start_indices(len(texts)))
-        rendered = [render(text, args.format, start) for text, start in zip(texts, starts)]
+        rendered = [render(text, args.format, start, args.claude) for text, start in zip(texts, starts)]
         outputs = [item[0] for item in rendered]
         expressions = [expression for item in rendered for expression in item[1]]
         spec = importlib.util.spec_from_file_location('quote_math', Path(__file__).with_name('math-validation.py'))
         validator = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(validator)
         errors = [error for error in validator.render_errors(expressions) if error]
+        if args.claude:
+            errors.extend(validator.claude_raw_errors('\n\n'.join(outputs)))
         if errors:
             parser.exit(1, '\n'.join(errors) + '\n')
         print('\n\n'.join(outputs))

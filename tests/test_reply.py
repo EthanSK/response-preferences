@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 spec=importlib.util.spec_from_file_location('reply',Path(__file__).resolve().parents[1]/'scripts/check-reply.py')
@@ -437,3 +438,14 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual(5, reply.prose_length(r'\textsf{A \& B}'))
         self.assertEqual([], check_fragment(r'\(\textsf{'+'x'*64+r'}\)'))
         self.assertTrue(any('may overflow' in e for e in check_fragment(r'\(\textsf{'+'x'*65+r'}\)')))
+
+    def test_claude_render_cli_checks_only_rendering(self):
+        script = Path(__file__).resolve().parents[1]/'scripts/check-reply.py'
+        # No About line or pointer: structural rules are skipped in this mode.
+        good = r'Costs \(\underline{\textsf{about \textdollar{}8}}\) so far.' + '\n\n> ' + r'\(\textsf{\color{#7070fa}{\textdollar{}8?}}\)'
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'reply.md'
+            for draft, returncode in [(good, 0), (good.replace(r'\textdollar{}', r'\$'), 1), ('[↗](</What did I ask?> "What did I ask?") ' + good, 0), (r'\(\textsf{x}}\)', 1)]:
+                path.write_text(draft)
+                result = subprocess.run(['python3', str(script), '--claude-render', str(path)], text=True, capture_output=True)
+                self.assertEqual(returncode, result.returncode, (draft, result.stdout))
