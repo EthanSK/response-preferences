@@ -157,3 +157,25 @@ process.stdin.on('end', () => process.stdout.write(JSON.stringify(
 
     def test_batch_rejects_oversized_expression(self):
         self.assertTrue(math.render_errors(['x' * 10001])[0])
+
+    def test_claude_raw_text_guard(self):
+        # Expressions Claude desktop showed as raw text on 2026-10-21, and their fixes.
+        nine_words = r'> \(\textsf{\color{#70b5fa}{Did} \color{#7093fa}{we} \color{#7070fa}{discuss} \color{#9370fa}{running} \color{#b570fa}{worktree} \color{#d870fa}{code} \color{#fa70fa}{in} \color{#fa70d8}{the} \color{#fa70b5}{cloud?}}\)'
+        self.assertIn('212-character', math.claude_raw_errors(nine_words)[0])
+        self.assertEqual([], math.claude_raw_errors(r'\(\textsf{' + 'x' * 191 + r'}\)'))
+        self.assertTrue(math.claude_raw_errors(r'\(\textsf{' + 'x' * 192 + r'}\)'))
+        for raw in [r'> \(\textsf{\color{#7070fa}{\$8}}\)',
+                    r'so \(\textsf{\color{#fb923c}about \$30 a month}\) plus',
+                    r'\(\underline{\textsf{at most about \$8 since 15 Oct}}\)']:
+            with self.subTest(raw=raw):
+                self.assertIn('dollar sign', math.claude_raw_errors(raw)[0])
+                self.assertEqual([], math.claude_raw_errors(raw.replace(r'\$', r'\textdollar{}')))
+        self.assertEqual([], math.claude_raw_errors(r'A run costs $0.50, so \(\underline{\textsf{about 8 dollars}}\).'))
+        for touching in [r'x\(\textsf{a}\)', r'"\(\textsf{a}\)"', r'—\(\textsf{a}\)']:
+            self.assertIn('touches its opening', math.claude_raw_errors(touching)[0])
+        for spaced in [r'**\(\textsf{a}\)**', r'(\(\textsf{a}\))', r'>\(\textsf{a}\)', r'- \(\textsf{a}\)']:
+            self.assertEqual([], math.claude_raw_errors(spaced), spaced)
+        self.assertIn('backtick', math.claude_raw_errors(r'\(\textsf{a ` b}\)')[0])
+        self.assertIn(r'\.', math.claude_raw_errors(r'\(\textsf{end\.}\)')[0])
+        self.assertEqual([], math.claude_raw_errors(r'\(\textsf{50\% \# \_ \& \{x\}}\)'))
+        self.assertEqual([], math.claude_raw_errors('`' + r'\(\textsf{\$8}\)' + '`\n\n```tex\n' + r'\(\textsf{\$8}\)' + '\n```'))
