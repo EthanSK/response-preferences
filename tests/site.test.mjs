@@ -286,6 +286,17 @@ test('planning and brainstorming share a working marker, explanation and filter'
  dom.window.close();
 });
 
+test('every added-beyond-request item starts with its score out of ten',()=>{
+ const dom=demo(),d=dom.window.document,marker=[...d.querySelectorAll('.conversation .sec > .mk')].find(x=>x.textContent==='➕➕❗');
+ const items=[...marker.parentElement.querySelectorAll('p')].filter(p=>!p.querySelector('strong'));
+ assert(items.length);
+ for(const item of items)assert.match(item.textContent,/^\((?:[1-9]|10)\/10\) /);
+ marker.click();
+ assert.equal(d.querySelector('#mk-name').textContent,'Added beyond your request');
+ assert.match(d.querySelector('.marker-popover').textContent,/score out of ten/);
+ dom.window.close();
+});
+
 
 test('test information uses the test marker without implying success or hiding limits',()=>{
  const dom=demo(),d=dom.window.document,example=d.querySelector('#welcome .testing-example');
