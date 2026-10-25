@@ -184,6 +184,8 @@ GitHub Actions runs the test suite on every push and pull request, including reg
 
 The always-read skill is a compact core; [the detailed reference](references/style-reference.md) retains the complete preferences. Read the core separately and retrieve missing ranges if a tool truncates it. Reread at task start, after compaction or a style correction, at least every 10 assistant messages (including commentary), and immediately before each final reply. Track the count through long waits, progress updates and workstream changes; reading another skill or moving into data operations does not reset it. Refresh before replying if the count is uncertain. Review replies also refresh the installed global and project review contracts. This is an agent instruction, not a background counter or a guarantee of model obedience. For an Agent Flow annotation without a native reference, `check-reply.py reply.md --require-annotation-context` diagnoses missing or late context fields before the first answer.
 
+Test status follows the evidence from the actual runner. A CI step named “Run tests” may still be preparing credentials or selecting cases; report preparation until the runner records a test start.
+
 Automatic reply repair is not part of this workflow. Follow the simple complete patterns; use the draft checker only when a diagnostic helps. The old guard and exemption helpers were removed; do not add a completion-hook repair or wake another task to fix formatting.
 
 ## Develop
