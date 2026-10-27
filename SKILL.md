@@ -58,10 +58,10 @@ Use only these meanings; do not invent, swap or combine markers, except the appr
 | 🤨 | Weird or unexpected points |
 | ⚠️ / ❓ | Caution / uncertainty or missing information |
 | 💡 / ⚖️ | Recommendation / trade-offs |
-| ⛔! | External blocker |
+| ⛔❗ | External blocker |
 | ➕➕❗ | Every **Added beyond your request** section; keep both pluses and the exclamation mark |
 
-I want an exclamation mark immediately after the external-blocker symbol: `⛔!`. Keep its existing meaning and phase-dependent size. User-requested — 2026-10-27.
+I want the same exclamation symbol used after `➕➕` immediately after the external-blocker symbol: `⛔❗`. Keep its existing meaning and phase-dependent size. User-requested — 2026-10-27.
 
 User request — 2026-10-10: add an exclamation mark after the plus-plus marker so extra work is easy to notice. Use the complete `➕➕❗` marker and a short bold, underlined “Added beyond your request” label; keep its phase-dependent marker size and existing chevron placement. This does not add an exclamation mark to every section.
 

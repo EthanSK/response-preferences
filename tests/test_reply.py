@@ -347,9 +347,10 @@ class ReplyChecks(unittest.TestCase):
             self.assertTrue(check_fragment(wrapper+' Details.', commentary=True))
 
     def test_blocker_marker_keeps_its_exclamation(self):
-        self.assertEqual([], check_fragment('⛔! Waiting for the provider.', commentary=True))
-        self.assertEqual([], check_fragment(r'\(\huge\text{⛔!}\) Waiting for the provider.'))
+        self.assertEqual([], check_fragment('⛔❗ Waiting for the provider.', commentary=True))
+        self.assertEqual([], check_fragment(r'\(\huge\text{⛔❗}\) Waiting for the provider.'))
         self.assertTrue(check_fragment('⛔ Waiting for the provider.', commentary=True))
+        self.assertTrue(check_fragment('⛔! Waiting for the provider.', commentary=True))
         self.assertTrue(check_fragment(r'\(\huge\text{⛔}\) Waiting for the provider.'))
 
     def test_direct_answers_stay_large_in_both_phases(self):
