@@ -79,6 +79,8 @@ Repeat the rainbow check in a read-only side conversation with an Agent Flow ful
 
 Full annotation context is optional when it helps a comparison or the user requests it. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
 
+Check a standalone `Problem at hand` too: it should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. Omit the problem sentence only when the rainbow question already supplies enough background.
+
 ```markdown
 > **Problem at hand:** Keep the short question visible.
 > **Earlier response:** The full annotation replaces the short question.
