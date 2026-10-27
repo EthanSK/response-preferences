@@ -82,7 +82,7 @@ Full annotation context is optional when it helps a comparison or the user reque
 Check a standalone `Problem at hand` too: it should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. Omit the problem sentence only when the rainbow question already supplies enough background.
 
 ```markdown
-> **Problem at hand:** Keep the short question visible.
+> **Problem at hand:** A detailed annotation preserves what was said earlier, but returning readers still need a short question to identify the specific issue being answered.
 > **Earlier response:** The full annotation replaces the short question.
 > **Your annotation:** Can I still see my short question below the full annotation?
 
