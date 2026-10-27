@@ -134,7 +134,7 @@ python3 ~/.codex/skills/response-preferences/scripts/create-viewer.py /absolute/
 
 The command prints a stable local URL. One shared viewer reads the original file, refreshes clean views after external edits, and saves edits back to that file. Unsaved work survives an external change; stale saves are rejected. The real path appears in the header. Skill metadata starts expanded. Whole-file links have no yellow selection; explicit line jumps highlight the requested passage. Code links can highlight an inclusive range with `--line` and `--end-line`, including every selected line's gutter. No document-specific HTML is created.
 
-When the agent points out specific text to inspect, the link highlights that passage in the original Markdown, including during read-only audits. Underlining the reply or supplying an ordinary file-and-line link does not replace this source highlighting.
+When the agent points out specific text to inspect, the link highlights that passage in the original Markdown or code, including progress replies and read-only audits. Code, comments, specs and skills all use the reader’s highlighted line or range link. Underlining the reply or supplying an ordinary file-and-line link does not replace this source highlighting.
 
 The loopback-only service starts automatically. On macOS it is a user LaunchAgent, so links continue working after login. Only files registered by the local helper are accessible; there is no arbitrary-path web endpoint. No document data goes to an external service. [File access, installation and export details](references/viewer.md).
 
