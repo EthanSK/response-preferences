@@ -34,7 +34,7 @@ This is a set of agent instructions with helper scripts, not a modification of t
 | Markdown viewer | One shared live viewer reads original Markdown/code files, with line highlighting, automatic refresh and conflict-aware saves. |
 | Code editor | CodeMirror provides syntax highlighting, line numbers, search/replace, undo/redo and bracket matching. Preview, edit and split views. |
 | Scannable tables | Colours important rows using the existing meanings: cyan for useful highlights, red for critical errors, orange for caveats and green for confirmed success. Underlines key words, keeps routine rows neutral and wording short, and uses approved category markers when helpful. |
-| Annotation context | Adds **Problem at hand**, **Earlier response** and **Your annotation** only when that extra context helps or the user asks. Clear selections can use a small rainbow-question answer directly. Any quoted context stays faithful to its real source; reading-only highlights do not become extra questions. |
+| Annotation context | Adds a standalone **Problem at hand** unless the rainbow question already explains the situation from first principles. Uses a substantive sentence, or a little more, to explain the system, the issue and why it matters. **Earlier response** and **Your annotation** remain optional for useful comparisons. Quoted context stays faithful to its real source; reading-only highlights do not become extra questions. |
 | Notification wording | Defines short, complete notification summaries. Native notification delivery is an optional **separate** integration. |
 
 The response-preference skill itself is used silently. Other skill announcements use 🧠 with a magenta skill name and an adjacent opening link.

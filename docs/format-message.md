@@ -10,6 +10,8 @@ Important bold wording also gets an underline on the same words. For example: \(
 
 Prefer several small answers, each with its own visible rainbow question and enlarged answer arrow. For example:
 
+> **Problem at hand:** An interrupted upload has already sent some of the file, so recovery needs to reuse those bytes without making the person start again.
+
 > \(\textsf{\color{#b5fa70}{Can} \color{#93fa70}{the} \color{#70fa70}{upload} \color{#70fa93}{resume?}}\)
 
 \(\huge\text{⮑}\) The upload can resume.
@@ -18,7 +20,7 @@ Prefer several small answers, each with its own visible rainbow question and enl
 
 \(\huge\text{⮑}\) A browser reload may require selecting the file again.
 
-A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. The larger Problem at hand / Earlier response / Your annotation block is optional too; use it for a useful comparison or when requested.
+A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. Include a standalone Problem at hand unless the rainbow question already explains the situation from first principles. Give it a substantive sentence, or a little more if needed, explaining the system, the issue and why it matters. Earlier response and Your annotation remain optional for useful comparisons.
 
 Closely related questions can share an answer when that reads better, but distinct answers get distinct rainbow reminders. Only the final assistant reply ends with About followed by scoped counts: `Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.` Working commentary, progress updates and skill announcements have neither footer; keep question tracking internal. A plan does not count as an answer.
 

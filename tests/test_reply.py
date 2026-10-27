@@ -90,6 +90,7 @@ class ReplyChecks(unittest.TestCase):
         answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
         self.assertEqual([], check_fragment(context + answer))
         self.assertEqual([], check_fragment(answer))
+        self.assertEqual([], check_fragment('> **Problem at hand:** Several pages share one address bar, so a hidden page can affect the address of the visible page.\n\n' + answer))
         for label in reply.ANNOTATION_CONTEXT_LABELS:
             broken = '\n'.join(line for line in context.splitlines() if label not in line) + '\n\n' + answer
             self.assertTrue(any(label in error for error in check_fragment(broken, require_annotation_context=True)))
