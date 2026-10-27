@@ -58,10 +58,12 @@ Use only these meanings; do not invent, swap or combine markers, except the appr
 | 🤨 | Weird or unexpected points |
 | ⚠️ / ❓ | Caution / uncertainty or missing information |
 | 💡 / ⚖️ | Recommendation / trade-offs |
-| ⛔ | External blocker |
+| ⛔! | External blocker |
 | ➕➕❗ | Every **Added beyond your request** section; keep both pluses and the exclamation mark |
 
-User request — 2026-10-10: add an exclamation mark after the plus-plus marker so extra work is easy to notice. Use the complete `➕➕❗` marker and a short bold, underlined “Added beyond your request” label; keep its phase-dependent marker size and existing chevron placement. The exclamation belongs only to this marker, not to every section.
+I want an exclamation mark immediately after the external-blocker symbol: `⛔!`. Keep its existing meaning and phase-dependent size. User-requested — 2026-10-27.
+
+User request — 2026-10-10: add an exclamation mark after the plus-plus marker so extra work is easy to notice. Use the complete `➕➕❗` marker and a short bold, underlined “Added beyond your request” label; keep its phase-dependent marker size and existing chevron placement. This does not add an exclamation mark to every section.
 
 Start every item under **Added beyond your request**, including a lone statement, with a score out of ten such as `(7/10)`: how much it matters for the user to look at it, by severity, importance or size. 1–3: small and safe to skip. 4–6: worth a glance. 7–10: changes behaviour, cost, data, security or another surface, or is large; read it. The score is the agent's judgment, not the user's approval, and never replaces the required disclosure. User-requested — 2026-10-23: “Add a number out of ten for the sort of severity or importance of or size of the change. So if there's low out of ten then I can ignore it.”
 
