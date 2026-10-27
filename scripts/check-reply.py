@@ -9,7 +9,7 @@ _spec = importlib.util.spec_from_file_location('reply_math', Path(__file__).with
 math_validation = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(math_validation)
 
-MARKERS = {'🧪', '🛠️', '⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔', '🧠', '➕➕❗', '🖥️', '👉'}
+MARKERS = {'🧪', '🛠️', '⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔!', '🧠', '➕➕❗', '🖥️', '👉'}
 # The one approved pairing of two existing markers, not a new meaning: it marks
 # only a Manual checks for you heading. User correction — 2026-10-11.
 MANUAL_CHECKS_FOR_YOU_MARKER = '🖥️🫵'
@@ -17,7 +17,7 @@ MARKER = re.compile(r'\\\((?:\\([a-zA-Z]+))?\\text\{([^{}]+)\}\\\)')
 # Match plain leading markers too, so commentary still checks vocabulary and placement.
 # The empty first group keeps the same (size, symbol) shape as wrapped markers.
 # The paired marker comes first so its finger is still seen in commentary.
-PLAIN_MARKER = re.compile(r'()(➕➕❗|➕➕|🖥️?🫵|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕⚖❓][\ufe0f]?)')
+PLAIN_MARKER = re.compile(r'()(⛔!|➕➕❗|➕➕|🖥️?🫵|[\U0001F300-\U0001FAFF⮑ⓘ✅❌⚠⛔➕⚖❓][\ufe0f]?)')
 # Nested underlines do not exempt a highlight from palette/font/link checks.
 COLOUR = re.compile(r'\\\(\\color\{([^{}]+)\}\{\\(textsf|textrm)\{.*?\}\}\\\)')
 COLOUR_SWITCH = re.compile(r'\\\(\\(textsf|textrm)\{\\color\{([^{}]+)\}(?:[^{}]|\{[^{}]*\})*\}\\\)')

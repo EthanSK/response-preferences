@@ -1,4 +1,4 @@
-# Response Preferences<br>⮑ 🛠️ 🧪 🖥️ ✅ ❌ 👀 🐌 🐞 ⓘ 👉 🫵 🤨 ⚠️ ❓ 💡 ⚖️ ⛔ 🧠 ➕➕❗
+# Response Preferences<br>⮑ 🛠️ 🧪 🖥️ ✅ ❌ 👀 🐌 🐞 ⓘ 👉 🫵 🤨 ⚠️ ❓ 💡 ⚖️ ⛔! 🧠 ➕➕❗
 
 [![Example Codex reply: magenta skill names, planning, test results, green success, cyan information, orange caution, red critical text, underlined scanning clues and a lavender topic reminder.](docs/readme-preview.svg)](https://ethansk.github.io/response-preferences/)
 
@@ -75,7 +75,7 @@ Orange warnings explain the affected feature, expected and observed behaviour, p
 | 🐞 | An actual bug | 🫵 | Your action or decision |
 | 🤨 | Unexpected behaviour | ⚠️ | Caution |
 | ❓ | Missing information | 💡 | Recommendation |
-| ⚖️ | Trade-offs | ⛔ | External blocker |
+| ⚖️ | Trade-offs | ⛔! | External blocker |
 | 🧠 | Skill use | ➕➕❗ | Added beyond your request |
 | 🖥️ | Computer Use, manual browser/app tests and Manual checks the agent ran | 👉 | Main takeaway |
 | 🛠️ | Planning and brainstorming | 🧪 | Tests |
