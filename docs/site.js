@@ -20,7 +20,7 @@ const M={
 '❓':['Missing information','Uncertainty, or information the assistant does not have.'],
 '💡':['Recommendation','A recommendation, including minor non-bug improvements.'],
 '\u2696':['Trade-offs','Trade-offs between options.'],
-'⛔!':['External blocker','A blocker outside the task that stops progress.'],
+'⛔❗':['External blocker','A blocker outside the task that stops progress.'],
 '🧠':['Skill use','A skill-use announcement: Skill use, the skill name in upright magenta serif, a brief reason, and a separate ↗ that opens the full skill. The response-preferences skill itself is applied silently unless you ask about it.'],
 '➕➕❗':['Added beyond your request','Work added beyond what you asked for. Both pluses are followed by an exclamation mark so this important section is easier to notice. Each item starts with a score out of ten, such as (7/10), for how much it matters to look at: 1–3 is safe to skip, 4–6 is worth a glance and 7–10 should be read.']
 };
