@@ -160,7 +160,9 @@ def leading_marker(line):
 
 
 def annotation_errors(text, require_context=False):
-    """Check full annotation context without enabling unrelated styling checks."""
+    """Check the full context layout only when the caller explicitly requests it."""
+    if not require_context:
+        return []
     errors = []
     counts = dict.fromkeys(ANNOTATION_CONTEXT_LABELS, 0)
     seen = set()
@@ -219,7 +221,6 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
     last_line = max((i for i, line in enumerate(text.splitlines(), 1) if line.strip()), default=0)
     previous = ''
     has_pointer = False
-    has_direct_answer = False
     fence = None
     caret = WORKING_CARET if commentary else CARET
     for number, raw in enumerate(text.splitlines(), 1):
@@ -281,16 +282,13 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             fail('Keep hidden comments and notification metadata out of the reply.')
         if re.search(r'</?u(?:\s[^>]*)?>', line, re.IGNORECASE):
             fail(r'Never use HTML <u> tags in a reply; Codex can display them literally. Use \(\underline{\textsf{short clue}}\) instead.')
+        if '⮑' in INLINE_MATH.sub('', line):
+            fail('Give each direct answer its own visible question and enlarged arrow, not a small inline arrow.')
         matches = list(MARKER.finditer(line))
         plain = PLAIN_MARKER.match(line, len(line) - len(line.lstrip()))
         if plain:
             matches.insert(0, plain)
         for match in matches:
-            if match.group(2) == '⮑':
-                if match.group(1) == 'huge':
-                    has_direct_answer = True
-                elif has_direct_answer and match.re is PLAIN_MARKER and line[match.end():].strip():
-                    continue  # Small follow-up reply within an already contextualized answer.
             # The paired Manual checks for you marker also points at the user.
             if '🫵' in match.group(2) or match.group(2) == '👉':
                 has_pointer = True
@@ -402,7 +400,7 @@ if __name__ == '__main__':
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
-    parser.add_argument('--require-annotation-context', action='store_true', help='Require the three nonempty quoted context fields before the first answer, including Agent Flow selections without native annotation references.')
+    parser.add_argument('--require-annotation-context', action='store_true', help='Explicitly require the optional three-field context layout, including for Agent Flow selections.')
     parser.add_argument('--require-question-coverage', action='store_true', help='Require final-reply question counts under About; validates structure and numeric bounds, not semantic coverage.')
     parser.add_argument('--claude-render', action='store_true', help='Claude desktop pre-send check: only KaTeX syntax and the Claude guard that shows rejected expressions as raw text, including blockquoted reminders. Skips structural rules.')
     args = parser.parse_args()

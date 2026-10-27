@@ -8,15 +8,19 @@ This is the fictional message used to introduce the website. The response below 
 
 Important bold wording also gets an underline on the same words. For example: \(\underline{\textsf{\textbf{Neither automatically wins}}}\). Bold alone is not a scanning cue; keep expressions short so the surrounding sentence wraps.
 
-Every main or small direct-answer arrow has its own one-character hover link immediately afterward, before the answer text. Keep it even when the same question appears above in the rainbow reminder. For example:
+Prefer several small answers, each with its own visible rainbow question and enlarged answer arrow. For example:
 
-⮑ [↗](</Can the upload resume?>) The upload can resume.
+> \(\textsf{\color{#b5fa70}{Can} \color{#93fa70}{the} \color{#70fa70}{upload} \color{#70fa93}{resume?}}\)
 
-⮑ [↗](</What happens after a browser reload?>) A browser reload may require selecting the file again.
+\(\huge\text{⮑}\) The upload can resume.
 
-The links contain the original question or thing being answered. In Codex they are hover-only paths, not real files.
+> \(\textsf{\color{#93fa70}{What} \color{#70fa70}{happens} \color{#70fa93}{after} \color{#70fab5}{a} \color{#70fad8}{browser} \color{#70fafa}{reload?}}\)
 
-Related questions can share one answer, but list each question. For example, “Can I change the style?” and “Will it update itself?” can share one answer, while each sub-answer retains its own original-question hover link: edit the skill; updates require agreement. Only the final assistant reply ends with About followed by scoped counts: `Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.` Working commentary, progress updates and skill announcements have neither footer; keep question tracking internal. A plan does not count as an answer.
+\(\huge\text{⮑}\) A browser reload may require selecting the file again.
+
+A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. The larger Problem at hand / Earlier response / Your annotation block is optional too; use it for a useful comparison or when requested.
+
+Closely related questions can share an answer when that reads better, but distinct answers get distinct rainbow reminders. Only the final assistant reply ends with About followed by scoped counts: `Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.` Working commentary, progress updates and skill announcements have neither footer; keep question tracking internal. A plan does not count as an answer.
 
 A compact coloured table value uses the same complete colour template as prose:
 

@@ -75,9 +75,9 @@ Use a separate section marker only when the purpose changes. Supporting blocks a
 
 ## Annotation context and short reminder
 
-Repeat the context-and-rainbow check in a read-only side conversation with an Agent Flow full prompt: retain the applicable three context fields and a separate rainbow reminder based on its authored words immediately above ⮑, minimally clarifying the resolved subject when needed. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User correction — 2026-09-30.
+Repeat the rainbow check in a read-only side conversation with an Agent Flow full prompt: each distinct answer gets a visible rainbow question based on its authored words immediately above an enlarged ⮑. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User-requested — 2026-10-27.
 
-The full annotation context and short reminder are both required. Separate distinct annotation-response sections with `---`, including Agent Flow selections, while keeping each section's context, short question and answer together. Verify the two-answer divider in the website demo. Keep context and reminder as distinct quote blocks, with the answer immediately after the short one:
+Full annotation context is optional when it helps a comparison or the user requests it. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
 
 ```markdown
 > **Problem at hand:** Keep the short question visible.
@@ -89,11 +89,11 @@ The full annotation context and short reminder are both required. Separate disti
 \(\huge\text{⮑}\) The **short question stays below the full context**, directly above the answer.
 ```
 
-For an Agent Flow code selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, verify that the response keeps all three fields: `Problem at hand` names worker selection, `Earlier response` quotes the code and identifies its app/file source, and `Your annotation` quotes “Why this limit?”. Repeat with coloured/escaped `app_selection` text and without a native annotation directive. The short rainbow reminder alone fails this check. An unrelated reading highlight and an ordinary standalone question must not acquire invented annotations. This is a manual semantic check; a structural checker cannot infer the omitted source context. User-requested hardening — 2026-09-27.
+For an Agent Flow code selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, a short rainbow question and self-contained answer can be enough. If the context block helps, verify its three fields accurately name the problem, quote the real source and quote the user's comment. Repeat with coloured/escaped selections and a native annotation reference; neither requires a large context block by itself. Do not manufacture annotations from reading-only highlights. User-requested — 2026-10-27.
 
 For that Agent Flow case, run `scripts/check-reply.py /absolute/reply.md --require-annotation-context`: the explicit flag requires all three nonempty fields before the first direct answer even without native annotation references. Check that a rainbow-only draft, each missing or empty field, and context placed after the answer fail; the complete draft passes. The flag diagnoses this supplied context requirement, not whether an arbitrary selection is relevant. It remains optional and does not install automatic repair or a message-counting hook. User request — 2026-10-03.
 
-The opening link must point to the real original-message viewer; the path above is illustrative. Include each real annotation’s required inline directive with its answer. Do not underline or paraphrase the exact earlier-response and annotation quotations.
+Any optional real-context link must point to the original-message viewer; the path above is illustrative. Include each real annotation's supplied inline directive with its answer. Do not underline or paraphrase exact source quotations. A hover link is optional; a hidden question without its visible rainbow reminder fails the answer-layout check.
 
 ## Attention finger coverage
 

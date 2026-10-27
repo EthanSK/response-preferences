@@ -85,20 +85,22 @@ class ReplyChecks(unittest.TestCase):
             skill = rf'\(\huge\text{{🧠}}\) **Skill use:** \(\textrm{{\color{{magenta}}skill-creator}}\) [↗]({viewer}) — update the skill.'
             self.assertEqual([], check_fragment(skill))
 
-    def test_annotation_context_and_rainbow_question_are_both_required(self):
+    def test_annotation_context_is_optional_unless_requested(self):
         context = '> **Problem at hand:** A hidden page changes the visible URL.\n> **Earlier response:** The callback clears the selector.\n> **Your annotation:** Why can another page change it?\n\n'
         answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
         self.assertEqual([], check_fragment(context + answer))
+        self.assertEqual([], check_fragment(answer))
         for label in reply.ANNOTATION_CONTEXT_LABELS:
             broken = '\n'.join(line for line in context.splitlines() if label not in line) + '\n\n' + answer
-            self.assertTrue(any(label in error for error in check_fragment(broken)))
-        self.assertTrue(any('Problem at hand' in error for error in check_fragment(answer)))
+            self.assertTrue(any(label in error for error in check_fragment(broken, require_annotation_context=True)))
+        self.assertTrue(any('Problem at hand' in error for error in check_fragment(answer, require_annotation_context=True)))
 
     def test_grouped_annotations_keep_one_context_per_distinct_annotation(self):
         context = '> Problem at hand: A route callback.\n> Earlier response: It edits the URL.\n> Your annotation: Why?\n\n'
         answer = '> Why?\n\n' + r'\(\huge\text{⮑}\) \(\textsf{One Router serves both pages.}\) :codex-annotation{index="1"} :codex-annotation{index="2"}'
         self.assertEqual([], check_fragment(context + context + answer))
-        self.assertTrue(any('Annotation 2' in error for error in check_fragment(context + answer)))
+        self.assertEqual([], check_fragment(context + answer))
+        self.assertTrue(any('Annotation 2' in error for error in check_fragment(context + answer, require_annotation_context=True)))
         self.assertEqual([], check_fragment(context + answer.replace('index="2"', 'index="1"')))
 
     def test_agent_flow_context_without_native_reference(self):
@@ -315,7 +317,7 @@ class ReplyChecks(unittest.TestCase):
         # Quoted earlier replies are context, not a new heading.
         self.assertEqual([], check_fragment('> Manual checks for you' + steps))
         # A list item or sentence that only mentions the heading is not one.
-        for mention in [r'- ⮑ \(\underline{\textsf{“Manual checks” is only what I checked}}\).',
+        for mention in [r'- \(\underline{\textsf{“Manual checks” is only what I checked}}\).',
                         '* Manual checks for you now use both emojis.']:
             with self.subTest(mention=mention):
                 self.assertEqual([], check_fragment(mention))
@@ -369,12 +371,16 @@ class ReplyChecks(unittest.TestCase):
         self.assertTrue(check_fragment(r'\(\huge\text{⮑}\) Yes, it is fixed.', commentary=True))
         self.assertTrue(check_fragment('> Is it fixed?\n\n'+r'\(\huge\text{⮑}\) ⌄'+'\n\nYes.', commentary=True))
 
-    def test_small_followup_answers_share_main_answer_context(self):
+    def test_each_followup_answer_needs_its_own_visible_question(self):
         main = '> How does upload recovery work?\n\n' + r'\(\huge\text{⮑}\) Upload recovery is supported.'
         for commentary in (False, True):
             for followup in ('\n\n⮑ Reloads may require file selection.', '\n\nThe browser stores progress. ⮑ It reuses finished parts.', '\n\n- ⮑ Retry continues the upload.'):
                 with self.subTest(commentary=commentary, followup=followup):
-                    self.assertEqual([], check_fragment(main + followup, commentary=commentary))
+                    self.assertTrue(check_fragment(main + followup, commentary=commentary))
+            followup = '\n\n> What happens after a reload?\n\n' + r'\(\huge\text{⮑}\) A reload may require selecting the file again.'
+            self.assertEqual([], check_fragment(main + followup, commentary=commentary))
+            hidden_question = '\n\n' + r'\(\huge\text{⮑}\) [↗](/reload-question) A reload may require selecting the file again.'
+            self.assertTrue(check_fragment(main + hidden_question, commentary=commentary, check_paths=False))
 
     def test_small_commentary_markers_keep_structure_and_reference_checks(self):
         with tempfile.TemporaryDirectory() as directory:
