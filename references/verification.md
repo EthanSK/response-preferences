@@ -35,7 +35,7 @@ Use `--require-question-coverage` during a coverage-format diagnostic. It requir
 | Markdown/code links | Generated HTML by default, specific verified line when relevant, source retained | Generator, parser source maps, target-line and editor tests |
 | Viewer | Preview/edit/split, syntax highlighting, search/replace, undo/redo, downloadable copy; explicit picked-file saving only | Viewer tests; browser interaction and screenshots |
 | Tables | Approved emoji plus category text, consistent grouping, no decorative new mappings | Website table and manual review |
-| Annotations | Exact In response to source quote, then a separate rainbow question in the user’s perspective, then the answer; required inline directives; related answers grouped | Manual review; quote content excluded from reply lint |
+| Annotations | Descriptive In response to sentence grounded in real context, then a separate rainbow question in the user’s perspective, then the answer; required inline directives; related answers grouped | Manual review; quote content excluded from reply lint |
 | Notifications | Current separate integration's live exact-chat-title and status/summary contract; metadata stays out of replies | Reply checker; native integration tests and fit check separately |
 | Other-model contributions | Short cyan Models line once at each other-model invocation's start and end; no repeated polling/progress/reuse notices; verified model and role; omitted for chat-only work; before required final footers/About | Semantic check against actual run metadata: one invocation across several progress messages gets two notices, a new invocation gets its own pair, and chat-only work gets none; format demonstration and rendered sample |
 | Sharing and maintenance | Public repo and Pages, README/site checked each change, installed/source/remote reconciled, normal push | CI; static validation; generated demo consistency; live bytes and install verification |
@@ -77,19 +77,19 @@ Use a separate section marker only when the purpose changes. Supporting blocks a
 
 Repeat the rainbow check in a read-only side conversation with an Agent Flow full prompt: each distinct answer gets a visible rainbow question based on its authored words immediately above an enlarged ⮑. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User-requested — 2026-10-27.
 
-Every rainbow question needs its own preceding In response to quote. Quote the actual earlier statement or selected source passage that Ethan’s question refers to, not a problem explanation or the answer. When no earlier statement exists, quote the relevant original request. Match each quote against the real message/history and preserve the rainbow question’s existing wording, meaning and length. Never invent a source or treat an unrelated reading highlight as another question. User-requested — 2026-10-28.
+Every rainbow question needs its own preceding descriptive In response to sentence. Explain in simple language what the rainbow text is about, naming the actual feature, earlier claim or change. Read the sentence and rainbow text without earlier messages: the subject must be clear. Ground it in the real message/history, preserve any exact quotation included, and keep the answer separate. Preserve the rainbow question’s wording, meaning and length. Never invent context or treat an unrelated reading highlight as another question. User-requested and clarified — 2026-10-28.
 
 ```markdown
-> **In response to:** “The full annotation replaces the short question.”
+> **In response to:** An earlier reply claimed that the full annotation replaces the short question.
 
 > Can I still see my short question below the full annotation?
 
 \(\huge\text{⮑}\) The short question stays visible, directly above the answer.
 ```
 
-Test missing, empty, late and repeated-source context for both commentary and final replies. A two-answer draft needs two correctly paired source quotes. Reject the old Problem at hand field as a substitute. For an Agent Flow selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, quote that exact code as In response to and keep the user’s question in rainbow text. Repeat with coloured/escaped selections and a supplied native annotation reference; preserve actual source attribution and never invent an index.
+Test missing, empty, late and repeated-source context for both commentary and final replies. A two-answer draft needs two correctly paired descriptive context sentences. Reject the old Problem at hand field as a substitute. For an Agent Flow selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, explain that the selected code chooses a worker based on a count, preserving the exact code if quoted and keep the user’s question in rainbow text. Repeat with coloured/escaped selections and a supplied native annotation reference; preserve actual source attribution and never invent an index.
 
-Run `scripts/check-reply.py /absolute/reply.md --require-annotation-context` to require the source field even without rainbow markup. Check a quote after the answer fails and a complete source/question/answer sequence passes. This optional diagnostic verifies structure, not whether a quote is true or relevant; verify that manually. No automatic repair or continuation hook is added.
+Run `scripts/check-reply.py /absolute/reply.md --require-annotation-context` to require the source field even without rainbow markup. Check a quote after the answer fails and a complete source/question/answer sequence passes. This optional diagnostic verifies structure, not whether a sentence explains the right subject clearly; verify that manually. No automatic repair or continuation hook is added.
 
 Any optional real-context link must point to the original-message viewer. Keep every real annotation’s supplied inline directive with its answer. Do not underline or paraphrase exact source quotations. A hover link is optional; a hidden question without its visible rainbow reminder fails the answer-layout check.
 

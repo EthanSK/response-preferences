@@ -212,7 +212,7 @@ def annotation_errors(text, require_context=False):
                 if counts[label] < len(seen):
                     errors.append(f'Line {number}: Annotation {index} needs its own quoted {label}: context before the answer/reference. The short rainbow question and native popup do not replace it.')
     if require_context and not checked_first_answer:
-        errors.append('The annotated reply needs a direct-answer arrow after its quoted In response to source field.')
+        errors.append('The annotated reply needs a direct-answer arrow after its descriptive In response to context sentence.')
     return errors
 
 
@@ -242,7 +242,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             continue
         if fence is not None:
             continue
-        # Quoted user/earlier-assistant context is evidence, not a new reply.
+        # Context and quoted evidence are separate from the answer being checked.
         if stripped.startswith('>'):
             context = stripped[1:].strip().replace('**', '')
             is_rainbow_question = any(match.group(1) in rainbow_quotes.PALETTE for match in COLOUR_COMMAND.finditer(context))
@@ -265,7 +265,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             errors.append(f'Line {number}: {message}')
         if stripped:
             if '⮑' in line and question_has_source_context is False:
-                fail('Put a nonempty quoted In response to source passage before every rainbow question, without shortening its quote.')
+                fail('Put a nonempty descriptive In response to context sentence before every rainbow question, without shortening the rainbow text.')
             source_context_available = False
             pending_source_context = False
             question_has_source_context = None
@@ -427,7 +427,7 @@ if __name__ == '__main__':
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
-    parser.add_argument('--require-annotation-context', action='store_true', help='Require the In response to source field, including when no rainbow markup is present.')
+    parser.add_argument('--require-annotation-context', action='store_true', help='Require the In response to context sentence, including when no rainbow markup is present.')
     parser.add_argument('--require-question-coverage', action='store_true', help='Require final-reply question counts under About; validates structure and numeric bounds, not semantic coverage.')
     parser.add_argument('--claude-render', action='store_true', help='Claude desktop pre-send check: only KaTeX syntax and the Claude guard that shows rejected expressions as raw text, including blockquoted reminders. Skips structural rules.')
     args = parser.parse_args()

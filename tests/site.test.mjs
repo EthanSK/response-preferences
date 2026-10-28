@@ -117,7 +117,7 @@ test('full annotation context keeps a separate short question before the answer'
  const dom=demo(),d=dom.window.document;
  const full=[...d.querySelectorAll('.annotation-context')].find(x=>x.nextElementSibling?.querySelector('a[href="#format-u3"]'));
  assert(full.textContent.includes('In response to:'));
- assert(full.textContent.includes(d.querySelector('#format-earlier-response p').textContent));
+ assert(full.textContent.includes('An earlier reply claimed that the full annotation replaces the short question.'));
  assert(!full.textContent.includes('Problem at hand:'));
  const reminder=full.nextElementSibling;
  assert(reminder.matches('blockquote.quote'));
@@ -324,7 +324,7 @@ test('rainbow question chunks preserve context links and exclude annotation evid
    const context=quote.previousElementSibling;
    assert(context?.matches('.annotation-context'),'Every rainbow question needs its own preceding context');
    assert.match(context.textContent,/In response to:\s+\S/);
-   assert(!context.textContent.includes('Problem at hand:'),'The old problem explanation is not the source quote');
+   assert(!context.textContent.includes('Problem at hand:'),'Keep the current In response to label for descriptive context');
    assert(!rainbow.querySelector('a,u'),'Links and underlines stay outside the rainbow');
    assert.equal(rainbow.querySelectorAll('.rq-chunk').length>0,true);
    assert([...rainbow.querySelectorAll('.rq-chunk')].every(x=>x.textContent.length<=24));
