@@ -85,19 +85,19 @@ class ReplyChecks(unittest.TestCase):
             skill = rf'\(\huge\text{{🧠}}\) **Skill use:** \(\textrm{{\color{{magenta}}skill-creator}}\) [↗]({viewer}) — update the skill.'
             self.assertEqual([], check_fragment(skill))
 
-    def test_problem_context_is_required_but_comparison_fields_are_optional(self):
-        context = '> **Problem at hand:** A hidden page changes the visible URL.\n> **Earlier response:** The callback clears the selector.\n> **Your annotation:** Why can another page change it?\n\n'
+    def test_source_context_is_required_without_legacy_comparison_fields(self):
+        context = '> **In response to:** A hidden page changes the visible URL.\n\n'
         answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
         self.assertEqual([], check_fragment(context + answer))
-        self.assertTrue(any('Problem at hand' in error for error in check_fragment(answer)))
-        self.assertEqual([], check_fragment('> **Problem at hand:** Several pages share one address bar, so a hidden page can affect the address of the visible page.\n\n' + answer))
+        self.assertTrue(any('In response to' in error for error in check_fragment(answer)))
+        self.assertEqual([], check_fragment('> **In response to:** Several pages share one address bar, so a hidden page can affect the address of the visible page.\n\n' + answer))
         for label in reply.ANNOTATION_CONTEXT_LABELS:
             broken = '\n'.join(line for line in context.splitlines() if label not in line) + '\n\n' + answer
             self.assertTrue(any(label in error for error in check_fragment(broken, require_annotation_context=True)))
-        self.assertTrue(any('Problem at hand' in error for error in check_fragment(answer, require_annotation_context=True)))
+        self.assertTrue(any('In response to' in error for error in check_fragment(answer, require_annotation_context=True)))
 
     def test_grouped_annotations_keep_one_context_per_distinct_annotation(self):
-        context = '> Problem at hand: A route callback.\n> Earlier response: It edits the URL.\n> Your annotation: Why?\n\n'
+        context = '> In response to: A route callback.\n\n'
         answer = '> Why?\n\n' + r'\(\huge\text{⮑}\) \(\textsf{One Router serves both pages.}\) :codex-annotation{index="1"} :codex-annotation{index="2"}'
         self.assertEqual([], check_fragment(context + context + answer))
         self.assertEqual([], check_fragment(context + answer))
@@ -105,7 +105,7 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([], check_fragment(context + answer.replace('index="2"', 'index="1"')))
 
     def test_agent_flow_context_without_native_reference(self):
-        context = '> **Problem at hand:** Suggestions sorting adds Back steps.\n> **Earlier response:** I fixed the sort helper.\n> **Your annotation:** Why did you omit the context?\n\n'
+        context = '> **In response to:** Suggestions sorting adds Back steps.\n\n'
         answer = '> Why did you omit the context?\n\n' + r'\(\huge\text{⮑}\) The draft missed its context.'
         self.assertEqual([], check_fragment(context + answer, require_annotation_context=True))
         self.assertEqual([], check_fragment(answer))
@@ -121,20 +121,21 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([], check_fragment('```text\n:codex-annotation{index="1"}\n```'))
         self.assertEqual([], check_fragment('An ordinary answer.'))
 
-    def test_every_rainbow_answer_needs_its_own_preceding_problem(self):
-        context = '> **Problem at hand:** A hidden page can replace the visible page URL.\n\n'
+    def test_every_rainbow_answer_needs_its_own_preceding_source(self):
+        context = '> **In response to:** A hidden page can replace the visible page URL.\n\n'
         question = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n'
         answer = question + r'\(\huge\text{⮑}\) Both pages share a Router.'
         for commentary in (False, True):
             with self.subTest(commentary=commentary):
                 self.assertEqual([], check_fragment(context + answer, commentary=commentary))
-                for broken in (answer, '> **Problem at hand:**\n\n' + answer,
+                for broken in (answer, '> **In response to:**\n\n' + answer,
                                answer + '\n\n' + context,
                                context + answer + '\n\n' + answer):
                     errors = check_fragment(broken, commentary=commentary)
-                    self.assertTrue(any('Problem at hand' in error for error in errors), errors)
-        multiline = '> **Problem at hand:**\n> A hidden page can replace the visible URL.\n\n'
+                    self.assertTrue(any('In response to' in error for error in errors), errors)
+        multiline = '> **In response to:**\n> A hidden page can replace the visible URL.\n\n'
         self.assertEqual([], check_fragment(multiline + answer))
+        self.assertTrue(any('In response to' in error for error in check_fragment('> **Problem at hand:** An explanation is not a source quote.\n\n' + answer)))
         self.assertEqual([], check_fragment('```text\n' + answer + '\n```'))
 
 

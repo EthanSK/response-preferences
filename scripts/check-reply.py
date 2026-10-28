@@ -29,7 +29,7 @@ COLOUR_TEXT = re.compile(r'\\\(\\color\{([^{}]+)\}\\text\{[^{}]*\}\\\)')
 COLOUR_COMMAND = re.compile(r'\\color\{([^{}]+)\}')
 LINK = re.compile(r'\[([^\]\n]*)\]\((<[^>\n]+>|[^)\n]+)\)')
 ANNOTATION = re.compile(r':codex-annotation\{index="([0-9]+)"\}')
-ANNOTATION_CONTEXT_LABELS = ('Problem at hand', 'Earlier response', 'Your annotation')
+ANNOTATION_CONTEXT_LABELS = ('In response to',)
 INLINE_CODE = re.compile(r'(?<!`)`[^`\n]+`(?!`)')
 PALETTE = {'#ef4444', '#22c55e', '#fb923c', '#67e8f9'}
 TOPIC_COLOUR = '#b8a4d9'
@@ -212,7 +212,7 @@ def annotation_errors(text, require_context=False):
                 if counts[label] < len(seen):
                     errors.append(f'Line {number}: Annotation {index} needs its own quoted {label}: context before the answer/reference. The short rainbow question and native popup do not replace it.')
     if require_context and not checked_first_answer:
-        errors.append('The annotated reply needs a direct-answer arrow after its three quoted context fields.')
+        errors.append('The annotated reply needs a direct-answer arrow after its quoted In response to source field.')
     return errors
 
 
@@ -226,9 +226,9 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
     previous = ''
     has_pointer = False
     fence = None
-    problem_context_available = False
-    pending_problem_context = False
-    question_has_problem_context = None
+    source_context_available = False
+    pending_source_context = False
+    question_has_source_context = None
     caret = WORKING_CARET if commentary else CARET
     for number, raw in enumerate(text.splitlines(), 1):
         stripped = raw.lstrip()
@@ -246,29 +246,29 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         if stripped.startswith('>'):
             context = stripped[1:].strip().replace('**', '')
             is_rainbow_question = any(match.group(1) in rainbow_quotes.PALETTE for match in COLOUR_COMMAND.finditer(context))
-            if context.startswith('Problem at hand:'):
-                problem_context_available = bool(context.removeprefix('Problem at hand:').strip())
-                pending_problem_context = not problem_context_available
+            if context.startswith('In response to:'):
+                source_context_available = bool(context.removeprefix('In response to:').strip())
+                pending_source_context = not source_context_available
             elif any(context.startswith(label + ':') for label in ANNOTATION_CONTEXT_LABELS):
-                pending_problem_context = False
-            elif pending_problem_context and context and not is_rainbow_question:
-                problem_context_available = True
-                pending_problem_context = False
+                pending_source_context = False
+            elif pending_source_context and context and not is_rainbow_question:
+                source_context_available = True
+                pending_source_context = False
             if is_rainbow_question:
-                if question_has_problem_context is None:
-                    question_has_problem_context = problem_context_available
-                    problem_context_available = False
+                if question_has_source_context is None:
+                    question_has_source_context = source_context_available
+                    source_context_available = False
             previous = raw
             continue
         line = re.sub(r'(`+).*?\1', '', raw)
         def fail(message):
             errors.append(f'Line {number}: {message}')
         if stripped:
-            if '⮑' in line and question_has_problem_context is False:
-                fail('Put a nonempty quoted Problem at hand before every rainbow question, without shortening its quote.')
-            problem_context_available = False
-            pending_problem_context = False
-            question_has_problem_context = None
+            if '⮑' in line and question_has_source_context is False:
+                fail('Put a nonempty quoted In response to source passage before every rainbow question, without shortening its quote.')
+            source_context_available = False
+            pending_source_context = False
+            question_has_source_context = None
         if raw.strip().startswith('Coverage since last final reply:'):
             coverage_lines.append(number)
             if commentary:
@@ -427,7 +427,7 @@ if __name__ == '__main__':
     parser.add_argument('--skip-path-check', action='store_true', help='For portable fixtures only; real replies must verify destinations.')
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
-    parser.add_argument('--require-annotation-context', action='store_true', help='Explicitly require the optional three-field context layout, including for Agent Flow selections.')
+    parser.add_argument('--require-annotation-context', action='store_true', help='Require the In response to source field, including when no rainbow markup is present.')
     parser.add_argument('--require-question-coverage', action='store_true', help='Require final-reply question counts under About; validates structure and numeric bounds, not semantic coverage.')
     parser.add_argument('--claude-render', action='store_true', help='Claude desktop pre-send check: only KaTeX syntax and the Claude guard that shows rejected expressions as raw text, including blockquoted reminders. Skips structural rules.')
     args = parser.parse_args()
