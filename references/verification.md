@@ -79,7 +79,7 @@ Repeat the rainbow check in a read-only side conversation with an Agent Flow ful
 
 Problem at hand is required before every rainbow question. Earlier response and Your annotation remain optional when they help a comparison or the user requests them. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
 
-Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. Explain the situation in one substantive sentence; use two only when absolutely justified because the explanation cannot be compressed, without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Never omit the problem sentence, even when the question seems clear or trivial. Preserve the rainbow quote’s wording and length when adding its context. Check each rainbow block separately, including whether its context can be compressed to one sentence; context for an earlier question does not cover a later one.
+Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. Explain the situation in one substantive sentence; use two only when absolutely justified because the explanation cannot be compressed, without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Never omit the problem sentence, even when the question seems clear or trivial. Preserve the rainbow quote’s wording and length when adding its context. Reject topic-only context such as “This chat handles feedback”; prefer “The feedback buttons have no destinations, so users cannot send reports.” Check that the problem comes before its context, without inventing a failure. Check each rainbow block separately, including whether its context can be compressed to one sentence; context for an earlier question does not cover a later one.
 
 Use the existing quoted context format, including when only the Problem field is needed:
 
@@ -90,7 +90,7 @@ Use the existing quoted context format, including when only the Problem field is
 Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify the quoted context appears before the question and answer, rather than as an unquoted paragraph, a new heading style or an explanation deferred until later. Every rainbow question uses this existing block; its quoted layout stays the same.
 
 ```markdown
-> **Problem at hand:** A detailed annotation preserves what was said earlier, but returning readers still need a short question to identify the specific issue being answered.
+> **Problem at hand:** A long annotation can hide the specific question being answered, so the reply still needs a short question reminder.
 > **Earlier response:** The full annotation replaces the short question.
 > **Your annotation:** Can I still see my short question below the full annotation?
 
