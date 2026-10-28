@@ -79,12 +79,12 @@ Repeat the rainbow check in a read-only side conversation with an Agent Flow ful
 
 Problem at hand is required before every rainbow question. Earlier response and Your annotation remain optional when they help a comparison or the user requests them. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
 
-Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. It should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Never omit the problem sentence, even when the question seems clear or trivial. Preserve the rainbow quote’s wording and length when adding its context. Check each rainbow block separately; context for an earlier question does not cover a later one.
+Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. Explain the situation in one substantive sentence; use two only when absolutely justified because the explanation cannot be compressed, without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Never omit the problem sentence, even when the question seems clear or trivial. Preserve the rainbow quote’s wording and length when adding its context. Check each rainbow block separately, including whether its context can be compressed to one sentence; context for an earlier question does not cover a later one.
 
 Use the existing quoted context format, including when only the Problem field is needed:
 
 ```markdown
-> **Problem at hand:** An automated browser check opens enlarged media views in a video editor to verify title and Close button placement. It creates sample media to fill those views, and a CPU comparison rejected the rendering work.
+> **Problem at hand:** A browser check renders sample media to verify title and Close button placement in enlarged video-editor views, but a CPU comparison rejected that rendering work.
 ```
 
 Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify the quoted context appears before the question and answer, rather than as an unquoted paragraph, a new heading style or an explanation deferred until later. Every rainbow question uses this existing block; its quoted layout stays the same.
