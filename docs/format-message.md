@@ -16,11 +16,13 @@ Prefer several small answers, each with its own visible rainbow question and enl
 
 \(\huge\text{⮑}\) The upload can resume.
 
+> **Problem at hand:** Reloading the browser interrupts the upload’s local file access, so continuing may need the same file selected again.
+
 > \(\textsf{\color{#93fa70}{What} \color{#70fa70}{happens} \color{#70fa93}{after} \color{#70fab5}{a} \color{#70fad8}{browser} \color{#70fafa}{reload?}}\)
 
 \(\huge\text{⮑}\) A browser reload may require selecting the file again.
 
-A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. Include a standalone Problem at hand unless the rainbow question already explains the situation from first principles. Give it a substantive sentence, or a little more if needed, explaining the system, the issue and why it matters. Earlier response and Your annotation remain optional for useful comparisons.
+A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. Always include a standalone Problem at hand before every rainbow question, even when the question already seems clear. Do not shorten the rainbow quote to make room. Give it a substantive sentence, or a little more if needed, explaining the system, the issue and why it matters. Earlier response and Your annotation remain optional for useful comparisons.
 
 Closely related questions can share an answer when that reads better, but distinct answers get distinct rainbow reminders. Only the final assistant reply ends with About followed by scoped counts: `Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.` Working commentary, progress updates and skill announcements have neither footer; keep question tracking internal. A plan does not count as an answer.
 
