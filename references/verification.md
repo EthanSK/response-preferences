@@ -79,7 +79,9 @@ Repeat the rainbow check in a read-only side conversation with an Agent Flow ful
 
 Full annotation context is optional when it helps a comparison or the user requests it. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
 
-Check a standalone `Problem at hand` too: it should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. Omit the problem sentence only when the rainbow question already supplies enough background.
+Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. It should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Omit the problem sentence only when the question itself already supplies enough background. This is a semantic check, not a reason to require the section in every trivial answer.
+
+For example, before a short question about a failed video test, explain: “An automated browser check opens enlarged media views in a video editor to verify title and Close button placement. It creates sample media to fill those views, and a CPU comparison rejected the rendering work.” Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify this context appears before the question and answer, rather than being deferred to a later section.
 
 ```markdown
 > **Problem at hand:** A detailed annotation preserves what was said earlier, but returning readers still need a short question to identify the specific issue being answered.
