@@ -9,6 +9,10 @@ _spec = importlib.util.spec_from_file_location('reply_math', Path(__file__).with
 math_validation = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(math_validation)
 
+_rainbow_spec = importlib.util.spec_from_file_location('reply_rainbow', Path(__file__).with_name('rainbow-quote.py'))
+rainbow_quotes = importlib.util.module_from_spec(_rainbow_spec)
+_rainbow_spec.loader.exec_module(rainbow_quotes)
+
 MARKERS = {'🧪', '🛠️', '⮑', '✅', '❌', '👀', '🐌', '🐞', 'ⓘ', '🫵', '🤨', '⚠️', '❓', '💡', '⚖️', '⛔❗', '🧠', '➕➕❗', '🖥️', '👉'}
 # The one approved pairing of two existing markers, not a new meaning: it marks
 # only a Manual checks for you heading. User correction — 2026-10-11.
@@ -222,6 +226,9 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
     previous = ''
     has_pointer = False
     fence = None
+    problem_context_available = False
+    pending_problem_context = False
+    question_has_problem_context = None
     caret = WORKING_CARET if commentary else CARET
     for number, raw in enumerate(text.splitlines(), 1):
         stripped = raw.lstrip()
@@ -237,11 +244,31 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             continue
         # Quoted user/earlier-assistant context is evidence, not a new reply.
         if stripped.startswith('>'):
+            context = stripped[1:].strip().replace('**', '')
+            is_rainbow_question = any(match.group(1) in rainbow_quotes.PALETTE for match in COLOUR_COMMAND.finditer(context))
+            if context.startswith('Problem at hand:'):
+                problem_context_available = bool(context.removeprefix('Problem at hand:').strip())
+                pending_problem_context = not problem_context_available
+            elif any(context.startswith(label + ':') for label in ANNOTATION_CONTEXT_LABELS):
+                pending_problem_context = False
+            elif pending_problem_context and context and not is_rainbow_question:
+                problem_context_available = True
+                pending_problem_context = False
+            if is_rainbow_question:
+                if question_has_problem_context is None:
+                    question_has_problem_context = problem_context_available
+                    problem_context_available = False
             previous = raw
             continue
         line = re.sub(r'(`+).*?\1', '', raw)
         def fail(message):
             errors.append(f'Line {number}: {message}')
+        if stripped:
+            if '⮑' in line and question_has_problem_context is False:
+                fail('Put a nonempty quoted Problem at hand before every rainbow question, without shortening its quote.')
+            problem_context_available = False
+            pending_problem_context = False
+            question_has_problem_context = None
         if raw.strip().startswith('Coverage since last final reply:'):
             coverage_lines.append(number)
             if commentary:

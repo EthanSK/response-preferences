@@ -115,7 +115,7 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
 
 test('full annotation context keeps a separate short question before the answer',()=>{
  const dom=demo(),d=dom.window.document;
- const full=d.querySelector('.annotation-context');
+ const full=[...d.querySelectorAll('.annotation-context')].find(x=>x.textContent.includes('Earlier response:'));
  assert(full.textContent.includes('Earlier response:'));
  assert(full.textContent.includes('Your annotation:'));
  const reminder=full.nextElementSibling;
@@ -320,6 +320,10 @@ test('rainbow question chunks preserve context links and exclude annotation evid
  const dom=demo(),d=dom.window.document;
  for(const quote of d.querySelectorAll('blockquote.quote:not(.annotation-context)')){
    const rainbow=quote.querySelector('.rainbow-quote');assert(rainbow);
+   const context=quote.previousElementSibling;
+   assert(context?.matches('.annotation-context'),'Every rainbow question needs its own preceding context');
+   assert.match(context.textContent,/Problem at hand:\s+\S/);
+   assert(context.textContent.length>50,'Context explains the situation rather than just naming a topic');
    assert(!rainbow.querySelector('a,u'),'Links and underlines stay outside the rainbow');
    assert.equal(rainbow.querySelectorAll('.rq-chunk').length>0,true);
    assert([...rainbow.querySelectorAll('.rq-chunk')].every(x=>x.textContent.length<=24));

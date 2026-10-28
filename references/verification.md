@@ -77,9 +77,9 @@ Use a separate section marker only when the purpose changes. Supporting blocks a
 
 Repeat the rainbow check in a read-only side conversation with an Agent Flow full prompt: each distinct answer gets a visible rainbow question based on its authored words immediately above an enlarged ⮑. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User-requested — 2026-10-27.
 
-Full annotation context is optional when it helps a comparison or the user requests it. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
+Problem at hand is required before every rainbow question. Earlier response and Your annotation remain optional when they help a comparison or the user requests them. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
 
-Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. It should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Omit the problem sentence only when the question itself already supplies enough background. This is a semantic check, not a reason to require the section in every trivial answer.
+Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. It should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Never omit the problem sentence, even when the question seems clear or trivial. Preserve the rainbow quote’s wording and length when adding its context. Check each rainbow block separately; context for an earlier question does not cover a later one.
 
 Use the existing quoted context format, including when only the Problem field is needed:
 
@@ -87,7 +87,7 @@ Use the existing quoted context format, including when only the Problem field is
 > **Problem at hand:** An automated browser check opens enlarged media views in a video editor to verify title and Close button placement. It creates sample media to fill those views, and a CPU comparison rejected the rendering work.
 ```
 
-Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify the quoted context appears before the question and answer, rather than as an unquoted paragraph, a new heading style or an explanation deferred until later. The increased sensitivity changes when to include this existing block, not its layout.
+Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify the quoted context appears before the question and answer, rather than as an unquoted paragraph, a new heading style or an explanation deferred until later. Every rainbow question uses this existing block; its quoted layout stays the same.
 
 ```markdown
 > **Problem at hand:** A detailed annotation preserves what was said earlier, but returning readers still need a short question to identify the specific issue being answered.
@@ -99,7 +99,7 @@ Naming only “the fullscreen test” does not explain the purpose or why it is 
 \(\huge\text{⮑}\) The **short question stays below the full context**, directly above the answer.
 ```
 
-For an Agent Flow code selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, a short rainbow question and self-contained answer can be enough. If the context block helps, verify its three fields accurately name the problem, quote the real source and quote the user's comment. Repeat with coloured/escaped selections and a native annotation reference; neither requires a large context block by itself. Do not manufacture annotations from reading-only highlights. User-requested — 2026-10-27.
+For an Agent Flow code selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, always put Problem at hand before the short rainbow question. If the optional comparison fields help, verify they quote the real source and the user's comment accurately. Repeat with coloured/escaped selections and a native annotation reference; neither requires a large context block by itself. Do not manufacture annotations from reading-only highlights. User-requested — 2026-10-27.
 
 For that Agent Flow case, run `scripts/check-reply.py /absolute/reply.md --require-annotation-context`: the explicit flag requires all three nonempty fields before the first direct answer even without native annotation references. Check that a rainbow-only draft, each missing or empty field, and context placed after the answer fail; the complete draft passes. The flag diagnoses this supplied context requirement, not whether an arbitrary selection is relevant. It remains optional and does not install automatic repair or a message-counting hook. User request — 2026-10-03.
 

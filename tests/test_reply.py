@@ -85,11 +85,11 @@ class ReplyChecks(unittest.TestCase):
             skill = rf'\(\huge\text{{🧠}}\) **Skill use:** \(\textrm{{\color{{magenta}}skill-creator}}\) [↗]({viewer}) — update the skill.'
             self.assertEqual([], check_fragment(skill))
 
-    def test_annotation_context_is_optional_unless_requested(self):
+    def test_problem_context_is_required_but_comparison_fields_are_optional(self):
         context = '> **Problem at hand:** A hidden page changes the visible URL.\n> **Earlier response:** The callback clears the selector.\n> **Your annotation:** Why can another page change it?\n\n'
         answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
         self.assertEqual([], check_fragment(context + answer))
-        self.assertEqual([], check_fragment(answer))
+        self.assertTrue(any('Problem at hand' in error for error in check_fragment(answer)))
         self.assertEqual([], check_fragment('> **Problem at hand:** Several pages share one address bar, so a hidden page can affect the address of the visible page.\n\n' + answer))
         for label in reply.ANNOTATION_CONTEXT_LABELS:
             broken = '\n'.join(line for line in context.splitlines() if label not in line) + '\n\n' + answer
@@ -120,6 +120,22 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([], check_fragment('> :codex-annotation{index="1"}'))
         self.assertEqual([], check_fragment('```text\n:codex-annotation{index="1"}\n```'))
         self.assertEqual([], check_fragment('An ordinary answer.'))
+
+    def test_every_rainbow_answer_needs_its_own_preceding_problem(self):
+        context = '> **Problem at hand:** A hidden page can replace the visible page URL.\n\n'
+        question = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n'
+        answer = question + r'\(\huge\text{⮑}\) Both pages share a Router.'
+        for commentary in (False, True):
+            with self.subTest(commentary=commentary):
+                self.assertEqual([], check_fragment(context + answer, commentary=commentary))
+                for broken in (answer, '> **Problem at hand:**\n\n' + answer,
+                               answer + '\n\n' + context,
+                               context + answer + '\n\n' + answer):
+                    errors = check_fragment(broken, commentary=commentary)
+                    self.assertTrue(any('Problem at hand' in error for error in errors), errors)
+        multiline = '> **Problem at hand:**\n> A hidden page can replace the visible URL.\n\n'
+        self.assertEqual([], check_fragment(multiline + answer))
+        self.assertEqual([], check_fragment('```text\n' + answer + '\n```'))
 
 
     def test_navigation_reply_missing_outer_brace_in_both_phases(self):
