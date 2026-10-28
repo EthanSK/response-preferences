@@ -24,6 +24,8 @@ Prefer several small answers, each with its own visible rainbow question and enl
 
 A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. Always include a standalone Problem at hand before every rainbow question, even when the question already seems clear. Do not shorten the rainbow quote to make room. Start with the actual difficulty, missing information or unresolved decision, then add context or consequence in one substantive sentence; use two only when absolutely justified because the explanation cannot be compressed. Earlier response and Your annotation remain optional for useful comparisons.
 
+Briefly explain terms, app-specific labels and product names that could be remotely hard to understand when they first appear, including in Problem at hand. For example: “The picker (the window for choosing a file) cannot open in Codex without your permission.” Or: “The private repository needs GitHub Team (GitHub's paid plan for organisations) to keep its environment secrets after the move.” Keep the explanation short so the problem makes sense before the answer.
+
 Closely related questions can share an answer when that reads better, but distinct answers get distinct rainbow reminders. Only the final assistant reply ends with About followed by scoped counts: `Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.` Working commentary, progress updates and skill announcements have neither footer; keep question tracking internal. A plan does not count as an answer.
 
 A compact coloured table value uses the same complete colour template as prose:

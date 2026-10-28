@@ -39,6 +39,8 @@ This is a set of agent instructions with helper scripts, not a modification of t
 
 The response-preference skill itself is used silently. Other skill announcements use 🧠 with a magenta skill name and an adjacent opening link.
 
+Briefly explain terms, app-specific labels and product names that could be remotely hard to understand when they first appear, including in **Problem at hand**. For example, a picker is the window for choosing a file, and GitHub Team is GitHub's paid plan for organisations. Keep the explanation short so the problem makes sense before the answer.
+
 ## Install
 
 On the [website’s installation walkthrough](https://ethansk.github.io/response-preferences/#setup), choose **Copy installation prompt** and paste it into your Codex task. The prompt asks your agent to check for an existing installation, preserve local edits, add the activation line without duplicating it and demonstrate the installed format. You can also [read the exact prompt](docs/install-prompt.txt) or install manually below.
