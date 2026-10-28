@@ -35,7 +35,7 @@ Use `--require-question-coverage` during a coverage-format diagnostic. It requir
 | Markdown/code links | Generated HTML by default, specific verified line when relevant, source retained | Generator, parser source maps, target-line and editor tests |
 | Viewer | Preview/edit/split, syntax highlighting, search/replace, undo/redo, downloadable copy; explicit picked-file saving only | Viewer tests; browser interaction and screenshots |
 | Tables | Approved emoji plus category text, consistent grouping, no decorative new mappings | Website table and manual review |
-| Annotations | Full problem/earlier-response/annotation quote, then a separate short question in the user’s perspective, then the answer; required inline directives; related answers grouped | Manual review; quote content excluded from reply lint |
+| Annotations | Exact In response to source quote, then a separate rainbow question in the user’s perspective, then the answer; required inline directives; related answers grouped | Manual review; quote content excluded from reply lint |
 | Notifications | Current separate integration's live exact-chat-title and status/summary contract; metadata stays out of replies | Reply checker; native integration tests and fit check separately |
 | Other-model contributions | Short cyan Models line once at each other-model invocation's start and end; no repeated polling/progress/reuse notices; verified model and role; omitted for chat-only work; before required final footers/About | Semantic check against actual run metadata: one invocation across several progress messages gets two notices, a new invocation gets its own pair, and chat-only work gets none; format demonstration and rendered sample |
 | Sharing and maintenance | Public repo and Pages, README/site checked each change, installed/source/remote reconciled, normal push | CI; static validation; generated demo consistency; live bytes and install verification |
@@ -77,33 +77,21 @@ Use a separate section marker only when the purpose changes. Supporting blocks a
 
 Repeat the rainbow check in a read-only side conversation with an Agent Flow full prompt: each distinct answer gets a visible rainbow question based on its authored words immediately above an enlarged ⮑. Run the documented standard-input helper with an explicit offset and verify the shared counter remains unchanged; source tracing and formatting must not mutate the main workspace. User-requested — 2026-10-27.
 
-Problem at hand is required before every rainbow question. Earlier response and Your annotation remain optional when they help a comparison or the user requests them. Separate distinct answers with `---`, keep their visible rainbow questions, and verify the two-answer layout in the website demo. When a full context block is used, put it before the short question:
-
-Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. Explain the situation in one substantive sentence; use two only when absolutely justified because the explanation cannot be compressed, without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Never omit the problem sentence, even when the question seems clear or trivial. Preserve the rainbow quote’s wording and length when adding its context. Reject topic-only context such as “This chat handles feedback”; prefer “The feedback buttons have no destinations, so users cannot send reports.” Check that the problem comes before its context, without inventing a failure. Check each rainbow block separately, including whether its context can be compressed to one sentence; context for an earlier question does not cover a later one.
-
-Use the existing quoted context format, including when only the Problem field is needed:
+Every rainbow question needs its own preceding In response to quote. Quote the actual earlier statement or selected source passage that Ethan’s question refers to, not a problem explanation or the answer. When no earlier statement exists, quote the relevant original request. Match each quote against the real message/history and preserve the rainbow question’s existing wording, meaning and length. Never invent a source or treat an unrelated reading highlight as another question. User-requested — 2026-10-28.
 
 ```markdown
-> **Problem at hand:** A browser check renders sample media to verify title and Close button placement in enlarged video-editor views, but a CPU comparison rejected that rendering work.
+> **In response to:** “The full annotation replaces the short question.”
+
+> Can I still see my short question below the full annotation?
+
+\(\huge\text{⮑}\) The short question stays visible, directly above the answer.
 ```
 
-Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify the quoted context appears before the question and answer, rather than as an unquoted paragraph, a new heading style or an explanation deferred until later. Every rainbow question uses this existing block; its quoted layout stays the same.
+Test missing, empty, late and repeated-source context for both commentary and final replies. A two-answer draft needs two correctly paired source quotes. Reject the old Problem at hand field as a substitute. For an Agent Flow selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, quote that exact code as In response to and keep the user’s question in rainbow text. Repeat with coloured/escaped selections and a supplied native annotation reference; preserve actual source attribution and never invent an index.
 
-```markdown
-> **Problem at hand:** A long annotation can hide the specific question being answered, so the reply still needs a short question reminder.
-> **Earlier response:** The full annotation replaces the short question.
-> **Your annotation:** Can I still see my short question below the full annotation?
+Run `scripts/check-reply.py /absolute/reply.md --require-annotation-context` to require the source field even without rainbow markup. Check a quote after the answer fails and a complete source/question/answer sequence passes. This optional diagnostic verifies structure, not whether a quote is true or relevant; verify that manually. No automatic repair or continuation hook is added.
 
-> Can I still see my short question below the full annotation? [↗](absolute-context-viewer.html)
-
-\(\huge\text{⮑}\) The **short question stays below the full context**, directly above the answer.
-```
-
-For an Agent Flow code selection `if (count <= 100) return smallWorker;` followed by “Why this limit?”, always put Problem at hand before the short rainbow question. If the optional comparison fields help, verify they quote the real source and the user's comment accurately. Repeat with coloured/escaped selections and a native annotation reference; neither requires a large context block by itself. Do not manufacture annotations from reading-only highlights. User-requested — 2026-10-27.
-
-For that Agent Flow case, run `scripts/check-reply.py /absolute/reply.md --require-annotation-context`: the explicit flag requires all three nonempty fields before the first direct answer even without native annotation references. Check that a rainbow-only draft, each missing or empty field, and context placed after the answer fail; the complete draft passes. The flag diagnoses this supplied context requirement, not whether an arbitrary selection is relevant. It remains optional and does not install automatic repair or a message-counting hook. User request — 2026-10-03.
-
-Any optional real-context link must point to the original-message viewer; the path above is illustrative. Include each real annotation's supplied inline directive with its answer. Do not underline or paraphrase exact source quotations. A hover link is optional; a hidden question without its visible rainbow reminder fails the answer-layout check.
+Any optional real-context link must point to the original-message viewer. Keep every real annotation’s supplied inline directive with its answer. Do not underline or paraphrase exact source quotations. A hover link is optional; a hidden question without its visible rainbow reminder fails the answer-layout check.
 
 ## Attention finger coverage
 
