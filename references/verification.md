@@ -81,7 +81,13 @@ Full annotation context is optional when it helps a comparison or the user reque
 
 Check a standalone `Problem at hand` too: assume the reader may not know or remember the named test, feature or system. It should explain the situation from first principles in a substantive sentence without requiring `Earlier response` or `Your annotation`. A short question such as “What is the test?” still needs that context; describing the test later in the answer does not replace it. Omit the problem sentence only when the question itself already supplies enough background. This is a semantic check, not a reason to require the section in every trivial answer.
 
-For example, before a short question about a failed video test, explain: “An automated browser check opens enlarged media views in a video editor to verify title and Close button placement. It creates sample media to fill those views, and a CPU comparison rejected the rendering work.” Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify this context appears before the question and answer, rather than being deferred to a later section.
+Use the existing quoted context format, including when only the Problem field is needed:
+
+```markdown
+> **Problem at hand:** An automated browser check opens enlarged media views in a video editor to verify title and Close button placement. It creates sample media to fill those views, and a CPU comparison rejected the rendering work.
+```
+
+Naming only “the fullscreen test” does not explain the purpose or why it is being discussed. Verify the quoted context appears before the question and answer, rather than as an unquoted paragraph, a new heading style or an explanation deferred until later. The increased sensitivity changes when to include this existing block, not its layout.
 
 ```markdown
 > **Problem at hand:** A detailed annotation preserves what was said earlier, but returning readers still need a short question to identify the specific issue being answered.
