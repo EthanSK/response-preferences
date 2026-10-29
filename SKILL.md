@@ -113,7 +113,7 @@ Make known, meaningful destinations clickable. For Markdown files, skills and ot
 
 Keep colours outside Markdown links: follow a coloured skill name or file-related statement with its separate `[↗](actual-target)`. Never put LaTeX in a link label or Markdown in LaTeX. No “open” labels. The icon belongs to the preceding reference, not a section.
 
-Before sending any viewer link, compare its literal outgoing URL with the helper result; reject placeholder destinations and unfinished substitutions. Self-improved — 2026-10-29: a progress reply sent an unfinished source-link placeholder despite the existing requirement to prepare links first (Codex task: 01a16aa1-69de-7931-895b-e0b6cd9f9409).
+Before sending any viewer link, verify the helper's source argument is the exact file described in that sentence, then compare its literal outgoing URL and highlight range with that helper result; a valid URL for a skill or neighboring file is still the wrong evidence link. Reject placeholder destinations and unfinished substitutions. Self-improved — 2026-10-29: a test-change explanation linked the spec-writing skill instead of the actual spec; source identity must be checked as well as URL syntax (Codex task: 01a18388-a68f-7fe2-8dec-1a61e3d89e25). Self-improved — 2026-10-29: a progress reply sent an unfinished source-link placeholder despite the existing requirement to prepare links first (Codex task: 01a16aa1-69de-7931-895b-e0b6cd9f9409).
 
 ## Colours and scanning cues
 
