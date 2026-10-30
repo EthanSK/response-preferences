@@ -20,3 +20,9 @@ body.demo-expanded{padding:29px 0 0}body.demo-expanded>.app{max-width:none;borde
 .mac-status{flex:1}.mac-status>*{flex-shrink:0}.mac-menu-apps{flex-shrink:1}.mac-menu-app{flex:none}
 
 .app:has(#welcome.active) .demo-composer:not(:focus-within) textarea{min-height:20px;height:20px}.app:has(#welcome.active) .demo-composer{padding-top:10px}.app:has(#welcome.active) .composer-note{padding-bottom:8px}
+
+/* A continuous homepage gallery goes from everyday replies to specialist cases. */
+#welcome .example-caption{font-size:12px;color:var(--muted);line-height:1.6;margin:4px 0 0}
+#welcome .example-group{border-top:1px solid var(--line);padding-top:22px;margin:14px 0 14px}
+#welcome .example-group h3{font-size:13px;letter-spacing:.02em;color:#bdbbc9;margin:0 0 6px;font-weight:600}
+#welcome .example-group p{font-size:12px;color:var(--muted);margin:0;line-height:1.6}
