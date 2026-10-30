@@ -241,9 +241,10 @@ test('every final example closes with a distinct topic reminder followed by scop
  assert.equal(dom.window.getComputedStyle(d.documentElement).getPropertyValue('--topic'),'#b8a4d9');
  assert(d.querySelector('#backup .final .topic-reminder').textContent.includes('release decision'));
  const shared=d.querySelector('#setup-u3').nextElementSibling;
- assert.deepEqual([...shared.querySelectorAll('.coverage-question-list li')].map(i=>i.textContent),['Can I change the style?','Will it update itself?']);
+ assert.deepEqual([...shared.querySelectorAll('.rainbow-quote')].map(i=>i.textContent),['Can I change the style?','Will it update itself?']);
  assert.equal(shared.querySelector('.question-coverage').textContent,'Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.');
- assert.equal(shared.querySelectorAll('.reply-inline').length,1);
+ assert.equal(shared.querySelectorAll('[data-kind="answer"]').length,2);
+ assert.equal(shared.querySelectorAll('.reply-inline').length,0);
  dom.window.close();
 });
 
