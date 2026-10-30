@@ -16,13 +16,13 @@ Prefer several small answers, each with its own visible rainbow question and enl
 
 > \(\textsf{\color{#b5fa70}{Can} \color{#93fa70}{the} \color{#70fa70}{upload} \color{#70fa93}{resume?}}\)
 
-\(\huge\text{⮑}\) The upload can resume.
+\(\huge\text{⮑}\) The upload \(\underline{\textsf{can resume}}\).
 
 > **In response to:** Reloading the browser interrupts the upload’s local file access, so continuing may need the same file selected again.
 
 > \(\textsf{\color{#93fa70}{What} \color{#70fa70}{happens} \color{#70fa93}{after} \color{#70fab5}{a} \color{#70fad8}{browser} \color{#70fafa}{reload?}}\)
 
-\(\huge\text{⮑}\) A browser reload may require selecting the file again.
+\(\huge\text{⮑}\) A browser reload \(\underline{\textsf{may require selecting the file again}}\).
 
 A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. Before every rainbow question, include a short descriptive In response to sentence explaining in simple language what the rainbow text is about. Name the actual feature, earlier claim or change, using real source context. The sentence and rainbow question should make sense without rereading earlier messages. Keep the answer separate, preserve any exact quotation included, and do not shorten the rainbow text to make room.
 

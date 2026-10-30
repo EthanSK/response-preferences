@@ -22,7 +22,7 @@ Preserve concurrent edits and reconcile installed/source checkouts before commit
 
 ## Check before sending
 
-Immediately before a final completion reply, reread the relevant coloured-highlight and final-check rules from the installed skill. Reread the full skill after compaction or a user style correction. Use these context changes and the completion boundary rather than an arbitrary every-X-messages counter.
+Read the core completely at task start, after compaction or a style correction, at least every 10 assistant messages including commentary, and immediately before each final reply. Track the count through waits and workstream changes; reread before replying if the count is uncertain. The core remains the authority for the refresh interval. User-requested refresh interval — 2026-10-19; reference reconciled — 2026-10-30.
 
 Before every commentary or final reply, check the draft against these rules, especially marker size (plain and normal-size in commentary, except an enlarged ⮑ direct answer; lowercase `\huge` in the final reply) and skill announcements: 🧠 first, each skill name in magenta upright serif, and its own real ↗ link immediately after it. Working and final prose can use short underlined cues and selected simple colour expressions. Do not copy an earlier assistant reply as the authority for current preferences. Apply the latest explicit user correction; a trial is not an adopted rule.
 
