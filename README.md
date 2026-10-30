@@ -207,7 +207,7 @@ Before sending a viewer link, compare its literal URL with the helper output and
 
 ## Licence and dependencies
 
-MIT. CodeMirror, markdown-it, Highlight.js and their dependencies retain their own MIT licences. The included bundle contains third-party code; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). This project is independent of OpenAI and is not an official Codex feature.
+First-party code uses [the no-sale terms](LICENSE). CodeMirror, markdown-it, Highlight.js and their dependencies retain their own MIT licences. The included bundle contains third-party code; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). This project is independent of OpenAI and is not an official Codex feature.
 
 ## Weekly update checks
 
@@ -240,3 +240,8 @@ The example sidebar includes a [numbered separator chat](https://ethansk.github.
 The short quoted question above each answer uses a fixed 24-colour cycle, including pink between violet and red. These colours identify your words; status highlights in the answer retain their own meanings. Each new quote starts one position further along that fixed cycle. The helper advances a small shared local counter, wrapping after 24; a lock protects simultaneous tasks. The counter stays outside the public skill, and retries reuse the same generated quote. The reminder favors wording that names what you were talking about. It keeps your meaning and perspective, and can lightly rephrase an unclear pronoun using the subject established by the prompt and nearby context: `Can we pause the whole hidden component at once?` is clearer later than `if it's like a one-time thing`. Exact original wording stays in the annotation context and source. The reminder is usually around 60–80 visible characters when that much relevant wording exists, with a maximum of 80. Short questions stay short; longer reminders wrap naturally in chunks of at most 64 visible characters. Every word advances one colour. Full annotation/evidence blocks remain unchanged.
 
 [Copy the exact recipes and different-length examples](references/format-recipes.md), or run `python3 scripts/rainbow-quote.py question-1.txt question-2.txt` to generate renderer-checked blockquotes from one or more plain-text excerpts. Multiple files are handled in one process and receive consecutive starting colours. The recipes also settle recurring choices for success versus information, test results, final pointers, punctuation and About reminders.
+
+
+## License
+
+Source-available under [Ethan Source-Available No-Sale Terms 1.0](LICENSE). You can use and modify the covered code, including internally at work, and share it without charge. Selling the software, modified versions, paid access, or bundles requires a separate commercial license. Earlier licenses and third-party rights remain in force. See [scope and release policy](LICENSING.md).
