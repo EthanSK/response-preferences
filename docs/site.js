@@ -7,6 +7,7 @@ const M={
 '🛠':['Planning and brainstorming','Planned or proposed work, not progress underway.'],
 '⮑':['Direct answer','A direct answer to your question. The arrow stays beside the opening answer, even when a table or list follows, and stays large in working updates too. The question sits in a quote above it; the answer makes sense without rereading it.'],
 '🖥':['Computer Use','Manual browser/app interaction and tests, and every Manual checks section of checks the agent ran, with explicit status wording. Checks for you to run go under a separate Manual checks for you heading, marked 🖥️🫵 together. Green highlights confirmed manual success; failed or incomplete checks are not green. Automated tests and lint use ordinary text.'],
+'🖥🫵':['Manual checks for you','Checks for you to perform on your own device. This is the approved pairing of Computer Use and Your action; it does not claim that the agent ran these checks.'],
 '✅':['Confirmed success','Only confirmed success or completion, never a general acknowledgement or a default prefix.'],
 '❌':['Failure','An actual failure, including a check that itself could not run.'],
 '👀':['Starting a check','Only when starting to look, check, inspect or review. A finished review reports its outcome with ✅, 🐞 or ❌ instead.'],

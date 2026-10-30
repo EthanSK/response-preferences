@@ -47,7 +47,7 @@ test('switching a viewed document requires confirmation; reopening it keeps edit
 });
 test('the demo preserves the approved marker vocabulary and efficient section placement',()=>{
  const dom=demo(),d=dom.window.document;
- const expected=['🧪','🛠️','⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔❗','🧠','➕➕❗','🖥️','👉'];
+ const expected=['🧪','🛠️','⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔❗','🧠','➕➕❗','🖥️','👉','🖥️🫵'];
  assert.deepEqual(new Set([...d.querySelectorAll('.conversation .mk,.glossary .mk')].map(x=>x.textContent)),new Set(expected));
  for(const b of d.querySelectorAll('.conversation .mk')){
    if(b.textContent!=='👉')assert.equal(b.parentElement.firstElementChild,b,'Marker precedes the section text');
@@ -145,7 +145,7 @@ test('automated results stay uncoloured and manual success uses the computer mar
 test('only final example replies have attention fingers, About and counts',()=>{
  const dom=demo();
  for(const msg of dom.window.document.querySelectorAll('.msg.assistant')){
-  assert.equal([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵'].includes(m.textContent)),msg.classList.contains('final'));
+  assert.equal([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵','🖥️🫵'].includes(m.textContent)),msg.classList.contains('final'));
   assert.equal(msg.querySelectorAll('.topic-reminder').length,msg.classList.contains('final')?1:0);
   assert.equal(msg.querySelectorAll('.question-coverage').length,msg.classList.contains('final')?1:0);
  }
@@ -254,8 +254,19 @@ test('the home reply stays focused while detailed examples remain available',()=
  assert.equal(first.querySelector('.rainbow-quote').textContent,'What does this skill actually do to your replies?');
  assert.equal(first.querySelectorAll('.mk').length,2);
  assert(!first.querySelector('table,.notification-example,.welcome-marker-range'));
- assert(!home.querySelector('.assistant:not(.final)'));
+ assert(!first.querySelector('.assistant:not(.final)'));
+ assert(home.querySelector('.assistant:not(.final)'));
+ const groups=[...home.querySelectorAll('.example-group h3')].map(x=>x.textContent);
+ assert.equal(groups[0],'Everyday Replies');
+ assert.equal(groups.at(-1),'The Instructions Behind the Replies');
+ assert(home.querySelectorAll('.final').length>=18);
+ assert(home.querySelector('#home-saved'));assert(home.querySelector('#home-batching'));
+ assert(!home.querySelector('.conversation'),'The gallery stays in one scrollable conversation');
  assert(d.querySelector('#markers .glossary'));
+ const manualPair=home.querySelector('#home-user-check').nextElementSibling.querySelector('[data-kind="action"] .mk');
+ manualPair.click();assert.equal(d.querySelector('#mk-name').textContent,'Manual checks for you');
+ assert.match(d.querySelector('.marker-popover').textContent,/does not claim that the agent ran/);
+ d.querySelector('.marker-popover button').click();
  const failure=[...d.querySelectorAll('#backup .mk')].find(x=>x.textContent==='❌');failure.click();
  assert.equal(d.querySelector('#mk-name').textContent,'Failure');assert(!d.querySelector('#app').classList.contains('pane-open'));assert.equal(d.querySelector('.marker-popover').getAttribute('aria-label'),'Failure');
  dom.window.close();
@@ -334,5 +345,15 @@ test('rainbow question chunks preserve context links and exclude annotation evid
  assert.equal(d.querySelectorAll('.annotation-context .rainbow-quote,.user .rainbow-quote,.preview .rainbow-quote,.topic-reminder .rainbow-quote').length,0);
  const link=d.querySelector('#welcome .quote a');link.click();
  assert.equal(link.getAttribute('href'),'#welcome-u1');
+ dom.window.close();
+});
+
+// A generated thumbnail must still reach the registered source-file link.
+test('the formatting attachment opens its actual public context document',()=>{
+ const dom=demo(),d=dom.window.document;
+ d.querySelector('[data-chat="format"]').click();
+ d.querySelector('.demo-attachment').click();
+ assert(d.querySelector('#app').classList.contains('pane-open'));
+ assert.match(d.querySelector('#frame').getAttribute('src'),/format-message\.html/);
  dom.window.close();
 });
