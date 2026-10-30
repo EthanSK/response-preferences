@@ -42,7 +42,7 @@ test('switching a viewed document requires confirmation; reopening it keeps edit
  const frame=d.querySelector('#frame'),src=frame.getAttribute('src');
  dom.window.confirm=()=>{throw Error('Same document must not prompt');};a.click();assert.equal(frame.getAttribute('src'),src);
  dom.window.confirm=()=>false;
- d.querySelector('.ctx[data-file]').click();assert.equal(frame.getAttribute('src'),src);
+ d.querySelector('.message-context[data-file]').click();assert.equal(frame.getAttribute('src'),src);
  dom.window.close();
 });
 test('the demo preserves the approved marker vocabulary and efficient section placement',()=>{
@@ -115,13 +115,13 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
 
 test('full annotation context keeps a separate short question before the answer',()=>{
  const dom=demo(),d=dom.window.document;
- const full=[...d.querySelectorAll('.annotation-context')].find(x=>x.nextElementSibling?.querySelector('a[href="#format-u3"]'));
+ const full=[...d.querySelectorAll('#format .annotation-context')].find(x=>x.textContent.includes('An earlier reply claimed'));
  assert(full.textContent.includes('In response to:'));
  assert(full.textContent.includes('An earlier reply claimed that the full annotation replaces the short question.'));
  assert(!full.textContent.includes('Problem at hand:'));
  const reminder=full.nextElementSibling;
  assert(reminder.matches('blockquote.quote'));
- assert.equal(reminder.querySelector('a').getAttribute('href'),'#format-u3');
+ assert.equal(reminder.querySelectorAll('a').length,0);
  assert(reminder.nextElementSibling.matches('p[data-kind="answer"]'));
  dom.window.close();
 });
@@ -328,7 +328,7 @@ test('test information uses the test marker without implying success or hiding l
 });
 
 
-test('rainbow question chunks preserve context links and exclude annotation evidence',()=>{
+test('rainbow reminders exclude demo navigation and preserve descriptive context',()=>{
  const dom=demo(),d=dom.window.document;
  for(const quote of d.querySelectorAll('blockquote.quote:not(.annotation-context)')){
    const rainbow=quote.querySelector('.rainbow-quote');assert(rainbow);
@@ -340,11 +340,10 @@ test('rainbow question chunks preserve context links and exclude annotation evid
    assert.equal(rainbow.querySelectorAll('.rq-chunk').length>0,true);
    assert([...rainbow.querySelectorAll('.rq-chunk')].every(x=>x.textContent.length<=24));
    assert(rainbow.textContent.length<=80,'Rainbow reminder stays within the doubled excerpt limit');
-   assert(quote.querySelector('a[href]'),'Keep original context navigation');
+   assert.equal(quote.querySelectorAll('a').length,0,'Do not append demo arrows to rainbow reminders');
  }
  assert.equal(d.querySelectorAll('.annotation-context .rainbow-quote,.user .rainbow-quote,.preview .rainbow-quote,.topic-reminder .rainbow-quote').length,0);
- const link=d.querySelector('#welcome .quote a');link.click();
- assert.equal(link.getAttribute('href'),'#welcome-u1');
+ assert.equal(d.querySelectorAll('.answer-context').length,0,'Do not duplicate question links beside the answer');
  dom.window.close();
 });
 
@@ -355,5 +354,20 @@ test('the formatting attachment opens its actual public context document',()=>{
  d.querySelector('.demo-attachment').click();
  assert(d.querySelector('#app').classList.contains('pane-open'));
  assert.match(d.querySelector('#frame').getAttribute('src'),/format-message\.html/);
+ dom.window.close();
+});
+
+// Check the rendered demo structure, including old walkthroughs, not just the newest examples.
+test('attention fingers close replies instead of joining the opening answer',()=>{
+ const dom=demo(),d=dom.window.document;
+ for(const answer of d.querySelectorAll('.conversation [data-kind="answer"]')){
+  assert.deepEqual([...answer.querySelectorAll('.mk')].map(x=>x.textContent),['⮑']);
+ }
+ for(const msg of d.querySelectorAll('.msg.assistant.final')){
+  const finger=[...msg.querySelectorAll('.mk')].find(x=>['👉','🫵','🖥️🫵'].includes(x.textContent));
+  assert(finger,'The final reply retains its attention cue');
+  const following=[...msg.children].slice([...msg.children].indexOf(finger.closest('p,.sec'))+1);
+  assert(!following.some(x=>x.matches('[data-kind],.sec,table,.quote')&&!x.textContent.startsWith('Models:')),'The finger closes the main content');
+ }
  dom.window.close();
 });
