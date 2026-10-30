@@ -48,7 +48,7 @@ test('switching a viewed document requires confirmation; reopening it keeps edit
 test('the demo preserves the approved marker vocabulary and efficient section placement',()=>{
  const dom=demo(),d=dom.window.document;
  const expected=['🧪','🛠️','⮑','✅','❌','👀','🐌','🐞','ⓘ','🫵','🤨','⚠️','❓','💡','⚖️','⛔❗','🧠','➕➕❗','🖥️','👉'];
- assert.deepEqual(new Set([...d.querySelectorAll('.conversation .mk')].map(x=>x.textContent)),new Set(expected));
+ assert.deepEqual(new Set([...d.querySelectorAll('.conversation .mk,.glossary .mk')].map(x=>x.textContent)),new Set(expected));
  for(const b of d.querySelectorAll('.conversation .mk')){
    if(b.textContent!=='👉')assert.equal(b.parentElement.firstElementChild,b,'Marker precedes the section text');
    assert(!b.closest('blockquote'),'The answer marker must be outside the question quote');
@@ -105,7 +105,7 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
  for(const colour of ['c-cyan','c-green','c-orange','c-red'])assert(d.querySelector('.conversation .'+colour+' u'),'Each colour also demonstrates scanning cues');
  const cues=[...d.querySelectorAll('.conversation .assistant u')].map(x=>x.textContent);
  for(const clue of ['packed but not uploaded','no off-site copy from tonight','after restarting the app','cannot guarantee that a model always follows them'])assert(cues.includes(clue),'Retain decisive qualification: '+clue);
- const supporting=d.querySelector('.conversation .assistant .welcome-example-note');
+ const supporting=d.querySelector('#welcome .topic-reminder');
  assert(supporting && !supporting.querySelector('u'),'Routine supporting prose stays readable without forced emphasis');
  const u=d.querySelector('.conversation .assistant u');
  assert.equal(dom.window.getComputedStyle(u).textDecorationLine,'underline');
@@ -247,22 +247,21 @@ test('every final example closes with a distinct topic reminder followed by scop
  dom.window.close();
 });
 
-test('the first home reply previews the range and its marker controls open real explanations',()=>{
+test('the home reply stays focused while detailed examples remain available',()=>{
  const dom=demo(),d=dom.window.document,home=d.querySelector('#welcome'),first=home.querySelector('.final');
- for(const c of ['c-green','c-cyan','c-orange','c-red'])assert(first.querySelector('.'+c+' u'));
- assert.equal(first.querySelectorAll('.welcome-marker-range .mk').length,20);
- assert(home.querySelector('.assistant:not(.final) .skill'));
- assert(first.querySelector('.sec > .mk'));assert(first.querySelector('table'));
- assert(first.querySelector('a[data-file][href^="./viewer.html"]'));
- assert(first.querySelector('a[data-file][href^="./message.html"]'));
- assert(first.querySelector('a[href="#format-u3"]'));assert(first.querySelector('.notification-example'));
- const failure=[...first.querySelectorAll('.welcome-marker-range .mk')].find(x=>x.textContent==='❌');failure.click();
+ assert(first.textContent.includes('The important points are underlined'));
+ assert.equal(first.querySelector('.rainbow-quote').textContent,'What does this skill actually do to your replies?');
+ assert.equal(first.querySelectorAll('.mk').length,2);
+ assert(!first.querySelector('table,.notification-example,.welcome-marker-range'));
+ assert(!home.querySelector('.assistant:not(.final)'));
+ assert(d.querySelector('#markers .glossary'));
+ const failure=[...d.querySelectorAll('#backup .mk')].find(x=>x.textContent==='❌');failure.click();
  assert.equal(d.querySelector('#mk-name').textContent,'Failure');assert(!d.querySelector('#app').classList.contains('pane-open'));assert.equal(d.querySelector('.marker-popover').getAttribute('aria-label'),'Failure');
  dom.window.close();
 });
 
 test('marker popovers toggle, dismiss with Escape and preserve the open document pane',()=>{
- const dom=demo(),d=dom.window.document,button=d.querySelector('.welcome-colours .mk');
+ const dom=demo(),d=dom.window.document,button=d.querySelector('#welcome [data-kind="answer"] .mk');
  const classes=d.querySelector('#app').className;button.click();assert.equal(d.querySelector('#app').className,classes);assert(d.querySelector('.marker-popover'));
  button.click();assert(!d.querySelector('.marker-popover'));
  button.click();d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));assert(!d.querySelector('.marker-popover'));assert.equal(d.activeElement,button);
@@ -275,14 +274,14 @@ test('marker popovers toggle, dismiss with Escape and preserve the open document
 
 
 test('planning and brainstorming share a working marker, explanation and filter',()=>{
- const dom=demo(),d=dom.window.document,example=d.querySelector('#welcome .planning-example');
+ const dom=demo(),d=dom.window.document,example=d.querySelector('#format .sec[data-kind="plan"]');
  example.querySelector('.mk').click();
  assert.equal(d.querySelector('#mk-name').textContent,'Planning and brainstorming');
  assert.match(d.querySelector('.marker-popover').textContent,/Planned or proposed work/);
  d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
  d.querySelector('[data-focus="plan"]').click();
  assert(!example.classList.contains('dim'));
- assert(d.querySelector('#welcome [data-kind="success"]').classList.contains('dim'));
+ assert(d.querySelector('#export [data-kind="success"]').classList.contains('dim'));
  assert(d.querySelector('#format .sec[data-kind="plan"] .mk'));
  dom.window.close();
 });
@@ -300,8 +299,8 @@ test('every added-beyond-request item starts with its score out of ten',()=>{
 
 
 test('test information uses the test marker without implying success or hiding limits',()=>{
- const dom=demo(),d=dom.window.document,example=d.querySelector('#welcome .testing-example');
- assert.match(example.textContent,/not covered/);
+ const dom=demo(),d=dom.window.document,example=d.querySelector('#export .final [data-kind="test"]');
+ assert.match(example.textContent,/finished.*correct final segment/);
  assert(!example.querySelector('[class^="c-"]'));
  example.querySelector('.mk').click();
  assert.equal(d.querySelector('#mk-name').textContent,'Tests');
