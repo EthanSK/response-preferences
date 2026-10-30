@@ -174,3 +174,7 @@ Ethan clarified that the previous gutter-only interpretation was insufficient: r
 ## Escape angle brackets inside hover destinations
 
 Markdown angle-wrapped link destinations still reject unescaped internal `<` and `>`; a type expression can therefore make the entire hover link render as raw text. Escape the destination rather than stripping source characters. `scripts/hover-link.py` also preserves backslashes, entities, URL punctuation and literal percent escapes; `tests/hover-link.test.mjs` checks one parsed link and exact decoded text. Multiline/control-character input falls back to the real context viewer. Parser success is separate from native popup appearance. User-requested prevention — 2026-10-18.
+
+## Website reply examples must match actual marker placement
+
+User correction — 2026-10-30: demo-only source jumps had accumulated after every rainbow reminder, with duplicate links and attention fingers beside older opening answers. Keep the normal answer arrow; put attention fingers with closing takeaways or next actions and actual context viewers in named body links. Compare the entire gallery, including older walkthroughs, with recent real replies. The website tests now check that questions carry no navigation links, answer rows have only their answer marker, and fingers close the main content. These checks cover the demonstrated structure, not model obedience.

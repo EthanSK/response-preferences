@@ -14,7 +14,7 @@ const M={
 '🐌':['Work in progress','Work that is actively underway right now, including counts or percentages. Not for finished work, history, or things you still have to do.'],
 '🐞':['Actual bug','An actual bug being reported. Not plans to look for bugs, test activity, or incomplete verification.'],
 'ⓘ':['Information','Information, explanations and status summaries. A new ⓘ section starts when the purpose changes; a result section does not cover the explanation after it.'],
-'👉':['Read this','The most useful takeaway to read, remember or continue from. Only the final reply uses an attention finger: normally one, with two only for distinct important items. Working updates have none.'],
+'👉':['Read this','The most useful takeaway to read, remember or continue from. Only the final reply uses an attention finger: normally one, with two only for distinct important items. Keep it with the takeaway near the end, rather than beside the opening answer. Working updates have none.'],
 '🫵':['Your action','An outstanding action or decision for you. Paired with 🖥️, it heads Manual checks for you to run.'],
 '🤨':['Unexpected','A weird or unexpected point.'],
 '\u26A0':['Caution','A caution. Orange marks the phrase that matters; red is kept for critical must-read text.'],
@@ -60,7 +60,6 @@ $$('.mk').forEach(b=>{const symbol=b.textContent.trim(),m=M[norm(symbol)];if(!m)
 $$('[data-chat]').forEach(a=>a.addEventListener('click',()=>showChat(a.dataset.chat)));
 $$('[data-pane]').forEach(a=>a.addEventListener('click',()=>showPane(a.dataset.pane,true)));
 $$('a[data-file]').forEach(a=>a.addEventListener('click',e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openFile(a);}));
-$$('a.ctx[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=d.getElementById(a.hash.slice(1));if(!t)return;e.preventDefault();flash(t);}));
 $$('[data-focus]').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.focus;$$('[data-focus]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));applyFilter();note.textContent=kind==='all'?'Showing whole replies. Click any marker to see its meaning.':'Emphasising '+b.textContent.trim()+'; other sections are dimmed.';}));
 $('#pane-close').addEventListener('click',closePane);
 menu.addEventListener('click',()=>{const open=side.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
