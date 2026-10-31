@@ -1,3 +1,4 @@
+// Exercise the public conversation demo, including navigation, formatting and source-file links.
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -145,7 +146,8 @@ test('automated results stay uncoloured and manual success uses the computer mar
 test('only final example replies have attention fingers, About and counts',()=>{
  const dom=demo();
  for(const msg of dom.window.document.querySelectorAll('.msg.assistant')){
-  assert.equal([...msg.querySelectorAll('.mk')].some(m=>['👉','🫵','🖥️🫵'].includes(m.textContent)),msg.classList.contains('final'));
+  const hasFinger=[...msg.querySelectorAll('.mk')].some(m=>['👉','🫵','🖥️🫵'].includes(m.textContent));
+  assert.equal(hasFinger,msg.classList.contains('final')&&!msg.classList.contains('brief-reply'));
   assert.equal(msg.querySelectorAll('.topic-reminder').length,msg.classList.contains('final')?1:0);
   assert.equal(msg.querySelectorAll('.question-coverage').length,msg.classList.contains('final')?1:0);
  }
@@ -257,8 +259,8 @@ test('the home reply stays focused while detailed examples remain available',()=
  assert(!first.querySelector('.assistant:not(.final)'));
  assert(home.querySelector('.assistant:not(.final)'));
  const groups=[...home.querySelectorAll('.example-group h3')].map(x=>x.textContent);
- assert.equal(groups[0],'Everyday Replies');
- assert.equal(groups.at(-1),'The Instructions Behind the Replies');
+ assert.equal(groups[0],'Reading the Reply');
+ assert.equal(groups.at(-1),'Deeper Details and Handoffs');
  assert(home.querySelectorAll('.final').length>=18);
  assert(home.querySelector('#home-saved'));assert(home.querySelector('#home-batching'));
  assert(!home.querySelector('.conversation'),'The gallery stays in one scrollable conversation');
@@ -365,9 +367,24 @@ test('attention fingers close replies instead of joining the opening answer',()=
  }
  for(const msg of d.querySelectorAll('.msg.assistant.final')){
   const finger=[...msg.querySelectorAll('.mk')].find(x=>['👉','🫵','🖥️🫵'].includes(x.textContent));
-  assert(finger,'The final reply retains its attention cue');
+  if(!finger){assert(msg.classList.contains('brief-reply'),'Only the demonstrated brief answer omits a redundant takeaway');continue;}
   const following=[...msg.children].slice([...msg.children].indexOf(finger.closest('p,.sec'))+1);
   assert(!following.some(x=>x.matches('[data-kind],.sec,table,.quote')&&!x.textContent.startsWith('Models:')),'The finger closes the main content');
  }
+ dom.window.close();
+});
+
+// Variety should appear during the first few scrolls, on the subject the guide actually explains.
+test('the homepage introduces different reply structures on preferences and the connected setup',()=>{
+ const dom=demo(),d=dom.window.document,home=d.querySelector('#welcome');
+ const early=[...home.querySelectorAll('.assistant.final')].slice(0,7);
+ assert(early.some(x=>x.querySelector('table')),'Explain the status colours with a comparison');
+ assert(early.some(x=>x.querySelector('ul')),'Show concise bullet points early');
+ assert(early.some(x=>x.querySelector('pre code')),'Show the actual formatting syntax');
+ assert(home.querySelector('#home-pause + .assistant [data-kind="caution"]'));
+ assert(home.querySelector('.brief-reply')&&!home.querySelector('.brief-reply .mk + .mk'));
+ assert(home.querySelector('a[href="https://ethansk.github.io/AgentFlow/"]'));
+ assert(home.querySelector('a[href="https://ethansk.github.io/agentic-mouse/"]'));
+ assert(!home.textContent.includes('save the album'),'Keep unrelated music-saving examples out of the introductory conversation');
  dom.window.close();
 });
