@@ -6,8 +6,8 @@
 <meta name="description" content="A Codex skill for how replies are written: fixed emoji meanings, self-contained coloured highlights, your question above each answer and a local Markdown and code editor, shown as an example conversation.">
 <meta name="theme-color" content="#161616"><meta property="og:title" content="Response Preferences"><meta property="og:description" content="A Codex skill for how replies are written, shown as an example conversation."><meta property="og:type" content="website"><meta property="og:url" content="https://ethansk.github.io/response-preferences/">
 <link rel="canonical" href="https://ethansk.github.io/response-preferences/"><link rel="icon" href="./mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=20261027-blocker-emoji"><script defer src="./site.js?v=20261031-home-conversation"></script>
-<link rel="stylesheet" href="./window.css?v=setup-footer1"><script defer src="./window.js?v=20261031-home-conversation"></script>
+<link rel="stylesheet" href="./styles.css?v=20261027-blocker-emoji"><script defer src="./site.js?v=20261031-early-markers"></script>
+<link rel="stylesheet" href="./window.css?v=setup-footer1"><script defer src="./window.js?v=20261031-early-markers"></script>
 <link rel="stylesheet" href="./desktop.css?v=20261030-home-feed"><script defer src="./desktop-data.js?v=agentflow1"></script><script defer src="./desktop.js?v=2"></script>
 </head>
 <body>
@@ -23,6 +23,7 @@
 <li><a href="#format" data-chat="format">Read the response format<small>Direct answers, sections, skill use, install</small></a></li>
 <li><a href="#setup" data-chat="setup">Install and customise<small>Ask your agent or install manually</small></a></li>
 <li><a href="#files" data-chat="files">Files and message context<small>Try the viewer</small></a></li>
+<li><a href="#ethan-setup" data-chat="ethan-setup">Ethan’s setup<small>A small detour through the desk</small></a></li>
 <li><a class="chat-separator" href="#separator" data-chat="separator" aria-label="2-------------------- — Organise pinned chats">2--------------------</a></li>
 <li><a href="#export" data-chat="export">Export check<small>Starting a check, progress, success, caution, your action</small></a></li>
 <li><a href="#backup" data-chat="backup">Nightly backup<small>Failure, an actual bug, a blocker, trade-offs</small></a></li>
@@ -47,14 +48,33 @@
 <p data-kind="info"><button type="button" class="mk">👉</button><u>Choose the amount of detail you want to read.</u></p>
 <p class="topic-reminder">About: Response Preferences makes the important parts of a reply easier to find.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
 <p class="example-caption">A sample conversation about Response Preferences and Ethan’s setup. The scenarios adapt real chats; they are demonstrations, not live reports about your Mac. Keep scrolling: each reply has a different job.</p>
-<div class="example-group"><h3>Reading the Reply</h3><p>Colour, skim reading and a small settings change—different shapes from the start.</p></div>
+<div class="example-group"><h3>Reading the Reply</h3><p>Colour, a recording caution and a real formatting bug—then skim reading and settings.</p></div>
 <div class="msg user" id="home-colours"><span class="who">You</span><p>What do the colours actually tell me?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> Reading the fixed meanings of coloured highlights.</p></blockquote>
 <blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#fa9370">What</span> <span class="rq-chunk" style="color:#fab570">do</span> <span class="rq-chunk" style="color:#fad870">the</span> <span class="rq-chunk" style="color:#fafa70">colours</span> <span class="rq-chunk" style="color:#d8fa70">actually</span> <span class="rq-chunk" style="color:#b5fa70">tell</span> <span class="rq-chunk" style="color:#93fa70">me?</span></span></p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><u>The colour tells you why a short passage matters</u>. The rainbow above it identifies your question; it is separate from these status colours.</p>
-<table class="tbl"><thead><tr><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Useful information</td><td><span class="c-cyan"><u>Underlines carry the main points.</u></span></td></tr><tr><td>Confirmed result</td><td><span class="c-green"><u>The reminder setting is saved.</u></span></td></tr><tr><td>A caution</td><td><span class="c-orange"><u>The running app still needs a restart.</u></span></td></tr><tr><td>A critical problem</td><td><span class="c-red"><u>Earlier dictated words were lost.</u></span></td></tr></tbody></table><p data-kind="other"><button type="button" class="mk">👉</button><u>Colour follows the meaning</u>; it is not decoration.</p>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><u>The colour tells you why a short passage matters</u>. </p>
+<table class="tbl"><thead><tr><th scope="col">Meaning</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Useful information</td><td><span class="c-cyan"><u>Underlines carry the main points.</u></span></td></tr><tr><td>Confirmed result</td><td><span class="c-green"><u>The reminder setting is saved.</u></span></td></tr><tr><td>A caution</td><td><span class="c-orange"><u>The running app still needs a restart.</u></span></td></tr><tr><td>A critical problem</td><td><span class="c-red"><u>Earlier dictated words were lost.</u></span></td></tr></tbody></table>
+<p data-kind="info"><button type="button" class="mk">ⓘ</button><u>The rainbow repeats your question</u>. Its colours do not carry the status meanings in this table.</p><p data-kind="other"><button type="button" class="mk">👉</button><u>Colour follows the meaning</u>; it is not decoration.</p>
 <p class="topic-reminder">About: reading colours. Information, success, cautions and critical problems have different meanings.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
+<div class="msg user" id="home-pause"><span class="who">You</span><p>I’m recording in Agent Flow. Will the reminder interrupt?</p></div>
+<div class="msg assistant final"><span class="who">Assistant</span>
+<blockquote class="quote annotation-context"><p><strong>In response to:</strong> Agent Flow is the dictation app; speech should not be picked up by its microphone.</p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#d8fa70">I’m</span> <span class="rq-chunk" style="color:#b5fa70">recording</span> <span class="rq-chunk" style="color:#93fa70">in</span> <span class="rq-chunk" style="color:#70fa70">Agent</span> <span class="rq-chunk" style="color:#70fa93">Flow.</span> <span class="rq-chunk" style="color:#70fab5">Will</span> <span class="rq-chunk" style="color:#70fad8">the</span> <span class="rq-chunk" style="color:#70fafa">reminder</span> <span class="rq-chunk" style="color:#70d8fa">interrupt?</span></span></p></blockquote>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><span class="c-cyan"><u>The notification can appear while speech is skipped.</u></span></p>
+<div class="sec" data-kind="caution"><button type="button" class="mk">⚠️</button><p class="c-orange"><strong><u>This reminder will not be spoken</u></strong></p><ul><li><u>Active voice recording blocks the spoken reminder</u>.</li><li>It is skipped immediately, <u>without waiting or replaying it later</u>.</li><li>Typing without recording voice does not block speech.</li></ul>
+</div>
+<p data-kind="other"><button type="button" class="mk">👉</button><u>Keep dictating; read the written notification when ready</u>.</p>
+<p class="topic-reminder">About: reminders during Agent Flow recording. Written notifications remain available; blocked speech is skipped.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
+<div class="msg user" id="home-latex"><span class="who">You</span><p>Why did that underlined percentage turn red?</p></div>
+<div class="msg assistant final"><span class="who">Assistant</span>
+<blockquote class="quote annotation-context"><p><strong>In response to:</strong> A percentage inside an underlined phrase appeared as red formatting commands.</p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#b5fa70">Why</span> <span class="rq-chunk" style="color:#93fa70">did</span> <span class="rq-chunk" style="color:#70fa70">that</span> <span class="rq-chunk" style="color:#70fa93">underlined</span> <span class="rq-chunk" style="color:#70fab5">percentage</span> <span class="rq-chunk" style="color:#70fad8">turn</span> <span class="rq-chunk" style="color:#70fafa">red?</span></span></p></blockquote>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><u>The bare percent sign broke the expression</u>. In LaTeX, it hides the rest of that line, including the closing braces.</p>
+<pre><code>Incorrect: \(\underline{\textsf{80% volume}}\)
+Correct:   \(\underline{\textsf{80\% volume}}\)</code></pre><p data-kind="problem"><button type="button" class="mk">🐞</button><u>This is a syntax error</u>, not evidence that sans-serif and underlining cannot be combined.</p>
+<p data-kind="other"><button type="button" class="mk">👉</button><u>Escape the percent sign and keep the intended formatting</u>.</p>
+<p class="topic-reminder">About: the red percentage. A bare percent sign can hide the closing syntax.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
 <div class="msg user" id="home-underline"><span class="who">You</span><p>Can I understand it by reading only the underlined bits?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> Ethan sometimes reads just the underlines, and reads the rest for more detail.</p></blockquote>
@@ -84,24 +104,6 @@
 <p data-kind="success"><button type="button" class="mk">🖥️</button><span class="c-green"><u>Test playback passed on the laptop speaker.</u></span> The external speaker was not part of this check.</p>
 <p data-kind="other"><button type="button" class="mk">👉</button><u>Laptop playback is checked</u>; speaker loudness is a separate check.</p>
 <p class="topic-reminder">About: the sample reminder check. Automated settings checks and laptop playback passed.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
-<div class="msg user" id="home-pause"><span class="who">You</span><p>I’m recording in Agent Flow. Will the reminder interrupt?</p></div>
-<div class="msg assistant final"><span class="who">Assistant</span>
-<blockquote class="quote annotation-context"><p><strong>In response to:</strong> Agent Flow is the dictation app; speech should not be picked up by its microphone.</p></blockquote>
-<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#d8fa70">I’m</span> <span class="rq-chunk" style="color:#b5fa70">recording</span> <span class="rq-chunk" style="color:#93fa70">in</span> <span class="rq-chunk" style="color:#70fa70">Agent</span> <span class="rq-chunk" style="color:#70fa93">Flow.</span> <span class="rq-chunk" style="color:#70fab5">Will</span> <span class="rq-chunk" style="color:#70fad8">the</span> <span class="rq-chunk" style="color:#70fafa">reminder</span> <span class="rq-chunk" style="color:#70d8fa">interrupt?</span></span></p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><span class="c-cyan"><u>The notification can appear while speech is skipped.</u></span></p>
-<div class="sec" data-kind="caution"><button type="button" class="mk">⚠️</button><p class="c-orange"><strong><u>This reminder will not be spoken</u></strong></p><ul><li><u>Active voice recording blocks the spoken reminder</u>.</li><li>It is skipped immediately, <u>without waiting or replaying it later</u>.</li><li>Typing without recording voice does not block speech.</li></ul>
-</div>
-<p data-kind="other"><button type="button" class="mk">👉</button><u>Keep dictating; read the written notification when ready</u>.</p>
-<p class="topic-reminder">About: reminders during Agent Flow recording. Written notifications remain available; blocked speech is skipped.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
-<div class="msg user" id="home-latex"><span class="who">You</span><p>Why did that underlined percentage turn red?</p></div>
-<div class="msg assistant final"><span class="who">Assistant</span>
-<blockquote class="quote annotation-context"><p><strong>In response to:</strong> A percentage inside an underlined phrase appeared as red formatting commands.</p></blockquote>
-<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#b5fa70">Why</span> <span class="rq-chunk" style="color:#93fa70">did</span> <span class="rq-chunk" style="color:#70fa70">that</span> <span class="rq-chunk" style="color:#70fa93">underlined</span> <span class="rq-chunk" style="color:#70fab5">percentage</span> <span class="rq-chunk" style="color:#70fad8">turn</span> <span class="rq-chunk" style="color:#70fafa">red?</span></span></p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><u>The bare percent sign broke the expression</u>. In LaTeX, it hides the rest of that line, including the closing braces.</p>
-<pre><code>Incorrect: \(\underline{\textsf{80% volume}}\)
-Correct:   \(\underline{\textsf{80\% volume}}\)</code></pre><p data-kind="problem"><button type="button" class="mk">🐞</button><u>This is a syntax error</u>, not evidence that sans-serif and underlining cannot be combined.</p>
-<p data-kind="other"><button type="button" class="mk">👉</button><u>Escape the percent sign and keep the intended formatting</u>.</p>
-<p class="topic-reminder">About: the red percentage. A bare percent sign can hide the closing syntax.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
 <div class="msg user" id="home-batching"><span class="who">You</span><p>Should bold text be underlined? And can it stay sans-serif?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> Underlining important bold words so they remain useful scanning cues.</p></blockquote>
@@ -236,6 +238,23 @@ Correct:   \(\underline{\textsf{80\% volume}}\)</code></pre><p data-kind="proble
 <p data-kind="info"><button type="button" class="mk">ⓘ</button><u>Attached response annotations</u> have a <u>native Codex hover</u> showing the selected text and your comment. Their <u>annotation reference</u> needs an actual attached annotation; it <u>cannot hold arbitrary message text</u>, so no fake path is needed for the same annotation.</p>
 <p data-kind="info"><button type="button" class="mk">ⓘ</button>The <u>ordinary-message hover fallback</u> uses original message text as a <u>deliberately fake destination</u>. It <u>shows text on hover and does not open a file</u>; the examples below use an explicitly named message viewer. A rainbow question does not need an extra arrow link.</p><p data-kind="info"><button type="button" class="mk">ⓘ</button>A <u>hover popup cannot show images</u>. Keep a separate real context file for attachments; <u>private source text and embedded images stay private</u>. <u>Public examples</u> on this site use <u>synthetic content</u>.</p><div class="guide-actions"><a href="./message.html?v=20260914" data-file="message.md · Your message">Open an example message ↗</a></div><p data-kind="other"><button type="button" class="mk">👉</button><u>A message viewer keeps the full text and images together</u>.</p>
 <p class="topic-reminder">About: recovering message context. Use native annotation hovers when available, or a message viewer for text and images.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div></section>
+<section class="conversation" id="ethan-setup" data-title="Ethan’s setup" aria-labelledby="ethan-setup-h"><h2 class="conv-title" id="ethan-setup-h">Ethan’s setup</h2>
+<div class="msg user" id="desk-u1"><span class="who">You</span><p>Wait, is there a whole setup behind this?</p></div><div class="msg assistant final"><span class="who">Assistant</span>
+<blockquote class="quote annotation-context"><p><strong>In response to:</strong> How Response Preferences connects to the rest of Ethan’s tools.</p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#d8fa70">Wait,</span> <span class="rq-chunk" style="color:#b5fa70">is</span> <span class="rq-chunk" style="color:#93fa70">there</span> <span class="rq-chunk" style="color:#70fa70">a</span> <span class="rq-chunk" style="color:#70fa93">whole</span> <span class="rq-chunk" style="color:#70fab5">setup</span> <span class="rq-chunk" style="color:#70fad8">behind</span> <span class="rq-chunk" style="color:#70fafa">this?</span></span></p></blockquote>
+<p data-kind="answer"><button type="button" class="mk">⮑</button>Yes—<u>Response Preferences is one part of the setup</u>. The other tools handle dictation, mouse controls, code review and the desktop.</p>
+<p data-kind="info"><button type="button" class="mk">ⓘ</button><u>The desktop around this conversation works too</u>. The Dock icons open app websites, and the menu-bar icons lead to Menu Bar Dock.</p>
+<details class="desk-easter-egg"><summary>One more thing…</summary><p><u>You found the rest of the desk.</u> The <a href="https://ethansk.github.io/ethan-setup/">setup website</a> shows the room, the controls and the tools that connect them. Try the mouse and wand there.</p></details>
+<p data-kind="other"><button type="button" class="mk">👉</button><u>Take the detour through the desk</u>: <a href="https://ethansk.github.io/ethan-setup/">Ethan’s setup</a>.</p>
+<p class="topic-reminder">About: the setup behind the skill. The demo’s desktop leads to the connected tools.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
+<div class="msg user" id="desk-u2"><span class="who">You</span><p>Where are all the project links?</p></div><div class="msg assistant final"><span class="who">Assistant</span>
+<blockquote class="quote annotation-context"><p><strong>In response to:</strong> The public project directory maintained by Ethan’s setup.</p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#b5fa70">Where</span> <span class="rq-chunk" style="color:#93fa70">are</span> <span class="rq-chunk" style="color:#70fa70">all</span> <span class="rq-chunk" style="color:#70fa93">the</span> <span class="rq-chunk" style="color:#70fab5">project</span> <span class="rq-chunk" style="color:#70fad8">links?</span></span></p></blockquote>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><u>The public project directory is below</u>, loaded from Ethan’s setup when this page opens.</p>
+<p id="setup-project-status" role="status">Loading project links…</p><ul id="setup-project-links" aria-label="Ethan’s public projects"></ul>
+<p data-kind="other"><button type="button" class="mk">👉</button><u>The complete setup also includes hardware and apps</u>: <a href="https://ethansk.github.io/ethan-setup/">Everything in Ethan’s setup</a>.</p>
+<p class="topic-reminder">About: the public project directory. Project links come from the same list as Ethan’s setup.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
+</section>
 <section class="conversation" id="export" data-title="Export check" aria-labelledby="export-h">
 <h2 class="conv-title" id="export-h">Export check</h2>
 <div class="msg user" id="export-u1"><span class="who">You</span><p>Can you check the export and tell me what I need to do?</p></div>
