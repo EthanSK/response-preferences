@@ -3,8 +3,9 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-function demo(mobile=false){
+function demo(mobile=false,projectFetch){
  const dom=new JSDOM(readFileSync('docs/index.html','utf8'),{url:'https://example.test/',runScripts:'outside-only'});
+ dom.window.fetch=projectFetch||(()=>Promise.resolve({ok:true,json:()=>Promise.resolve([{name:'Agent Flow',url:'https://ethansk.github.io/AgentFlow/'},{name:'Agentic Mouse',url:'https://ethansk.github.io/agentic-mouse/'}])}));
  const queries=new Map();dom.window.matchMedia=q=>{
   if(!queries.has(q))queries.set(q,{matches:/(900|1150)px/.test(q)&&mobile,listeners:[],addEventListener(_,fn){this.listeners.push(fn);}});
   return queries.get(q);
@@ -209,7 +210,7 @@ test('compact layouts dismiss the details card on resize and after choosing a de
 
 test('the welcome route leads through all conversations including the separator and returns from install details',()=>{
  const dom=demo(),d=dom.window.document;assert.equal(d.querySelector('.conversation.active').id,'welcome');
- assert.equal(d.querySelectorAll('.chat-list [data-chat]').length,7);
+ assert.equal(d.querySelectorAll('.chat-list [data-chat]').length,8);
  for(const link of d.querySelectorAll('.chat-list [data-chat]'))assert(d.getElementById(link.dataset.chat));
  d.querySelector('[data-chat="separator"]').click();assert.equal(d.querySelector('.conversation.active').id,'separator');
  assert.equal(d.querySelector('[data-chat="separator"]').getAttribute('aria-current'),'page');
@@ -386,5 +387,35 @@ test('the homepage introduces different reply structures on preferences and the 
  assert(home.querySelector('a[href="https://ethansk.github.io/AgentFlow/"]'));
  assert(home.querySelector('a[href="https://ethansk.github.io/agentic-mouse/"]'));
  assert(!home.textContent.includes('save the album'),'Keep unrelated music-saving examples out of the introductory conversation');
+ dom.window.close();
+});
+
+// Meaningful markers should appear while the introduction is still fresh, without changing the first reply.
+test('information, caution and bug markers appear within the first four homepage replies',()=>{
+ const dom=demo(),d=dom.window.document,early=[...d.querySelectorAll('#welcome .assistant.final')].slice(0,4);
+ assert.equal(early[0].querySelectorAll('.mk').length,2);
+ const symbols=new Set(early.flatMap(x=>[...x.querySelectorAll('.mk')].map(m=>m.textContent)));
+ for(const symbol of ['ⓘ','⚠️','🐞'])assert(symbols.has(symbol),'Show the meaning early: '+symbol);
+ dom.window.close();
+});
+test('the separate setup conversation has a desk detour and live canonical project links',async()=>{
+ const dom=demo(),d=dom.window.document;
+ await new Promise(resolve=>setImmediate(resolve));
+ d.querySelector('.chat-list [data-chat="ethan-setup"]').click();
+ assert(d.querySelector('#ethan-setup').classList.contains('active'));
+ assert(d.querySelector('.suggested-questions a[href="#ethan-setup"]'));
+ assert(d.querySelector('.desk-easter-egg summary').textContent.includes('One more thing'));
+ assert(d.querySelector('.desk-easter-egg a[href="https://ethansk.github.io/ethan-setup/"]'));
+ const links=[...d.querySelectorAll('#setup-project-links a')];
+ assert.deepEqual(links.map(x=>x.textContent),['Agent Flow','Agentic Mouse']);
+ assert.equal(d.querySelector('#setup-project-status').hidden,true);
+ dom.window.close();
+});
+test('an unavailable project directory keeps the setup destination accessible',async()=>{
+ const dom=demo(false,()=>Promise.reject(new Error('offline'))),d=dom.window.document;
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(d.querySelector('#setup-project-status').hidden,false);
+ assert.match(d.querySelector('#setup-project-status').textContent,/setup website has the full list/);
+ assert(d.querySelector('#ethan-setup a[href="https://ethansk.github.io/ethan-setup/"]'));
  dom.window.close();
 });

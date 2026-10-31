@@ -1,3 +1,4 @@
+/* Route the example chats, explain their markers and open source files. Loaded by index.html. */
 (()=>{
 'use strict';
 const d=document;d.documentElement.classList.add('js');
@@ -67,5 +68,31 @@ d.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(app.classList.con
 $('#copy-install').addEventListener('click',async()=>{const s=$('#copy-status');try{await navigator.clipboard.writeText('git clone https://github.com/EthanSK/response-preferences.git ~/.codex/skills/response-preferences');s.textContent='Command copied.';}catch{s.textContent='Could not copy. Select the command above instead.';}});
 mobile.addEventListener('change',()=>{const blocked=mobile.matches&&app.classList.contains('pane-open');side.inert=blocked;$('#thread').inert=blocked;});
 addEventListener('hashchange',route);
+
+// Use the setup site's own public directory, so this detour does not become another hand-maintained catalogue.
+async function loadSetupProjects(){
+ const list=$('#setup-project-links'),status=$('#setup-project-status');
+ if(!list||!status)return;
+ try{
+  const response=await fetch('https://ethansk.github.io/ethan-setup/projects.json');
+  if(!response.ok)throw new Error('Project directory unavailable');
+  const projects=await response.json();
+  if(!Array.isArray(projects))throw new Error('Invalid project directory');
+  const links=[];
+  for(const project of projects){
+   if(!project||typeof project.name!=='string'||typeof project.url!=='string')continue;
+   const url=new URL(project.url);
+   if(url.protocol!=='https:')continue;
+   const item=d.createElement('li'),link=d.createElement('a');
+   link.textContent=project.name;link.href=url.href;item.append(link);links.push(item);
+  }
+  if(!links.length)throw new Error('Empty project directory');
+  list.replaceChildren(...links);status.textContent='';status.hidden=true;
+ }catch{
+  status.textContent='Project links are unavailable here. The setup website has the full list.';
+ }
+}
+loadSetupProjects();
+
 showChat('welcome');route();
 })();
