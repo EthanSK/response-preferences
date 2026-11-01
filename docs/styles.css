@@ -41,3 +41,12 @@ details{font-size:12.5px;color:var(--muted);margin:0 0 10px}summary{cursor:point
 /* Match the separately wrapping native quote expressions, preserving selection. */
 .rainbow-quote .rq-chunk{display:inline-block}
 @media (forced-colors:active){.rainbow-quote .rq-chunk{color:CanvasText!important}}
+
+/* A divider separates distinct answers within one reply. Its margin is larger than the paragraph spacing it meets
+   (20px in window.css), so the collapsed gaps above and below the line stay equal; Ethan wants an even visible gap on
+   both sides of dividers. The default browser rule was bright and sat closer to the next answer than the previous one. */
+.msg.assistant>hr{border:0;border-top:1px solid #5a5a5a;height:0;margin:24px 0}
+
+/* Text the person selected in an earlier reply, quoted inside their own message before the question about it. */
+.msg.user .user-selection{margin:10px 0 4px;padding:0 0 0 10px;border-left:2px solid #5a5a5a;color:var(--muted);font-size:.92em}
+.msg.user>.user-selection:first-of-type{margin-top:0}.msg.user>p+p{margin-top:6px}

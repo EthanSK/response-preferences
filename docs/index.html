@@ -6,7 +6,7 @@
 <meta name="description" content="A Codex skill for how replies are written: fixed emoji meanings, self-contained coloured highlights, your question above each answer and a local Markdown and code editor, shown as an example conversation.">
 <meta name="theme-color" content="#161616"><meta property="og:title" content="Response Preferences"><meta property="og:description" content="A Codex skill for how replies are written, shown as an example conversation."><meta property="og:type" content="website"><meta property="og:url" content="https://ethansk.github.io/response-preferences/">
 <link rel="canonical" href="https://ethansk.github.io/response-preferences/"><link rel="icon" href="./mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./styles.css?v=20261027-blocker-emoji"><script defer src="./site.js?v=20261031-early-markers"></script>
+<link rel="stylesheet" href="./styles.css?v=20261101-dividers"><script defer src="./site.js?v=20261031-early-markers"></script>
 <link rel="stylesheet" href="./window.css?v=setup-footer1"><script defer src="./window.js?v=20261031-early-markers"></script>
 <link rel="stylesheet" href="./desktop.css?v=20261030-home-feed"><script defer src="./desktop-data.js?v=agentflow1"></script><script defer src="./desktop.js?v=2"></script>
 </head>
@@ -48,7 +48,7 @@
 <p data-kind="info"><button type="button" class="mk">👉</button><u>Choose the amount of detail you want to read.</u></p>
 <p class="topic-reminder">About: Response Preferences makes the important parts of a reply easier to find.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
 <p class="example-caption">A sample conversation about Response Preferences and Ethan’s setup. The scenarios adapt real chats; they are demonstrations, not live reports about your Mac. Keep scrolling: each reply has a different job.</p>
-<div class="example-group"><h3>Reading the Reply</h3><p>Colour, a recording caution and a real formatting bug—then skim reading and settings.</p></div>
+<div class="example-group"><h3>Reading the Reply</h3><p>Colour, a recording caution and three follow-ups in one reply—then skim reading and settings.</p></div>
 <div class="msg user" id="home-colours"><span class="who">You</span><p>What do the colours actually tell me?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> Reading the fixed meanings of coloured highlights.</p></blockquote>
@@ -66,29 +66,44 @@
 </div>
 <p data-kind="other"><button type="button" class="mk">👉</button><u>Keep dictating; read the written notification when ready</u>.</p>
 <p class="topic-reminder">About: reminders during Agent Flow recording. Written notifications remain available; blocked speech is skipped.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
-<div class="msg user" id="home-latex"><span class="who">You</span><p>Why did that underlined percentage turn red?</p></div>
+<!-- Several distinct follow-ups in one message get separate answers with dividers between them. Ethan asked to see this by
+     the third or fourth reply so the homepage does not repeat one reply shape (2026-11-01). The quoted selections show the
+     earlier text each follow-up refers to, as Agent Flow sends it. -->
+<div class="msg user" id="home-latex"><span class="who">You</span><blockquote class="user-selection"><p>Earlier dictated words were lost.</p></blockquote><p>Does red always mean something broke?</p><blockquote class="user-selection"><p>It is skipped immediately, without waiting or replaying it later.</p></blockquote><p>Can it just wait until I stop recording?</p><p>Also, why did that underlined percentage turn red?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
+<blockquote class="quote annotation-context"><p><strong>In response to:</strong> The colours reply showed lost dictated words as a red critical problem.</p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#b5fa70">Does</span> <span class="rq-chunk" style="color:#93fa70">red</span> <span class="rq-chunk" style="color:#70fa70">always</span> <span class="rq-chunk" style="color:#70fa93">mean</span> <span class="rq-chunk" style="color:#70fab5">something</span> <span class="rq-chunk" style="color:#70fad8">broke?</span></span></p></blockquote>
+<p data-kind="answer"><button type="button" class="mk">⮑</button>No—<u>red marks information you must read</u>, <u>not only failures</u>. A warning can be red before anything goes wrong:</p>
+<p><span class="c-red"><u>Quitting now discards your unsent dictation.</u></span></p>
+<hr>
+<blockquote class="quote annotation-context"><p><strong>In response to:</strong> The recording reply said a blocked spoken reminder is skipped, not replayed later.</p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#93fa70">Can</span> <span class="rq-chunk" style="color:#70fa70">it</span> <span class="rq-chunk" style="color:#70fa93">just</span> <span class="rq-chunk" style="color:#70fab5">wait</span> <span class="rq-chunk" style="color:#70fad8">until</span> <span class="rq-chunk" style="color:#70fafa">I</span> <span class="rq-chunk" style="color:#70d8fa">stop</span> <span class="rq-chunk" style="color:#70b5fa">recording?</span></span></p></blockquote>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><u>Not at the moment</u>: a reminder blocked by recording is <u>skipped, not queued</u>.</p>
+<p data-kind="other"><button type="button" class="mk">⚖️</button><u>Waiting would keep every reminder</u>, but one could <u>speak long after its reply mattered</u> or <u>interrupt your next recording</u>.</p>
+<hr>
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> A percentage inside an underlined phrase appeared as red formatting commands.</p></blockquote>
-<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#b5fa70">Why</span> <span class="rq-chunk" style="color:#93fa70">did</span> <span class="rq-chunk" style="color:#70fa70">that</span> <span class="rq-chunk" style="color:#70fa93">underlined</span> <span class="rq-chunk" style="color:#70fab5">percentage</span> <span class="rq-chunk" style="color:#70fad8">turn</span> <span class="rq-chunk" style="color:#70fafa">red?</span></span></p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#70fa70">Why</span> <span class="rq-chunk" style="color:#70fa93">did</span> <span class="rq-chunk" style="color:#70fab5">that</span> <span class="rq-chunk" style="color:#70fad8">underlined</span> <span class="rq-chunk" style="color:#70fafa">percentage</span> <span class="rq-chunk" style="color:#70d8fa">turn</span> <span class="rq-chunk" style="color:#70b5fa">red?</span></span></p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button><u>The bare percent sign broke the expression</u>. In LaTeX, it hides the rest of that line, including the closing braces.</p>
 <pre><code>Incorrect: \(\underline{\textsf{80% volume}}\)
 Correct:   \(\underline{\textsf{80\% volume}}\)</code></pre><p data-kind="problem"><button type="button" class="mk">🐞</button><u>This is a syntax error</u>, not evidence that sans-serif and underlining cannot be combined.</p>
-<p data-kind="other"><button type="button" class="mk">👉</button><u>Escape the percent sign and keep the intended formatting</u>.</p>
-<p class="topic-reminder">About: the red percentage. A bare percent sign can hide the closing syntax.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
+<p data-kind="action"><button type="button" class="mk">🫵</button><u>Choose if blocked reminders should wait</u> until recording stops; until then, <u>they stay skipped</u>.</p>
+<p class="topic-reminder">About: three follow-ups. Red means must-read, blocked speech is skipped, and a bare percent broke the syntax.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 3/3 requests and steers addressed.</p></div>
 <div class="msg user" id="home-underline"><span class="who">You</span><p>Can I understand it by reading only the underlined bits?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> Ethan sometimes reads just the underlines, and reads the rest for more detail.</p></blockquote>
 <blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#fab570">Can</span> <span class="rq-chunk" style="color:#fad870">I</span> <span class="rq-chunk" style="color:#fafa70">understand</span> <span class="rq-chunk" style="color:#d8fa70">it</span> <span class="rq-chunk" style="color:#b5fa70">by</span> <span class="rq-chunk" style="color:#93fa70">reading</span> <span class="rq-chunk" style="color:#70fa70">only</span> <span class="rq-chunk" style="color:#70fa93">the</span> <span class="rq-chunk" style="color:#70fab5">underlined</span> <span class="rq-chunk" style="color:#70fad8">bits?</span></span></p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button>Yes—<u>the selected phrases should read as a connected explanation</u>, keeping useful verbs, negatives and conditions.</p>
-<p>A weak clue: <u>notifications</u>.</p><p>A useful clue: <u>Notifications still appear while speech is skipped</u>.</p><ul><li><u>The underlines explain what matters</u>, including what did not happen.</li><li>The surrounding text adds detail when you want a closer read.</li></ul>
-<p data-kind="other"><button type="button" class="mk">👉</button><u>Choose meaningful phrases, with no quota per sentence</u>.</p>
+<p>Read only the underlines here: <u>notifications still appear</u> while <u>spoken reminders are skipped</u>, but <u>only during recording</u>.</p>
+<p data-kind="info"><button type="button" class="mk">ⓘ</button><span class="c-cyan"><u>Single-word cues lose the result.</u></span> Underlining just <u>notifications</u>, <u>reminders</u> and <u>recording</u> names the subjects without saying what happened.</p>
+<p data-kind="other"><button type="button" class="mk">👉</button><u>Good underlines still explain the result when read alone</u>, with no quota per sentence.</p>
 <p class="topic-reminder">About: skim reading. Underlines should preserve the explanation, not just name its subjects.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
 <div class="msg user" id="home-saved"><span class="who">You</span><p>Make the spoken reminders a little quieter.</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> Reducing spoken-reminder volume without changing music playback.</p></blockquote>
 <blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#fad870">Make</span> <span class="rq-chunk" style="color:#fafa70">the</span> <span class="rq-chunk" style="color:#d8fa70">spoken</span> <span class="rq-chunk" style="color:#b5fa70">reminders</span> <span class="rq-chunk" style="color:#93fa70">a</span> <span class="rq-chunk" style="color:#70fa70">little</span> <span class="rq-chunk" style="color:#70fa93">quieter.</span></span></p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><span class="c-green"><u>Reminders now play at 80% of their previous level.</u></span></p>
-<ul><li><u>The playback volume changed</u>; the voice and speaking pace stay the same.</li><li>The quieter late-night and speaker-specific settings still apply.</li></ul>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><span class="c-cyan"><u>Spoken reminders now play at 80% of their previous level.</u></span></p>
+<ul><li><u>Only the playback volume changed</u>; the voice and speaking pace stay the same.</li><li>The quieter late-night and speaker-specific settings still apply.</li></ul>
+<p data-kind="success"><button type="button" class="mk">✅</button><span class="c-green"><u>The quieter setting is saved.</u></span></p>
 <p data-kind="other"><button type="button" class="mk">👉</button><u>The change is to spoken reminders</u>, not your Mac’s music volume.</p>
 <p class="topic-reminder">About: the sample volume change. Reminders are quieter; other audio keeps its level.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
 <div class="example-group"><h3>While the Agent Works</h3><p>Progress stays small. Finished replies show the result, evidence and any real next action.</p></div>
@@ -106,14 +121,14 @@ Correct:   \(\underline{\textsf{80\% volume}}\)</code></pre><p data-kind="proble
 <p class="topic-reminder">About: the sample reminder check. Automated settings checks and laptop playback passed.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
 <div class="msg user" id="home-batching"><span class="who">You</span><p>Should bold text be underlined? And can it stay sans-serif?</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
-<blockquote class="quote annotation-context"><p><strong>In response to:</strong> Underlining important bold words so they remain useful scanning cues.</p></blockquote>
-<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#70fa70">Should</span> <span class="rq-chunk" style="color:#70fa93">bold</span> <span class="rq-chunk" style="color:#70fab5">text</span> <span class="rq-chunk" style="color:#70fad8">be</span> <span class="rq-chunk" style="color:#70fafa">underlined?</span></span></p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><u>Important bold wording gets underlined on the same words</u>. Bold alone is not the scanning cue.</p>
-<hr><blockquote class="quote annotation-context"><p><strong>In response to:</strong> Keeping the font inside a short underline, without an extra paragraph wrapper.</p></blockquote>
-<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#93fa70">Can</span> <span class="rq-chunk" style="color:#70fa70">underlined</span> <span class="rq-chunk" style="color:#70fa93">words</span> <span class="rq-chunk" style="color:#70fab5">stay</span> <span class="rq-chunk" style="color:#70fad8">sans-serif?</span></span></p></blockquote>
-<p data-kind="answer"><button type="button" class="mk">⮑</button><u>Yes—the short underline keeps its sans-serif font</u>. It does not need another wrapper around the whole paragraph.</p>
+<!-- Closely related questions can share one quote and one answer; this contrasts with the separate answers and dividers in
+     the earlier three-part reply. -->
+<blockquote class="quote annotation-context"><p><strong>In response to:</strong> Two closely related questions about styling short underlined cues.</p></blockquote>
+<blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#70fa70">Should</span> <span class="rq-chunk" style="color:#70fa93">bold</span> <span class="rq-chunk" style="color:#70fab5">text</span> <span class="rq-chunk" style="color:#70fad8">be</span> <span class="rq-chunk" style="color:#70fafa">underlined?</span> <span class="rq-chunk" style="color:#70d8fa">And</span> <span class="rq-chunk" style="color:#70b5fa">can</span> <span class="rq-chunk" style="color:#7093fa">it</span> <span class="rq-chunk" style="color:#7070fa">stay</span> <span class="rq-chunk" style="color:#9370fa">sans-serif?</span></span></p></blockquote>
+<p data-kind="answer"><button type="button" class="mk">⮑</button><strong><u>Yes to both</u></strong>: important bold wording is underlined on the same words, and the short underline keeps its sans-serif font.</p>
+<p data-kind="info"><button type="button" class="mk">ⓘ</button><u>One answer covers both questions</u>, so they share one quote. <u>Separate questions get separate answers</u>, like the three follow-ups above.</p>
 <p data-kind="other"><button type="button" class="mk">👉</button><u>Keep the underline short so surrounding text can wrap</u>.</p>
-<p class="topic-reminder">About: bold and underlined text. Preserve scanning cues and the sans-serif font.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.</p></div>
+<p class="topic-reminder">About: bold and underlined text. One answer covers both styling questions.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.</p></div>
 <div class="example-group"><h3>Files and the Rest of the Setup</h3><p>Real file links, quiet answers and situations that need a different kind of reply.</p></div>
 <div class="msg user" id="home-files"><span class="who">You</span><p>Show me the instructions behind this style.</p></div>
 <div class="msg assistant final"><span class="who">Assistant</span>
@@ -168,7 +183,7 @@ Correct:   \(\underline{\textsf{80\% volume}}\)</code></pre><p data-kind="proble
 <blockquote class="quote annotation-context"><p><strong>In response to:</strong> Organising the remaining written-notification and speech checks.</p></blockquote>
 <blockquote class="quote"><p><span class="rainbow-quote"><span class="rq-chunk" style="color:#7093fa">How</span> <span class="rq-chunk" style="color:#7070fa">would</span> <span class="rq-chunk" style="color:#9370fa">you</span> <span class="rq-chunk" style="color:#b570fa">organise</span> <span class="rq-chunk" style="color:#d870fa">the</span> <span class="rq-chunk" style="color:#fa70fa">remaining</span> <span class="rq-chunk" style="color:#fa70d8">notification</span> <span class="rq-chunk" style="color:#fa70b5">checks?</span></span></p></blockquote>
 <p data-kind="answer"><button type="button" class="mk">⮑</button>I would <u>check written delivery separately from speech</u>, then test them together.</p>
-<div class="sec" data-kind="plan"><button type="button" class="mk">🛠️</button><p><strong><u>Proposed checks</u></strong></p><ul><li><u>Confirm the notification title matches the chat name</u>.</li><li>Check that the written banner appears while Agent Flow records.</li><li>After recording stops, test one new spoken reminder at the saved volume.</li></ul>
+<div class="sec" data-kind="plan"><button type="button" class="mk">🛠️</button><p><strong><u>Proposed order</u></strong></p><ol><li><u>Confirm the notification title matches the chat name</u>.</li><li>Check that the <u>written banner appears while Agent Flow records</u>.</li><li>After recording stops, <u>play one reminder and check both arrive</u>: the banner and the speech.</li></ol>
 </div>
 <p data-kind="other"><button type="button" class="mk">👉</button><u>This is a proposed plan</u>; it does not claim that the checks ran.</p>
 <p class="topic-reminder">About: the notification-check plan. Written banners and speech need separate evidence.</p><p class="question-coverage">Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.</p></div>
