@@ -398,6 +398,28 @@ test('information, caution and bug markers appear within the first four homepage
  for(const symbol of ['ⓘ','⚠️','🐞'])assert(symbols.has(symbol),'Show the meaning early: '+symbol);
  dom.window.close();
 });
+// Ethan asked to see a reply with several answers and dividers by the third or fourth homepage reply (2026-11-01).
+test('an early homepage reply separates several follow-ups with evenly spaced dividers',()=>{
+ const dom=demo(),d=dom.window.document,style=el=>dom.window.getComputedStyle(el);
+ const answersIn=msg=>[...msg.children].filter(x=>x.matches('[data-kind="answer"]'));
+ const reply=[...d.querySelectorAll('#welcome .assistant.final')].slice(0,4).find(x=>answersIn(x).length>=3);
+ assert(reply,'Show several separate answers by the fourth homepage reply');
+ const children=[...reply.children],answers=answersIn(reply),dividers=children.filter(x=>x.matches('hr'));
+ assert.equal(dividers.length,answers.length-1,'One divider between each pair of answer sections');
+ assert(children.indexOf(dividers[0])>children.indexOf(answers[0]),'No divider before the first answer');
+ for(const [index,answer] of answers.entries()){
+  const question=answer.previousElementSibling,context=question.previousElementSibling;
+  assert(question.querySelector('.rainbow-quote')&&context.matches('.annotation-context'),'Each answer keeps its own context and question');
+  if(index)assert(context.previousElementSibling.matches('hr'),'A divider starts each later section, never inside one');
+ }
+ for(const hr of dividers){
+  assert.equal(style(hr).marginTop,style(hr).marginBottom);
+  assert(parseFloat(style(hr).marginTop)>=parseFloat(style(hr.previousElementSibling).marginBottom),'The collapsed gap above the divider matches the gap below it');
+ }
+ const user=reply.previousElementSibling;
+ assert(user.matches('.msg.user')&&user.querySelectorAll('.user-selection').length>=2,'The follow-ups quote the earlier text they ask about');
+ dom.window.close();
+});
 test('the separate setup conversation has a desk detour and live canonical project links',async()=>{
  const dom=demo(),d=dom.window.document;
  await new Promise(resolve=>setImmediate(resolve));
