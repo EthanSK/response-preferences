@@ -1,6 +1,15 @@
-# Live Markdown and code viewer
+# Custom-viewer links and the live text viewer
 
-Read this when linking a file, maintaining the viewer or explaining file access.
+Read the startup checks before sharing any custom-viewer link. The remaining sections describe this skill's Markdown/code viewer, its maintenance and file access.
+
+## Check custom viewers before linking
+
+Ethan wants the agent to check that a custom viewer is running whenever it shares a link, and get the viewer server up and running if it is not. The purpose is a usable link now: checking only the source file left a 3D-model link refusing connections. User-requested — 2026-11-02.
+
+1. Identify the viewer that owns the URL and use its existing launch instructions or helper. The text viewer below, a project's 3D preview and the local video viewer may have different servers; one healthy viewer does not establish another's availability.
+2. Check the exact destination and its intended content now, including when reusing an older link. A listener or HTTP success for an empty application shell is insufficient. Check the required model, media or document data too; use the intended browser and inspect the rendered content when scripts or assets determine whether the result is usable.
+3. If it is down, start or resume that viewer's server yourself within the authorized task, preserving its existing content and access boundaries. Use its established service or a suitable detached process so it survives the command that launched it. Reuse a healthy server; do not kill an unrelated process to take its port, expose a private viewer publicly, or add a background monitor merely to keep checking it.
+4. After startup, verify the exact URL and intended artifact again before linking. Keep the service running for the user's handoff. If startup or verification cannot be completed, state the concrete failure instead of presenting the unavailable link as ready.
 
 ## Normal links read the original
 
