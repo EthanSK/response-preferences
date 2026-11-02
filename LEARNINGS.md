@@ -178,3 +178,8 @@ Markdown angle-wrapped link destinations still reject unescaped internal `<` and
 ## Website reply examples must match actual marker placement
 
 User correction — 2026-10-30: demo-only source jumps had accumulated after every rainbow reminder, with duplicate links and attention fingers beside older opening answers. Keep the normal answer arrow; put attention fingers with closing takeaways or next actions and actual context viewers in named body links. Compare the entire gallery, including older walkthroughs, with recent real replies. The website tests now check that questions carry no navigation links, answer rows have only their answer marker, and fingers close the main content. These checks cover the demonstrated structure, not model obedience.
+
+
+## Preserve operational clauses when moving dated rule notes
+
+User-requested — 2026-11-02: deduplicate the response guide without removing useful rules, reasons or examples. Several dated self-improvement notes had operational clauses after their incident evidence. Keep those clauses in the current core when moving the historical explanation into `references/rule-history.md`; match actual dated notes, not the literal `Self-improved — YYYY-MM-DD` template. A baseline-to-candidate preservation review caught both risks during editing. The final cleanup preserves the read schedule and style contract; smaller text alone does not prove faster replies or future model obedience.
