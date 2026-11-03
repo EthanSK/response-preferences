@@ -8,7 +8,7 @@ This is the fictional message used to introduce the website. The response below 
 
 Important bold wording also gets an underline on the same words. For example: \(\underline{\textsf{\textbf{Neither automatically wins}}}\). Bold alone is not a scanning cue; keep expressions short so the surrounding sentence wraps.
 
-Assume the reader will \(\underline{\textsf{skip text without underlining}}\). Put useful cues throughout substantial explanations and lists, so \(\underline{\textsf{the cues alone explain what matters}}\), including the result, alternatives, caveats and next action. The agent chooses the density; an underlined heading does not make a long unmarked explanation skimmable.
+Assume the reader will \(\underline{\textsf{skip text without underlining}}\). Put useful cues throughout substantial explanations and lists, so \(\underline{\textsf{the cues alone explain what matters}}\), including the result, alternatives, caveats and next action. Even a one-sentence wait update needs \(\underline{\textsf{a cue naming the wait or next action}}\). The agent chooses the density; an underlined heading does not make a long unmarked explanation skimmable.
 
 Prefer several small answers, each with its own visible rainbow question and enlarged answer arrow. Brief permission follow-ups during ongoing work keep this same context, question and answer structure. For example:
 
