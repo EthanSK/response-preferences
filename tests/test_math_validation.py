@@ -129,6 +129,10 @@ process.stdin.on('end', () => process.stdout.write(JSON.stringify(
         correct = broken.replace(r'once}},', r'once}}\),')
         self.assertIn('opening delimiter has no closing delimiter', ' '.join(math.check_math(broken)))
         self.assertEqual([], math.check_math(correct))
+        punctuation_broken = r'\(\underline{\textsf{We don’t need that helper now}}.'
+        punctuation_correct = r'\(\underline{\textsf{We don’t need that helper now}}\).'
+        self.assertIn('opening delimiter has no closing delimiter', ' '.join(math.check_math(punctuation_broken)))
+        self.assertEqual([], math.check_math(punctuation_correct))
 
     def test_sans_serif_and_underline_are_valid_when_fully_closed(self):
         valid = [r'\(\underline{\textsf{still pending}}\)',
