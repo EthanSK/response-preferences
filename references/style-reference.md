@@ -89,7 +89,7 @@ For compact coloured values, copy `\(\textsf{\color{#67e8f9}100\%}\)`. The colou
 
 ## Context above direct replies
 
-- Each distinct answer has its own visible rainbow question immediately above an enlarged ⮑. The fake-file hover link is optional extra context, not the main home for a question. Omit it when the visible question is enough; use it only when a longer original excerpt genuinely helps. Follow [the core context contract](../SKILL.md#visible-questions-first-optional-hover-context). User-requested — 2026-10-27.
+- Each distinct answer has its own visible rainbow question immediately above an enlarged ⮑. The fake-file hover link is optional extra context, not the main home for a question. Omit it when the visible question is enough; use it only when a longer original excerpt genuinely helps. Follow [the core context contract](../SKILL.md#visible-questions-above-answers-optional-hover-context). User-requested — 2026-10-27.
 
 - If referring to things you'll clarify later, do the clarification there and then; say “More clarification below” only when a later section adds detail. Explain the term and relevant limitation at first mention so each answer stands on its own, including every annotation answer and main or side chat reply. Before sending, read each answer without later sections and move any explanation needed to understand it beside the original statement. User request — 2026-10-04.
 
