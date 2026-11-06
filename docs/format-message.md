@@ -6,6 +6,8 @@ Can you make this easier to follow?
 
 This is the fictional message used to introduce the website. The response below it demonstrates the skill's own formatting.
 
+Put the brief, self-contained 👉 takeaway summary at the top of a final reply, before screenshots, question references and detailed answers. Include essential caveats. Keep 🫵 beside an actual next action near the end; About and question coverage still close the final reply.
+
 Important bold wording also gets an underline on the same words. For example: \(\underline{\textsf{\textbf{Neither automatically wins}}}\). Bold alone is not a scanning cue; keep expressions short so the surrounding sentence wraps.
 
 Assume the reader will \(\underline{\textsf{skip text without underlining}}\). Put useful cues throughout substantial explanations and lists, so \(\underline{\textsf{the cues alone explain what matters}}\), including the result, alternatives, caveats and next action. Even a one-sentence wait update needs \(\underline{\textsf{a cue naming the wait or next action}}\). The agent chooses the density; an underlined heading does not make a long unmarked explanation skimmable.

@@ -95,7 +95,7 @@ Any optional real-context link must point to the original-message viewer. Keep e
 
 ## Attention finger coverage
 
-Check that working commentary has no attention fingers. The final reply normally has one 🫵 at a real user action or one 👉 before its main self-contained takeaway; two are appropriate only for distinct important items. Quotations and code examples do not count. The checker defaults to final mode; use `--commentary` to require normal-size markers, an enlarged ⮑ direct answer and no fingers in work updates. Website checks cover both progress messages and final replies. Review the caret visually: smaller than the emoji and raised toward its vertical centre.
+Check that working commentary has no attention fingers. The final reply normally has one 🫵 at a real user action near the end or one 👉 with its brief self-contained takeaway summary at the top, before screenshots, question references and detailed answers; two are appropriate only for distinct important items. Retain essential caveats in the summary. Quotations and code examples do not count. The checker defaults to final mode; use `--commentary` to require normal-size markers, an enlarged ⮑ direct answer and no fingers in work updates. Website checks cover summary-first ordering, question/answer pairing, and final-only markers and footers. Review the caret visually: smaller than the emoji and raised toward its vertical centre.
 
 ## Context when scanning backwards
 

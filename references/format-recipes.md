@@ -56,7 +56,7 @@ These synthetic questions show the same word-by-word rhythm for short and longer
 | A saved/merged/deployed result | Green on the short confirmed outcome; ordinary details follow. |
 | Useful explanation of how it works | Cyan on a complete short clause; do not turn it green merely because the task is finished. |
 | Automated test result | 🧪 and ordinary text, with an explicit passed/failed/unverified status. |
-| Needs the user's next action / mainly a takeaway | Favour 🫵 / 👉 respectively, normally once and only in the final reply. |
+| Needs the user's next action / mainly a takeaway | Favour 🫵 near the end / 👉 with the summary at the top respectively, normally once and only in the final reply. |
 | One statement / several blocks | Inline marker / standalone marker plus the existing raised chevron. Keep ⮑ beside its answer in either case. |
 | Literal symbols in prose | Keep numbers and symbols visible. Short styled text uses the core symbol lookup: `10\%`, `\$500`, `C\#`, `sample\_tool`. Ordinary Markdown needs no TeX escape. Code, paths and exact quotes retain their own formatting. The quote helper escapes its short literals. |
 | Returning after hours | Final-only About: concrete subject, then one useful result or next step in short lavender chunks. |
@@ -64,13 +64,13 @@ These synthetic questions show the same word-by-word rhythm for short and longer
 For working and final replies, use `\(\underline{\textsf{short useful clue}}\)` for a short scanning cue. Keep its inner `\textsf` for the sans-serif font, but do not wrap the whole surrounding sentence or paragraph in another LaTeX expression for grouping. That extra wrapper did not give whole-line triple-click selection and can overflow. Keep normal-size markers in working updates. A selected non-underlined colour uses a separate sans-serif `\(\textsf{\color{#hex}Short fact.}\)` pattern; keep each expression below 64 visible characters and let surrounding Markdown wrap. User clarification — 2026-09-23.
 
 ```latex
+\(\huge\text{👉}\) The \(\underline{\textsf{quote keeps your wording}}\). Its colours identify the question being answered.
+
 \(\huge\text{✅}\) \(\textsf{\color{#22c55e}The change is saved.}\)
 
 \(\huge\text{ⓘ}\) \(\textsf{\color{#67e8f9}The quote shows your question.}\)
 
 \(\huge\text{🧪}\) The \(\underline{\textsf{formatter checks passed}}\), including `C#`, `54%` and `sample_tool`.
-
-\(\huge\text{👉}\) The \(\underline{\textsf{quote keeps your wording}}\). Its colours identify the question being answered.
 
 \(\textsf{\color{#b8a4d9}About: Rainbow question reminders.}\) \(\textsf{\color{#b8a4d9}Short highlights wrap around ordinary prose.}\)
 ```

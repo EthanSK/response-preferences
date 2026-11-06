@@ -361,17 +361,32 @@ test('the formatting attachment opens its actual public context document',()=>{
 });
 
 // Check the rendered demo structure, including old walkthroughs, not just the newest examples.
-test('attention fingers close replies instead of joining the opening answer',()=>{
+test('takeaway summaries lead replies while user actions close the main content',()=>{
  const dom=demo(),d=dom.window.document;
+ let summaries=0,actions=0;
  for(const answer of d.querySelectorAll('.conversation [data-kind="answer"]')){
   assert.deepEqual([...answer.querySelectorAll('.mk')].map(x=>x.textContent),['⮑']);
  }
  for(const msg of d.querySelectorAll('.msg.assistant.final')){
-  const finger=[...msg.querySelectorAll('.mk')].find(x=>['👉','🫵','🖥️🫵'].includes(x.textContent));
-  if(!finger){assert(msg.classList.contains('brief-reply'),'Only the demonstrated brief answer omits a redundant takeaway');continue;}
-  const following=[...msg.children].slice([...msg.children].indexOf(finger.closest('p,.sec'))+1);
-  assert(!following.some(x=>x.matches('[data-kind],.sec,table,.quote')&&!x.textContent.startsWith('Models:')),'The finger closes the main content');
+  const children=[...msg.children],fingers=[...msg.querySelectorAll('.mk')].filter(x=>['👉','🫵','🖥️🫵'].includes(x.textContent));
+  if(!fingers.length){assert(msg.classList.contains('brief-reply'),'Only the demonstrated brief answer omits a redundant takeaway');continue;}
+  for(const finger of fingers){
+   const section=finger.closest('p,.sec');
+   if(finger.textContent==='👉'){
+    summaries++;
+    assert.equal(section.tagName,'P');
+    assert(children[0].classList.contains('who'));
+    assert.equal(children[1],section,'Summary precedes screenshots, question references and details');
+   }else{
+    actions++;
+    for(const answer of msg.querySelectorAll('[data-kind="answer"]'))assert(children.indexOf(section)>children.indexOf(answer),'User action follows the detailed answers');
+    const following=children.slice(children.indexOf(section)+1);
+    assert(!following.some(x=>x.matches('[data-kind],.sec,table,.quote')&&!x.textContent.startsWith('Models:')),'User action closes the main content');
+   }
+  }
  }
+ assert(summaries>30,'Check the varied summaries across the conversation examples');
+ assert(actions>0,'Keep examples of real next actions');
  dom.window.close();
 });
 
