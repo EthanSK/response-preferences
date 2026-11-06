@@ -34,10 +34,8 @@ def revision(raw):
 
 
 def read_text(path):
-    if path.stat().st_size > LIMIT:
-        raise ValueError('This file is larger than 5 MB.')
-    raw = path.read_bytes()
-    if len(raw) > LIMIT or b'\0' in raw:
+    raw = export.read_bounded(path, LIMIT, 'This file is larger than 5 MB.')
+    if b'\0' in raw:
         raise ValueError('Only UTF-8 text files up to 5 MB are supported.')
     return raw, raw.decode('utf-8')
 
@@ -169,8 +167,7 @@ class Handler(BaseHTTPRequestHandler):
                         links[href] = '/index.html?' + urlencode({'doc': linked_key}) + ('#' + fragment if fragment else '')
                 return self.send(200, {'name': path.name, 'path': str(path), 'source': text, 'revision': tag, 'images': images, 'links': links, 'appearance': export.codex_appearance()})
             if route == '/api/resource' and path.suffix.lower() in export.MIMES:
-                if path.stat().st_size > 20 * 1024 * 1024: raise ValueError('Image is too large.')
-                return self.send(200, path.read_bytes(), export.MIMES[path.suffix.lower()])
+                return self.send(200, export.read_bounded(path, 20 * 1024 * 1024, 'Image is too large.'), export.MIMES[path.suffix.lower()])
             self.send(404, {'error': 'Not found.'})
         except PermissionError as error: self.send(403, {'error': str(error)})
         except (OSError, UnicodeError, ValueError) as error: self.send(400, {'error': str(error)})

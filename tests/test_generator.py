@@ -1,10 +1,12 @@
+"""Check snapshot exports and file-allocation limits without large fixtures."""
 import importlib.util
+from io import BytesIO
 import json
 from pathlib import Path
 import re
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 spec=importlib.util.spec_from_file_location('generator', Path(__file__).resolve().parents[1] / 'scripts/create-viewer.py')
 generator=importlib.util.module_from_spec(spec)
@@ -12,6 +14,49 @@ spec.loader.exec_module(generator)
 
 
 class GeneratorTests(unittest.TestCase):
+    def test_growing_file_read_is_bounded_before_rejection(self):
+        # A stale size check must never turn into an unbounded allocation.
+        reads = []
+        class GrowingFile(BytesIO):
+            def read(self, size=-1):
+                reads.append(size)
+                self.assert_bounded(size)
+                return super().read(size)
+
+            @staticmethod
+            def assert_bounded(size):
+                if size != 33:
+                    raise AssertionError('Read must request only the limit plus one byte')
+
+        path = Mock()
+        path.stat.return_value.st_size = 1
+        path.open.return_value = GrowingFile(b'x' * 100)
+        with self.assertRaisesRegex(ValueError, 'too large'):
+            generator.read_bounded(path, 32, 'too large')
+        self.assertEqual(reads, [33])
+
+    def test_bounded_read_accepts_exact_limit_and_preserves_bytes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'text.txt'
+            path.write_bytes(b'\xef\xbb\xbfhi\r\n')
+            self.assertEqual(generator.read_bounded(path, 7, 'too large'), path.read_bytes())
+
+    def test_snapshot_images_respect_actual_remaining_budget(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / 'images.md'
+            image = Path(tmp) / 'image.png'
+            source.write_text('![Image](image.png)\n')
+            image.write_bytes(b'short')
+            bounded = generator.read_bounded
+            def grow_image(path, limit, error):
+                if path == image.resolve():
+                    path.write_bytes(b'x' * 20)
+                return bounded(path, limit, error)
+            with patch.object(generator, 'MAX_IMAGES', 10), patch.object(generator, 'read_bounded', side_effect=grow_image):
+                page = generator.create_viewer(source, Path(tmp) / 'snapshot.html').read_text()
+            payload = json.loads(re.search(r'<script id="document-data" type="application/json">(.*?)</script>', page, re.S).group(1))
+            self.assertEqual(payload['images'], {})
+
     def test_code_range_is_retained_in_snapshot_without_changing_the_source(self):
         with tempfile.TemporaryDirectory() as tmp:
             source=Path(tmp)/'example.ts';source.write_text('one\ntwo\nthree\n')

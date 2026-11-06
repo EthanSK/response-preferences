@@ -1,5 +1,9 @@
 # Verified project lessons
 
+## Bound the read, not only the preceding file-size check — Self-improved — 2026-11-06
+
+A file can grow between stat and read_bytes. Checking its size first and rejecting oversized bytes afterward still allows an unbounded allocation. Both live and snapshot viewer reads now share read_bounded, which requests at most the permitted bytes plus one before rejecting oversize content. Snapshot image accounting also checks actual bytes against the remaining total image budget. A simulated growing file verifies the read size without allocating a large fixture. This fixes a separate viewer weakness; it does not establish that the viewer caused the Mac's geometry-review memory exhaustion.
+
 ## LaTeX selection and wrapping limits
 
 Ethan verified continuous selection inside one outer `\textsf` expression with a nested coloured span. A later whole-paragraph expression visibly overflowed. A subsequent single-expression trial containing both an underline and an emoji did not give Ethan the desired whole-line triple-click selection; that trial does not isolate which element caused the selection behavior. Do not claim that underlined LaTeX fixes triple-click or that selection crosses expression boundaries. Cap each unbreakable expression at 64 approximate visible characters and leave ordinary spaces between expressions for wrapping. Links, code and paths remain outside when unsafe in KaTeX. User-verified behavior — 2026-09-18 and 2026-09-19.

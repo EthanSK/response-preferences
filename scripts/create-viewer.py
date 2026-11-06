@@ -5,6 +5,7 @@ import base64
 from datetime import datetime, timezone
 import hashlib
 import html
+from io import StringIO
 import json
 import os
 from pathlib import Path
@@ -18,14 +19,24 @@ MAX_IMAGES = 40 * 1024 * 1024
 MIMES = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp'}
 
 
+def read_bounded(path: Path, limit: int, error: str) -> bytes:
+    """Limit the actual allocation even if a file grows after its size check."""
+    if path.stat().st_size > limit:
+        raise ValueError(error)
+    with path.open('rb') as stream:
+        raw = stream.read(limit + 1)
+    if len(raw) > limit:
+        raise ValueError(error)
+    return raw
+
+
 def codex_appearance(config=None):
     """Read only simple appearance settings, also on Python 3.9 without tomllib."""
     config = Path(config) if config else Path(os.environ.get('CODEX_HOME', Path.home() / '.codex')) / 'config.toml'
     tables, section = {}, ''
     try:
-        if config.stat().st_size > 1024 * 1024:
-            return {}
-        with config.open(encoding='utf-8') as stream:
+        raw = read_bounded(config, 1024 * 1024, 'Appearance settings are too large.')
+        with StringIO(raw.decode('utf-8')) as stream:
             for line in stream:
                 heading = re.fullmatch(r'\s*\[([\w.]+)\]\s*(?:#.*)?', line.rstrip())
                 if heading:
@@ -42,7 +53,7 @@ def codex_appearance(config=None):
                         tables.setdefault(section, {})[match.group(1)] = json.loads(match.group(2))
                     except (ValueError, TypeError):
                         pass
-    except (OSError, UnicodeError):
+    except (OSError, UnicodeError, ValueError):
         return {}
     desktop = tables.get('desktop', {})
     appearance = {'mode': desktop.get('appearanceTheme', 'system')}
@@ -76,11 +87,7 @@ def destinations(text):
 
 def create_viewer(source, output=None, line=1, embed_images=True, public=False, end_line=None):
     source = Path(source).expanduser().resolve(strict=True)
-    if source.stat().st_size > MAX_TEXT:
-        raise ValueError('File exceeds the 5 MB text limit')
-    raw = source.read_bytes()
-    if len(raw) > MAX_TEXT:
-        raise ValueError('File exceeds the 5 MB text limit')
+    raw = read_bounded(source, MAX_TEXT, 'File exceeds the 5 MB text limit')
     text = raw.decode('utf-8')
     if '\0' in text:
         raise ValueError('Only UTF-8 text files are supported')
@@ -111,7 +118,11 @@ def create_viewer(source, output=None, line=1, embed_images=True, public=False, 
             mime = MIMES.get(linked.suffix.lower())
             size = linked.stat().st_size
             if embed_images and mime and size <= 20 * 1024 * 1024 and used + size <= MAX_IMAGES:
-                image_bytes = linked.read_bytes()
+                # Enforce both limits on the bytes read, not an earlier stat.
+                try:
+                    image_bytes = read_bounded(linked, min(20 * 1024 * 1024, MAX_IMAGES - used), 'Image is too large.')
+                except ValueError:
+                    continue
                 data['images'][href] = f'data:{mime};base64,' + base64.b64encode(image_bytes).decode('ascii')
                 used += len(image_bytes)
     payload = json.dumps(data, ensure_ascii=False).replace('&', '\\u0026').replace('<', '\\u003c').replace('>', '\\u003e')
