@@ -89,6 +89,8 @@ For compact coloured values, copy `\(\textsf{\color{#67e8f9}100\%}\)`. The colou
 
 ## Context above direct replies
 
+- Merge the same authored request repeated in Agent Flow’s editable opening and XML timeline before choosing answer blocks. These are two presentations, not two requests. Keep context and order from the timeline, retain opening-only edits and distinct corrections, and answer each real ask once. A selected older prompt is context unless the user adopts it; do not replay it as fresh speech. User-requested — 2026-11-07.
+
 - Each distinct answer has its own visible rainbow question immediately above an enlarged ⮑. The fake-file hover link is optional extra context, not the main home for a question. Omit it when the visible question is enough; use it only when a longer original excerpt genuinely helps. Follow [the core context contract](../SKILL.md#visible-questions-above-answers-optional-hover-context). User-requested — 2026-10-27.
 
 - If referring to things you'll clarify later, do the clarification there and then; say “More clarification below” only when a later section adds detail. Explain the term and relevant limitation at first mention so each answer stands on its own, including every annotation answer and main or side chat reply. Before sending, read each answer without later sections and move any explanation needed to understand it beside the original statement. User request — 2026-10-04.
@@ -152,9 +154,9 @@ For a coverage statement, write `The expanded \(\underline{\textsf{audit covers 
 
 ## End-of-message topic reminder
 
-- Only at the end of the final assistant reply, add an `About:` reminder followed immediately by the question-coverage line. This reminder helps quickly recover what we are doing. Use a brief overall summary, then useful specifics about the action, problem, result or next step. Do not invent context. Do not print either footer in working commentary, progress updates or skill-use announcements. User correction — 2026-10-10: final replies only, superseding the earlier every-message rule.
+- Only at the end of the final assistant reply, add an `About:` reminder. This reminder helps quickly recover what we are doing. Use a brief overall summary, then useful specifics about the action, problem, result or next step. Do not invent context. Do not print the reminder in working commentary, progress updates or skill-use announcements. User correction — 2026-10-10: final replies only, superseding the earlier every-message rule.
 - Keep both sentences compact inside short muted-lavender sans-serif `#b8a4d9` expressions. For example: `\(\textsf{\color{#b8a4d9}About: fixing video export.}\) \(\textsf{\color{#b8a4d9}Restart the app, then retry the clip.}\)`. Keep every chunk within 64 approximate visible characters and separate chunks with ordinary spaces. This is one closing reminder with one `About:` prefix. Reserve lavender for it; add no bold, emoji, caret, link, heading or divider.
-- The coverage line below About says `Coverage since last final reply: N user messages; Y/X requests and steers addressed.` Count only human user messages after the previous assistant final reply, including interruptions and corrections; commentary does not reset that window. Follow the core's private item-to-final-answer mapping, not accumulated task totals. Keep older unfinished work tracked separately. Required project footers retain their established placement. Do not add automatic counting, repair or continuation hooks. User clarification — 2026-10-13.
+- Visible coverage counts are disabled by default. Continue the private completeness check; [the optional coverage footer](coverage-footer.md) preserves the original rules for immediate restoration on request. Required project footers retain their established placement. User-requested reversible trial — 2026-11-07.
 
 ## Clickable references
 

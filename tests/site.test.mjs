@@ -144,13 +144,13 @@ test('automated results stay uncoloured and manual success uses the computer mar
  dom.window.close();
 });
 
-test('only final example replies have attention fingers, About and counts',()=>{
+test('only final example replies have attention fingers and About; coverage stays disabled',()=>{
  const dom=demo();
  for(const msg of dom.window.document.querySelectorAll('.msg.assistant')){
   const hasFinger=[...msg.querySelectorAll('.mk')].some(m=>['👉','🫵','🖥️🫵'].includes(m.textContent));
   assert.equal(hasFinger,msg.classList.contains('final')&&!msg.classList.contains('brief-reply'));
   assert.equal(msg.querySelectorAll('.topic-reminder').length,msg.classList.contains('final')?1:0);
-  assert.equal(msg.querySelectorAll('.question-coverage').length,msg.classList.contains('final')?1:0);
+  assert.equal(msg.querySelectorAll('.question-coverage').length,0);
  }
  dom.window.close();
 });
@@ -227,15 +227,13 @@ test('mobile sidebar and editor isolate the background and restore it',async()=>
  d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);dom.window.close();
 });
 
-test('every final example closes with a distinct topic reminder followed by scoped counts',()=>{
+test('every final example closes with a distinct topic reminder without visible counts',()=>{
  const dom=demo(),d=dom.window.document;
  for(const msg of d.querySelectorAll('.msg.assistant.final')){
   const reminders=msg.querySelectorAll('.topic-reminder');assert.equal(reminders.length,1);
-  const reminder=reminders[0],coverage=msg.querySelector('.question-coverage');
-  assert.equal(reminder.nextElementSibling,coverage);
-  assert.equal(msg.lastElementChild,coverage);
-  assert.match(coverage.textContent,/^Coverage since last final reply: \d+ user messages?; \d+\/\d+ requests and steers addressed\.$/);
-  assert(coverage.textContent.includes('since last final reply'));
+  const reminder=reminders[0];
+  assert.equal(msg.lastElementChild,reminder);
+  assert.equal(msg.querySelector('.question-coverage'),null);
   assert.match(reminder.textContent,/^About: .+/);
   assert.equal(reminder.querySelectorAll('u,a,.mk').length,0);
   assert.equal(dom.window.getComputedStyle(reminder).color,'var(--topic)');
@@ -245,7 +243,7 @@ test('every final example closes with a distinct topic reminder followed by scop
  assert(d.querySelector('#backup .final .topic-reminder').textContent.includes('release decision'));
  const shared=d.querySelector('#setup-u3').nextElementSibling;
  assert.deepEqual([...shared.querySelectorAll('.rainbow-quote')].map(i=>i.textContent),['Can I change the style?','Will it update itself?']);
- assert.equal(shared.querySelector('.question-coverage').textContent,'Coverage since last final reply: 1 user message; 2/2 requests and steers addressed.');
+ assert.equal(shared.querySelector('.question-coverage'),null);
  assert.equal(shared.querySelectorAll('[data-kind="answer"]').length,2);
  assert.equal(shared.querySelectorAll('.reply-inline').length,0);
  dom.window.close();

@@ -13,6 +13,13 @@ def check_fragment(*args, **kwargs):
     return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
+    def test_coverage_is_optional_and_can_be_restored(self):
+        draft = r'\(\huge\text{👉}\) The rename is complete.'+'\n\n'+TOPIC
+        self.assertEqual([], reply.check(draft))
+        self.assertTrue(reply.check(draft, require_question_coverage=True))
+        restored = draft+'\nCoverage since last final reply: 1 user message; 1/1 requests and steers addressed.'
+        self.assertEqual([], reply.check(restored, require_question_coverage=True))
+
     def test_final_question_coverage_under_about(self):
         body = r'\(\huge\text{👉}\) The rename is complete.'
         coverage = 'Coverage since last final reply: 2 user messages; 3/3 requests and steers addressed.'

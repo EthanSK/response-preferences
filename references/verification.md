@@ -13,7 +13,7 @@ Read this when changing the skill, auditing prior requests, or testing the respo
 
 The checker is deliberately limited. It catches common structural regressions in conventional Markdown/LaTeX replies, including the missing-magenta announcement that prompted it. It does not parse every Markdown or LaTeX construct, decide what is important, choose useful underlined words or guarantee sentence coverage, prove a link supports a claim, detect every omitted marker, inspect the Codex renderer, or force another model to obey instructions. A passing result is not a guarantee of perfect formatting.
 
-Use `--require-question-coverage` during a coverage-format diagnostic. It requires the line only in final replies and checks its structure, arithmetic bounds, final wording and placement under About; commentary rejects both footers even without that opt-in flag. It it cannot infer the real questions or certify that Y answers exist. Keep legacy snippets usable without that opt-in flag. No automatic reply hook is added.
+Visible coverage counts are disabled by default; see [the dormant rule and restoration procedure](coverage-footer.md). Use `--require-question-coverage` only during an explicitly enabled coverage-format diagnostic. It requires the line only in final replies and checks its structure, arithmetic bounds, final wording and placement under About; commentary rejects both footers even without that opt-in flag. It cannot infer the real questions or certify that Y answers exist. Keep legacy snippets usable without that opt-in flag. No automatic reply hook is added.
 
 ## Coverage map
 

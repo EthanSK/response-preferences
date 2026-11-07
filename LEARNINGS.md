@@ -183,3 +183,8 @@ User correction — 2026-10-30: demo-only source jumps had accumulated after eve
 ## Preserve operational clauses when moving dated rule notes
 
 User-requested — 2026-11-02: deduplicate the response guide without removing useful rules, reasons or examples. Several dated self-improvement notes had operational clauses after their incident evidence. Keep those clauses in the current core when moving the historical explanation into `references/rule-history.md`; match actual dated notes, not the literal `Self-improved — YYYY-MM-DD` template. A baseline-to-candidate preservation review caught both risks during editing. The final cleanup preserves the read schedule and style contract; smaller text alone does not prove faster replies or future model obedience.
+
+
+## Merge repeated input before formatting answer blocks — 2026-11-07
+
+A stored Claude reply repeated the same five rainbow questions and their answers within one final reply. The raw opening and linked Agent Flow timeline contained those same authored requests. The duplicate output is verified; the model's internal reason is not. Deduplicate by intended meaning before applying the question/answer-block layout, preserving opening-only edits, additional details and genuine corrections. Syntax/structure checks cannot establish that two valid blocks answer the same question. Keep the clarification in the shared Response Preferences core so both Codex and Claude use it.
