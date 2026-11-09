@@ -15,18 +15,18 @@ Assume the reader will \(\underline{\textsf{skip text without underlining}}\). P
 Merge the same request repeated in Agent Flow’s editable opening and XML before choosing answer blocks; answer each real ask once. Keep any opening-only edits, extra details and later corrections. Use several small answers when there are genuinely distinct asks, each with its own visible rainbow question and enlarged answer arrow. Brief permission follow-ups during ongoing work keep this same context, question and answer structure. For example:
 
 > **In response to:** An interrupted upload has already sent some of the file, so recovery needs to reuse those bytes without making the person start again.
-
+>
 > \(\textsf{\color{#b5fa70}{Can} \color{#93fa70}{the} \color{#70fa70}{upload} \color{#70fa93}{resume?}}\)
 
 \(\huge\text{⮑}\) The upload \(\underline{\textsf{can resume}}\).
 
 > **In response to:** Reloading the browser interrupts the upload’s local file access, so continuing may need the same file selected again.
-
+>
 > \(\textsf{\color{#93fa70}{What} \color{#70fa70}{happens} \color{#70fa93}{after} \color{#70fab5}{a} \color{#70fad8}{browser} \color{#70fafa}{reload?}}\)
 
 \(\huge\text{⮑}\) A browser reload \(\underline{\textsf{may require selecting the file again}}\).
 
-A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. Before every rainbow question, include a short descriptive In response to sentence explaining in simple language what the rainbow text is about. Name the actual feature, earlier claim or change, using real source context. The sentence and rainbow question should make sense without rereading earlier messages. Keep the answer separate, preserve any exact quotation included, and do not shorten the rainbow text to make room.
+A hover-only link is optional when a longer original excerpt genuinely helps. Do not hide a separate question there under one broad answer. Before every rainbow question, include a short descriptive In response to sentence explaining in simple language what the rainbow text is about. Keep both paragraphs inside one continuous blockquote, using a bare `>` line between them, so they share one left-hand vertical line and take less vertical space. Keep the answer outside. Name the actual feature, earlier claim or change, using real source context. The sentence and rainbow question should make sense without rereading earlier messages. Keep the answer separate, preserve any exact quotation included, and do not shorten the rainbow text to make room.
 
 Briefly explain terms, app-specific labels and product names that could be remotely hard to understand when they first appear, including in the descriptive context sentence. For example: “The picker (the window for choosing a file) cannot open in Codex without your permission.” Or: “The private repository needs GitHub Team (GitHub's paid plan for organisations) to keep its environment secrets after the move.” Keep the explanation short so the problem makes sense before the answer.
 

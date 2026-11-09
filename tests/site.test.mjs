@@ -115,16 +115,17 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
  dom.window.close();
 });
 
-test('full annotation context keeps a separate short question before the answer',()=>{
+test('full annotation context and short question share one quote before the answer',()=>{
  const dom=demo(),d=dom.window.document;
  const full=[...d.querySelectorAll('#format .annotation-context')].find(x=>x.textContent.includes('An earlier reply claimed'));
  assert(full.textContent.includes('In response to:'));
  assert(full.textContent.includes('An earlier reply claimed that the full annotation replaces the short question.'));
  assert(!full.textContent.includes('Problem at hand:'));
- const reminder=full.nextElementSibling;
- assert(reminder.matches('blockquote.quote'));
- assert.equal(reminder.querySelectorAll('a').length,0);
- assert(reminder.nextElementSibling.matches('p[data-kind="answer"]'));
+ const paragraphs=full.querySelectorAll(':scope > p');
+ assert.equal(paragraphs.length,2);
+ assert(paragraphs[1].querySelector('.rainbow-quote'));
+ assert.equal(full.querySelectorAll('blockquote,a').length,0);
+ assert(full.nextElementSibling.matches('p[data-kind="answer"]'));
  dom.window.close();
 });
 
@@ -331,10 +332,16 @@ test('test information uses the test marker without implying success or hiding l
 
 test('rainbow reminders exclude demo navigation and preserve descriptive context',()=>{
  const dom=demo(),d=dom.window.document;
- for(const quote of d.querySelectorAll('blockquote.quote:not(.annotation-context)')){
+ for(const quote of d.querySelectorAll('blockquote.quote')){
    const rainbow=quote.querySelector('.rainbow-quote');assert(rainbow);
-   const context=quote.previousElementSibling;
-   assert(context?.matches('.annotation-context'),'Every rainbow question needs its own preceding context');
+   const context=quote;
+   assert(context.matches('.annotation-context'),'Context and rainbow question share one quote');
+   assert(quote.querySelectorAll(':scope > p').length>=2,'Preserve multi-paragraph source context inside the same quote');
+   assert.equal(quote.querySelectorAll('blockquote').length,0,'No nested quote creates a second vertical line');
+   assert(quote.firstElementChild.textContent.startsWith('In response to:'));
+   const content=[...quote.children].filter(p=>!p.classList.contains('preview'));
+   assert(content.at(-1).contains(rainbow),'The question follows its context; preserve the optional preview note');
+   assert.equal(quote.querySelectorAll('.rainbow-quote').length,1,'Distinct asks keep separate quote blocks');
    assert.match(context.textContent,/In response to:\s+\S/);
    assert(!context.textContent.includes('Problem at hand:'),'Keep the current In response to label for descriptive context');
    assert(!rainbow.querySelector('a,u'),'Links and underlines stay outside the rainbow');
@@ -343,7 +350,7 @@ test('rainbow reminders exclude demo navigation and preserve descriptive context
    assert(rainbow.textContent.length<=80,'Rainbow reminder stays within the doubled excerpt limit');
    assert.equal(quote.querySelectorAll('a').length,0,'Do not append demo arrows to rainbow reminders');
  }
- assert.equal(d.querySelectorAll('.annotation-context .rainbow-quote,.user .rainbow-quote,.preview .rainbow-quote,.topic-reminder .rainbow-quote').length,0);
+ assert.equal(d.querySelectorAll('.user .rainbow-quote,.preview .rainbow-quote,.topic-reminder .rainbow-quote').length,0);
  assert.equal(d.querySelectorAll('.answer-context').length,0,'Do not duplicate question links beside the answer');
  dom.window.close();
 });
@@ -421,7 +428,7 @@ test('an early homepage reply separates several follow-ups with evenly spaced di
  assert.equal(dividers.length,answers.length-1,'One divider between each pair of answer sections');
  assert(children.indexOf(dividers[0])>children.indexOf(answers[0]),'No divider before the first answer');
  for(const [index,answer] of answers.entries()){
-  const question=answer.previousElementSibling,context=question.previousElementSibling;
+  const question=answer.previousElementSibling,context=question;
   assert(question.querySelector('.rainbow-quote')&&context.matches('.annotation-context'),'Each answer keeps its own context and question');
   if(index)assert(context.previousElementSibling.matches('hr'),'A divider starts each later section, never inside one');
  }

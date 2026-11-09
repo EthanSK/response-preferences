@@ -93,7 +93,7 @@ class ReplyChecks(unittest.TestCase):
             self.assertEqual([], check_fragment(skill))
 
     def test_source_context_is_required_without_legacy_comparison_fields(self):
-        context = '> **In response to:** A hidden page changes the visible URL.\n\n'
+        context = '> **In response to:** A hidden page changes the visible URL.\n>\n'
         answer = r'> \(\textsf{\color{#fa7070}{Why?}}\)' + '\n\n' + r'\(\huge\text{⮑}\) \(\textsf{The pages share one Router.}\) :codex-annotation{index="1"}'
         self.assertEqual([], check_fragment(context + answer))
         self.assertTrue(any('In response to' in error for error in check_fragment(answer)))
