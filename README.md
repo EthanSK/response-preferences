@@ -117,7 +117,7 @@ Projects can list additional user-approved emoji meanings in their existing inst
 
 ## Underlines for scanning
 
-When important words are bold, underline those same words too: bold alone is not a scanning cue. This applies to opening answers, conclusions, list lead-ins and test-result totals. Use a plain short underline if bold adds nothing. Check the actual explanatory body for important details that lost useful underline cues; labels or a footer alone do not make the explanation skimmable. This is a judgment-based draft check, not a quota or mandatory checker run. Exact quotations, code, paths and link labels keep their original formatting.
+When important words are bold, underline those same words too: bold alone is not a scanning cue. This applies to opening answers, conclusions, list lead-ins and test-result totals. In findings, check bold outcomes and attempt/retry counts separately from structural block labels; underline those outcomes or leave them plain. Use a plain short underline if bold adds nothing. Check the actual explanatory body for important details that lost useful underline cues; labels or a footer alone do not make the explanation skimmable. This is a judgment-based draft check, not a quota or mandatory checker run. Exact quotations, code, paths and link labels keep their original formatting.
 
 ```latex
 \(\underline{\textsf{\textbf{Neither automatically wins}}}\)
