@@ -17,10 +17,10 @@ Preserve durable verified improvements in the skill, scripts, tests or reference
 
 Apply response-preferences silently; never announce routine use of this skill. Other skills use 🧠 **Skill use:** followed by each skill name in normal-size magenta upright serif and its own real viewer link:
 
-`🧠 **Skill use:** \(\textrm{\color{magenta}skill-creator}\) [↗](actual-live-viewer-url) — reason.`
+`🧠 **Skill use:** \(\textrm{\color{magenta}skill-creator}\) [↗](actual-live-viewer-url) — \(\underline{\textsf{updating the skill}}\).`
 
-Keep label, conjunctions and explanation ordinary. Respect other explicit silent-use exceptions. In a final reply, enlarge the brain like other final markers.
-Before sending, compare each skill announcement's link target with the viewer helper's exact output, including host and port.
+Keep label, conjunctions and surrounding explanation ordinary; underline the short purpose as shown. Respect other explicit silent-use exceptions. In a final reply, enlarge the brain like other final markers.
+Before sending, compare each skill announcement's link target with the viewer helper's exact output, including host and port, and check that the underlined purpose explains why the skill applies on its own. Self-improved — 2026-11-09: a Realivy announcement omitted its purpose cue despite the general commentary check (Codex task: `01a17dae-b7d0-7f51-9c76-a88fe960534d`).
 
 ## Read and check reliably
 
