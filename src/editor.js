@@ -1,3 +1,4 @@
+// Run the shared live and exported document viewer, including editing, previews and file-type icons.
 import {basicSetup} from 'codemirror';
 import {EditorState, StateField, StateEffect, Compartment, RangeSet} from '@codemirror/state';
 import {EditorView, Decoration, GutterMarker, gutterLineClass, keymap, scrollPastEnd} from '@codemirror/view';
@@ -20,6 +21,7 @@ import {renderMarkdown, selectPassage} from './markdown.js';
 import {decodeText, writeIfUnchanged} from './files.js';
 import {resizeTables} from './table-resize.js';
 import {installAppearance} from './theme.js';
+import {viewerIcon} from './viewer-icons.js';
 
 const $ = id => document.getElementById(id);
 const data = JSON.parse($('document-data').textContent);
@@ -77,6 +79,7 @@ let hasTarget = Number(data.line) > 0 || lineHashPattern.test(location.hash);
 const normalise = text => text.replace(/^\ufeff/, '').replace(/\r\n?/g, '\n');
 baseline = normalise(baseline);
 function say(message) {$('status').textContent = message;}
+function updateViewerIcon() {$('viewer-icon').href = viewerIcon(name);}
 function isDirty() {return editor.state.doc.toString() !== baseline;}
 function updateDirty() {
   const writable = fileHandle || (live && liveRevision);
@@ -140,7 +143,7 @@ function confirmDiscard() {return !isDirty() || confirm('You have unsaved change
 async function loadFile(file, handle=null) {
   if(file.size>5*1024*1024) throw Error('This file is larger than 5 MB. Open a smaller text file.');
   const text=decodeText(await file.arrayBuffer());
-  name=file.name;rawBaseline=text;baseline=normalise(text);sourceEol=text.includes('\r\n')?'\r\n':'\n';sourceBom=text.startsWith('\ufeff');
+  name=file.name;updateViewerIcon();rawBaseline=text;baseline=normalise(text);sourceEol=text.includes('\r\n')?'\r\n':'\n';sourceBom=text.startsWith('\ufeff');
   live=null;hasTarget=false;fileHandle=handle;images={};links={};tableWidths.clear();$('reload').hidden=true;
   editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
   $('filename').textContent=name;$('filename').title=name;$('file-note').textContent='Opened from disk · does not update automatically';
@@ -188,6 +191,7 @@ async function refreshLive(force=false) {
     $('filename').textContent=name;$('filename').title=next.path;$('file-note').textContent=next.path;
     $('snapshot-note').textContent='Live file · Save writes to the original file.';
     document.title=name+' · Live file viewer';
+    updateViewerIcon();
     if(first && next.appearance)installAppearance(document.documentElement,$('theme'),next.appearance);
     if(first)currentMode=/\.(md|markdown)$/i.test(name)?'preview':'edit';
     setMode(currentMode);updateDirty();if(!hasTarget)say('File opened');
@@ -199,6 +203,7 @@ function downloadFile() {
   const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
   say('Download started. The file you opened is unchanged.');
 }
+updateViewerIcon();
 $('filename').textContent=name;$('filename').title=name;$('file-note').textContent=data.generated?`Snapshot · ${data.generated}`:'Local document';
 document.querySelectorAll('button[data-mode]').forEach(button=>button.onclick=()=>setMode(button.dataset.mode));
 $('jump-form').onsubmit=event=>{event.preventDefault();jump($('line').value);};

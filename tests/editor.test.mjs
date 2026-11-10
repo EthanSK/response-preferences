@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {JSDOM,VirtualConsole} from 'jsdom';
+import {viewerIcon} from '../src/viewer-icons.js';
 
 function boot(document, setup = () => {}) {
   const template=fs.readFileSync(new URL('../assets/viewer.html',import.meta.url),'utf8');
@@ -241,4 +242,42 @@ test('system appearance follows changes until the reader chooses a theme',async(
     d.querySelector('#theme').click();assert.equal(root.dataset.theme,'dark');
     changed();assert.equal(root.dataset.theme,'dark');
   } finally {dom.window.close();}
+});
+
+
+test('snapshot and picked files show the icon for their viewer type', async () => {
+  const {dom, errors} = boot({name: 'example.ts', source: 'const value = 1;', images: {}, links: {}}, window => {
+    window.showOpenFilePicker = async () => [{getFile: async () => ({
+      name: 'notes.md', size: 8, arrayBuffer: async () => new TextEncoder().encode('# Notes').buffer
+    })}];
+  });
+  try {
+    const document = dom.window.document;
+    assert.equal(document.querySelector('#viewer-icon').href, viewerIcon('example.ts'));
+    document.querySelector('#open').click();
+    await new Promise(resolve => setTimeout(resolve, 100));
+    assert.equal(document.querySelector('#viewer-icon').href, viewerIcon('notes.md'));
+    assert.notEqual(viewerIcon('notes.md'), viewerIcon('example.ts'));
+    assert.deepEqual(errors, []);
+  } finally { dom.window.close(); }
+});
+
+test('live refresh changes the viewer icon when the registered file type changes', async () => {
+  let name = 'notes.md';
+  const {dom, errors} = boot({source: '', live: true}, window => {
+    window.history.replaceState(null, '', '?doc=registered');
+    window.fetch = async () => ({ok: true, status: 200, json: async () => ({
+      name, path: '/canonical/' + name, source: 'Example', revision: name, images: {}, links: {}
+    })});
+  });
+  try {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    const document = dom.window.document;
+    assert.equal(document.querySelector('#viewer-icon').href, viewerIcon('notes.md'));
+    name = 'example.py';
+    dom.window.dispatchEvent(new dom.window.Event('focus'));
+    await new Promise(resolve => setTimeout(resolve, 100));
+    assert.equal(document.querySelector('#viewer-icon').href, viewerIcon('example.py'));
+    assert.deepEqual(errors, []);
+  } finally { dom.window.close(); }
 });
