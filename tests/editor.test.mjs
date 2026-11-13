@@ -19,6 +19,23 @@ function boot(document, setup = () => {}) {
   return {dom,errors};
 }
 
+test('plain-text documents wrap by default in the editor and preview',()=>{
+  const source='A long paragraph '.repeat(40)+'\n  Indented text';
+  const {dom,errors}=boot({name:'letter.txt',source});
+  try {
+    const {document}=dom.window;
+    assert.equal(document.querySelector('#workspace').dataset.mode,'edit');
+    assert.ok(document.querySelector('.cm-content.cm-lineWrapping'));
+    document.querySelector('button[data-mode="preview"]').click();
+    const preview=document.querySelector('#preview pre');
+    assert.equal(preview.textContent,source);
+    assert.equal(dom.window.getComputedStyle(preview).whiteSpace,'pre-wrap');
+    assert.deepEqual(errors,[]);
+  } finally {
+    dom.window.close();
+  }
+});
+
 test('whole-file skill view opens metadata without a highlight, while Go still selects line one',async()=>{
   const {dom,errors}=boot({source:'',live:true},window=>{
     window.history.replaceState(null,'','?doc=registered');

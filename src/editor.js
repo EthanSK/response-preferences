@@ -90,6 +90,7 @@ function updateDirty() {
 const extensions = () => [
   basicSetup, keymap.of([indentWithTab, {key:'Mod-s', run:() => {(fileHandle || live) ? saveFile() : downloadFile(); return true;}}]),
   language.of(modeFor(name)), syntaxHighlighting(colours), selectedLine, scrollPastEnd(),
+  EditorView.lineWrapping,
   EditorView.contentAttributes.of({'aria-label':'Document source'}),
   EditorView.updateListener.of(update => {if (update.docChanged) {updateDirty();clearTimeout(renderTimer);renderTimer=setTimeout(render,180);}})
 ];

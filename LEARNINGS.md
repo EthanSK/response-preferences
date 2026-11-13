@@ -1,5 +1,9 @@
 # Verified project lessons
 
+## Wrap long viewer lines by default — 2026-11-13
+
+Plain-text files open in Edit, which uses CodeMirror. Preview renders the same source in a preformatted block. Enable CodeMirror line wrapping and use `pre-wrap` with `overflow-wrap: anywhere` for preview blocks. Both preserve the original newlines and indentation, including when a long path must break within a word. User-requested default.
+
 ## LaTeX selection and wrapping limits
 
 Ethan verified continuous selection inside one outer `\textsf` expression with a nested coloured span. A later whole-paragraph expression visibly overflowed. A subsequent single-expression trial containing both an underline and an emoji did not give Ethan the desired whole-line triple-click selection; that trial does not isolate which element caused the selection behavior. Do not claim that underlined LaTeX fixes triple-click or that selection crosses expression boundaries. Cap each unbreakable expression at 64 approximate visible characters and leave ordinary spaces between expressions for wrapping. Links, code and paths remain outside when unsafe in KaTeX. User-verified behavior — 2026-09-18 and 2026-09-19.

@@ -160,6 +160,8 @@ header button svg{width:15px;height:15px;flex:none}
 #preview code,#preview kbd{font-family:var(--mono);font-size:.88em}
 #preview :not(pre)>code{padding:.1em .35em;border-radius:4px;background:var(--panel)}
 #preview pre{margin:0;padding:11px 14px;border:1px solid var(--line);border-radius:7px;background:var(--code);color:var(--code-text);font-size:12.5px;line-height:1.55;overflow:auto;overscroll-behavior-x:contain}
+/* Preview wraps long lines while preserving source whitespace. */
+#preview pre{white-space:pre-wrap;overflow-wrap:anywhere}
 #preview pre code{font-size:inherit;padding:0;background:none}
 #preview blockquote{padding:.1em 0 .1em 14px;border-left:2px solid var(--line-strong);color:var(--muted)}
 #preview img{max-width:100%;height:auto;border-radius:6px}
