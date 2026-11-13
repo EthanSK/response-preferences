@@ -18,6 +18,7 @@
     </div>
     <div class="toolbar">
       <div class="modes" role="group" aria-label="Document view"><button type="button" data-mode="preview" aria-pressed="true">Preview</button><button type="button" data-mode="edit" aria-pressed="false">Edit</button><button type="button" data-mode="split" aria-pressed="false">Split</button></div>
+      <button type="button" id="word-wrap" aria-pressed="true">Word wrap</button>
       <form id="jump-form" class="jump"><label for="line">Line</label><input id="line" type="number" min="1" value="1" required inputmode="numeric" aria-label="Jump to line"><button type="submit" title="Show the passage at this line">Go</button></form>
       <div class="actions">
         <button type="button" id="search" aria-label="Search" title="Search and replace in the source"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.2 10.2 14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
@@ -29,7 +30,7 @@
       </div>
     </div>
   </header>
-  <main id="workspace" data-mode="preview"><section id="editor-pane" aria-label="Source editor"><div id="editor"></div></section><article id="preview" aria-label="Formatted document" tabindex="0"></article></main>
+  <main id="workspace" data-mode="preview" data-word-wrap="true"><section id="editor-pane" aria-label="Source editor"><div id="editor"></div></section><article id="preview" aria-label="Formatted document" tabindex="0"></article></main>
   <footer><div id="status" role="status" aria-live="polite">Files stay in your browser. Nothing is uploaded.</div><span id="snapshot-note">Edits here do not change the file this page was generated from.</span></footer>
   <input id="file-input" type="file" hidden accept=".md,.markdown,.txt,.js,.mjs,.cjs,.jsx,.ts,.tsx,.json,.py,.css,.html,.htm,.xml,.yaml,.yml,.sh,.zsh,.bash,.sql,.rs,.go,.java,.c,.h,.cpp,.toml,.csv">
   <noscript>This viewer needs JavaScript. Open the original file to read it without this viewer.</noscript>

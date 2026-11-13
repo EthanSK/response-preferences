@@ -55,9 +55,11 @@ header button svg{width:15px;height:15px;flex:none}
 .modes{display:inline-flex;padding:2px;gap:1px;border-radius:7px;background:var(--panel)}
 .modes button{height:22px;padding:0 10px;border-radius:5px;font-weight:500;color:var(--muted)}
 .modes button:hover{background:transparent;color:var(--text)}
-.modes button[aria-pressed=true]{background:var(--panel-strong);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.28)}
-:root[data-theme=light] .modes button[aria-pressed=true]{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.14)}
+.modes button[aria-pressed=true],#word-wrap[aria-pressed=true]{background:var(--panel-strong);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.28)}
+:root[data-theme=light] :is(.modes button,#word-wrap)[aria-pressed=true]{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.14)}
 .modes button:focus-visible{outline-offset:-2px}
+#word-wrap{color:var(--muted);font-weight:500}
+#word-wrap:hover{color:var(--text)}
 
 .jump{display:inline-flex;align-items:center;height:26px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);overflow:hidden}
 .jump:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
@@ -161,7 +163,7 @@ header button svg{width:15px;height:15px;flex:none}
 #preview :not(pre)>code{padding:.1em .35em;border-radius:4px;background:var(--panel)}
 #preview pre{margin:0;padding:11px 14px;border:1px solid var(--line);border-radius:7px;background:var(--code);color:var(--code-text);font-size:12.5px;line-height:1.55;overflow:auto;overscroll-behavior-x:contain}
 /* Preview wraps long lines while preserving source whitespace. */
-#preview pre{white-space:pre-wrap;overflow-wrap:anywhere}
+#workspace[data-word-wrap=true] #preview pre{white-space:pre-wrap;overflow-wrap:anywhere}
 #preview pre code{font-size:inherit;padding:0;background:none}
 #preview blockquote{padding:.1em 0 .1em 14px;border-left:2px solid var(--line-strong);color:var(--muted)}
 #preview img{max-width:100%;height:auto;border-radius:6px}

@@ -26,6 +26,7 @@ import {viewerIcon} from './viewer-icons.js';
 const $ = id => document.getElementById(id);
 const data = JSON.parse($('document-data').textContent);
 const language = new Compartment();
+const wordWrap = new Compartment();
 const targetEffect = StateEffect.define();
 const targetGutter = new class extends GutterMarker {elementClass = 'cm-target-gutter';}();
 const selectedLine = StateField.define({
@@ -77,6 +78,8 @@ const lineHashPattern=/^#L(\d+)(?:-L(\d+))?$/;
 // action owns the yellow highlight; metadata is not a warning or special route.
 let hasTarget = Number(data.line) > 0 || lineHashPattern.test(location.hash);
 const normalise = text => text.replace(/^\ufeff/, '').replace(/\r\n?/g, '\n');
+// Share the toolbar choice across the preview and each editor state in this tab.
+let wordWrapEnabled = true;
 baseline = normalise(baseline);
 function say(message) {$('status').textContent = message;}
 function updateViewerIcon() {$('viewer-icon').href = viewerIcon(name);}
@@ -90,7 +93,7 @@ function updateDirty() {
 const extensions = () => [
   basicSetup, keymap.of([indentWithTab, {key:'Mod-s', run:() => {(fileHandle || live) ? saveFile() : downloadFile(); return true;}}]),
   language.of(modeFor(name)), syntaxHighlighting(colours), selectedLine, scrollPastEnd(),
-  EditorView.lineWrapping,
+  wordWrap.of(wordWrapEnabled ? EditorView.lineWrapping : []),
   EditorView.contentAttributes.of({'aria-label':'Document source'}),
   EditorView.updateListener.of(update => {if (update.docChanged) {updateDirty();clearTimeout(renderTimer);renderTimer=setTimeout(render,180);}})
 ];
@@ -207,6 +210,13 @@ function downloadFile() {
 updateViewerIcon();
 $('filename').textContent=name;$('filename').title=name;$('file-note').textContent=data.generated?`Snapshot · ${data.generated}`:'Local document';
 document.querySelectorAll('button[data-mode]').forEach(button=>button.onclick=()=>setMode(button.dataset.mode));
+$('word-wrap').onclick = () => {
+  wordWrapEnabled = !wordWrapEnabled;
+  const pressed = String(wordWrapEnabled);
+  $('word-wrap').setAttribute('aria-pressed', pressed);
+  $('workspace').dataset.wordWrap = pressed;
+  editor.dispatch({effects: wordWrap.reconfigure(wordWrapEnabled ? EditorView.lineWrapping : [])});
+};
 $('jump-form').onsubmit=event=>{event.preventDefault();jump($('line').value);};
 $('search').onclick=()=>{if(currentMode==='preview')setMode('edit');openSearchPanel(editor);editor.focus();};
 $('open').onclick=openFile;$('save').onclick=saveFile;$('download').onclick=downloadFile;

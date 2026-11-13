@@ -45,5 +45,5 @@ For a developer-owned local install, keep one project checkout as the editable s
 
 ## Maintain and verify
 
-The editor and preview wrap long lines by default, including plain-text files and code. Wrapping is visual, so saving and line links still use the original source lines.
+The **Word wrap** toolbar button starts on and controls the editor and preformatted preview text for the current tab. Wrapping is visual, so saving and line links still use the original source lines.
 `npm run check` rebuilds the shared app and public examples, then runs tests. Validate the skill, source-line mapping, hostile Markdown, live read/save, stale writes, clean refresh and preserved drafts. Manually test the installed runtime and inspect actual screenshots. Builds do not prove visual correctness. Do not bypass browser automation restrictions.

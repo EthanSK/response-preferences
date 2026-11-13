@@ -19,17 +19,28 @@ function boot(document, setup = () => {}) {
   return {dom,errors};
 }
 
-test('plain-text documents wrap by default in the editor and preview',()=>{
+test('word wrap starts on and can be toggled across editor and preview modes',()=>{
   const source='A long paragraph '.repeat(40)+'\n  Indented text';
   const {dom,errors}=boot({name:'letter.txt',source});
   try {
     const {document}=dom.window;
     assert.equal(document.querySelector('#workspace').dataset.mode,'edit');
+    const wrap=document.querySelector('#word-wrap');
+    assert.equal(wrap.getAttribute('aria-pressed'),'true');
     assert.ok(document.querySelector('.cm-content.cm-lineWrapping'));
     document.querySelector('button[data-mode="preview"]').click();
     const preview=document.querySelector('#preview pre');
     assert.equal(preview.textContent,source);
     assert.equal(dom.window.getComputedStyle(preview).whiteSpace,'pre-wrap');
+    wrap.click();
+    assert.equal(wrap.getAttribute('aria-pressed'),'false');
+    document.querySelector('button[data-mode="split"]').click();
+    assert.equal(document.querySelector('.cm-content.cm-lineWrapping'),null);
+    assert.equal(dom.window.getComputedStyle(document.querySelector('#preview pre')).whiteSpace,'pre');
+    wrap.click();
+    assert.ok(document.querySelector('.cm-content.cm-lineWrapping'));
+    assert.equal(dom.window.getComputedStyle(document.querySelector('#preview pre')).whiteSpace,'pre-wrap');
+    assert.equal(document.querySelector('#preview pre').textContent,source);
     assert.deepEqual(errors,[]);
   } finally {
     dom.window.close();
