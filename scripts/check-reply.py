@@ -245,7 +245,7 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
         # Context and quoted evidence are separate from the answer being checked.
         if stripped.startswith('>'):
             context = stripped[1:].strip().replace('**', '')
-            is_rainbow_question = any(match.group(1) in rainbow_quotes.PALETTE for match in COLOUR_COMMAND.finditer(context))
+            is_rainbow_question = any(rainbow_quotes.is_rainbow_colour(match.group(1)) for match in COLOUR_COMMAND.finditer(context))
             if context.startswith('In response to:'):
                 source_context_available = bool(context.removeprefix('In response to:').strip())
                 pending_source_context = not source_context_available

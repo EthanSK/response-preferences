@@ -8,6 +8,20 @@ ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('context',ROOT/'scripts/create-reply-context.py')
 context=importlib.util.module_from_spec(spec);spec.loader.exec_module(context)
 class ContextAndDemos(unittest.TestCase):
+    def test_public_rainbows_match_the_installed_generator_formula(self):
+        rainbow_spec=importlib.util.spec_from_file_location('public_rainbow',ROOT/'scripts/rainbow-quote.py')
+        rainbow=importlib.util.module_from_spec(rainbow_spec);rainbow_spec.loader.exec_module(rainbow)
+        page=(ROOT/'docs/index.html').read_text()
+        spans=re.findall(r'<span class="rq-chunk" style="color:(#[0-9a-f]{6})">[^<]*</span>',page)
+        self.assertTrue(spans)
+        self.assertEqual([rainbow.word_colour(i) for i in range(len(spans))],spans,
+                         'Build must derive every website question from the canonical colour formula')
+        poster=(ROOT/'docs/readme-preview.svg').read_text()
+        question=re.search(r'class="rainbow-preview">(.*?)</text>',poster).group(1)
+        colours=re.findall(r'<tspan fill="(#[0-9a-f]{6})">',question)
+        self.assertTrue(colours)
+        self.assertEqual([rainbow.word_colour(i) for i in range(len(colours))],colours)
+
     def test_context_keeps_exact_message_and_image_after_original_expires(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);image=root/'clipboard.png';image.write_bytes(b'image bytes')
