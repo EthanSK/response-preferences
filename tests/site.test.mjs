@@ -107,8 +107,6 @@ test('scanning cues preserve qualifications, colours, quotations and real links'
  for(const colour of ['c-cyan','c-green','c-orange','c-red'])assert(d.querySelector('.conversation .'+colour+' u'),'Each colour also demonstrates scanning cues');
  const cues=[...d.querySelectorAll('.conversation .assistant u')].map(x=>x.textContent);
  for(const clue of ['packed but not uploaded','no off-site copy from tonight','after restarting the app','cannot guarantee that a model always follows them'])assert(cues.includes(clue),'Retain decisive qualification: '+clue);
- const supporting=d.querySelector('#welcome .topic-reminder');
- assert(supporting && !supporting.querySelector('u'),'Routine supporting prose stays readable without forced emphasis');
  const u=d.querySelector('.conversation .assistant u');
  assert.equal(dom.window.getComputedStyle(u).textDecorationLine,'underline');
  assert.equal(u.closest('a'),null,'Underlines do not invent links');
@@ -145,12 +143,12 @@ test('automated results stay uncoloured and manual success uses the computer mar
  dom.window.close();
 });
 
-test('only final example replies have attention fingers and About; coverage stays disabled',()=>{
+test('only final example replies have attention fingers; automatic footers stay disabled',()=>{
  const dom=demo();
  for(const msg of dom.window.document.querySelectorAll('.msg.assistant')){
   const hasFinger=[...msg.querySelectorAll('.mk')].some(m=>['👉','🫵','🖥️🫵'].includes(m.textContent));
   assert.equal(hasFinger,msg.classList.contains('final')&&!msg.classList.contains('brief-reply'));
-  assert.equal(msg.querySelectorAll('.topic-reminder').length,msg.classList.contains('final')?1:0);
+  assert.equal(msg.querySelectorAll('.topic-reminder').length,0);
   assert.equal(msg.querySelectorAll('.question-coverage').length,0);
  }
  dom.window.close();
@@ -228,20 +226,9 @@ test('mobile sidebar and editor isolate the background and restore it',async()=>
  d.dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'Escape'}));await Promise.resolve();assert.equal(d.querySelector('#thread').inert,false);dom.window.close();
 });
 
-test('every final example closes with a distinct topic reminder without visible counts',()=>{
+test('example replies omit automatic topic reminders and preserve grouped answers',()=>{
  const dom=demo(),d=dom.window.document;
- for(const msg of d.querySelectorAll('.msg.assistant.final')){
-  const reminders=msg.querySelectorAll('.topic-reminder');assert.equal(reminders.length,1);
-  const reminder=reminders[0];
-  assert.equal(msg.lastElementChild,reminder);
-  assert.equal(msg.querySelector('.question-coverage'),null);
-  assert.match(reminder.textContent,/^About: .+/);
-  assert.equal(reminder.querySelectorAll('u,a,.mk').length,0);
-  assert.equal(dom.window.getComputedStyle(reminder).color,'var(--topic)');
- }
- assert.equal(d.querySelectorAll('.user .topic-reminder,.quote .topic-reminder').length,0);
- assert.equal(dom.window.getComputedStyle(d.documentElement).getPropertyValue('--topic'),'#b8a4d9');
- assert(d.querySelector('#backup .final .topic-reminder').textContent.includes('release decision'));
+ assert.equal(d.querySelectorAll('.topic-reminder,.question-coverage').length,0);
  const shared=d.querySelector('#setup-u3').nextElementSibling;
  assert.deepEqual([...shared.querySelectorAll('.rainbow-quote')].map(i=>i.textContent),['Can I change the style?','Will it update itself?']);
  assert.equal(shared.querySelector('.question-coverage'),null);

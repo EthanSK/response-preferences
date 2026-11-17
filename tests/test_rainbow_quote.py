@@ -123,9 +123,9 @@ class RainbowRoute(unittest.TestCase):
         self.assertTrue(all(checker.rainbow_quotes.is_rainbow_colour(colour) for colour in colours_in(markdown)))
         answer = r'\(\huge\text{⮑}\) \(\textsf{The colour heads somewhere new.}\)'
         without = markdown + '\n\n' + answer
-        self.assertTrue(any('In response to' in error for error in checker.check(without, require_topic=False)))
+        self.assertTrue(any('In response to' in error for error in checker.check(without)))
         with_context = '> **In response to:** How rainbow colours change.\n>\n' + markdown + '\n\n' + answer
-        self.assertFalse(any('In response to' in error for error in checker.check(with_context, require_topic=False)))
+        self.assertFalse(any('In response to' in error for error in checker.check(with_context)))
 
 
 class RainbowQuotes(unittest.TestCase):

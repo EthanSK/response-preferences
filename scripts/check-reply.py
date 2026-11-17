@@ -216,7 +216,7 @@ def annotation_errors(text, require_context=False):
     return errors
 
 
-def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_topic=True, require_annotation_context=False, require_question_coverage=False):
+def check(text, check_paths=True, approved_project_markers=(), require_pointer=True, commentary=False, hover_contexts=(), require_annotation_context=False, require_question_coverage=False):
     errors = math_validation.check_math(text)
     if not commentary:
         errors.extend(annotation_errors(text, require_annotation_context))
@@ -280,10 +280,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 messages, answered, detected = map(int, coverage.groups())
                 if answered > detected or (detected and not messages):
                     fail('Coverage counts are inconsistent: addressed items cannot exceed requests; requests need a user message in the window.')
-            if not topic_lines or previous != text.splitlines()[topic_lines[-1] - 1]:
-                fail('Put question coverage immediately below the About reminder.')
             if number != last_line:
-                fail('Put question coverage at the end, below About.')
+                fail('Put question coverage at the end of the reply body.')
         for expression in INLINE_MATH.finditer(line):
             if UNESCAPED_PERCENT.search(expression.group(1)):
                 fail(r'Bare % inside LaTeX starts a TeX comment and breaks the expression, even in phrases like 100% sure. Reword the cue or move the percentage into ordinary Markdown; escape it as \% only when it must be styled.')
@@ -411,10 +409,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
             previous = line
     if commentary and topic_lines:
         errors.append('About reminders belong only in the final reply, never commentary.')
-    if require_topic and not commentary and len(topic_lines) != 1:
-        errors.append('End the final reply with exactly one muted-lavender About: topic reminder.')
     if len(coverage_lines) > 1 or (require_question_coverage and not commentary and len(coverage_lines) != 1):
-        errors.append('Include exactly one question-coverage line below About.')
+        errors.append('Include exactly one question-coverage line at the end of the reply body.')
     if require_pointer and not has_pointer:
         errors.append('Include 🫵 for a real user action, or 👉 before the main reading takeaway.')
     return errors
@@ -428,7 +424,7 @@ if __name__ == '__main__':
     parser.add_argument('--approved-project-marker', action='append', default=[], help='Exact symbol already approved by the user for this project; repeat for each mapping.')
     parser.add_argument('--hover-context', action='append', default=[], help='Exact user-approved hover-only destination; real file links remain checked.')
     parser.add_argument('--require-annotation-context', action='store_true', help='Require the In response to context sentence, including when no rainbow markup is present.')
-    parser.add_argument('--require-question-coverage', action='store_true', help='Require final-reply question counts under About; validates structure and numeric bounds, not semantic coverage.')
+    parser.add_argument('--require-question-coverage', action='store_true', help='Require final-reply question counts at the end of the reply body; validates structure and numeric bounds, not semantic coverage.')
     parser.add_argument('--claude-render', action='store_true', help='Claude desktop pre-send check: only KaTeX syntax and the Claude guard that shows rejected expressions as raw text, including blockquoted reminders. Skips structural rules.')
     args = parser.parse_args()
     text = args.reply.read_text(encoding='utf-8')

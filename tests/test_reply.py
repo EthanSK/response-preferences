@@ -7,10 +7,10 @@ spec=importlib.util.spec_from_file_location('reply',Path(__file__).resolve().par
 reply=importlib.util.module_from_spec(spec);spec.loader.exec_module(reply)
 TOPIC = r'\(\color{#b8a4d9}{\textsf{About: requested file change. Its current status is covered.}}\)'
 def check_message(text, **kwargs):
-    return reply.check(text if kwargs.get('commentary') else text+'\n\n'+TOPIC, **kwargs)
+    return reply.check(text, **kwargs)
 
 def check_fragment(*args, **kwargs):
-    return reply.check(*args, require_pointer=False, require_topic=False, **kwargs)
+    return reply.check(*args, require_pointer=False, **kwargs)
 
 class ReplyChecks(unittest.TestCase):
     def test_coverage_is_optional_and_can_be_restored(self):
@@ -423,41 +423,17 @@ class ReplyChecks(unittest.TestCase):
         self.assertEqual([],check_fragment('> Earlier: '+r'\(\huge\text{🧠}\)'+'\n\n```text\n👉 example\n```\n\nⓘ Details.\n\n| Item | Status |\n|---|---|\n| Check | ✅ Passed |',commentary=True))
 
 
-    def test_topic_reminder_is_required_only_in_final(self):
-        final = r'\(\huge\text{👉}\) The file is saved.'
-        self.assertTrue(reply.check(final))
-        self.assertEqual([], reply.check(final+'\n\n'+TOPIC))
+    def test_final_reply_needs_no_about_closing_line(self):
+        draft = r'\(\huge\text{👉}\) The file is saved.'
+        self.assertEqual([], reply.check(draft))
         working = '🐌 Saving the file.'
-        options = {'commentary': True, 'require_pointer': False}
-        self.assertEqual([], reply.check(working, **options))
-        self.assertTrue(reply.check(working+'\n\n'+TOPIC, **options))
-        # Literal earlier replies may still be quoted or shown as code.
-        self.assertEqual([], reply.check('> '+TOPIC+'\n\n'+working, **options))
-        self.assertEqual([], reply.check('```latex\n'+TOPIC+'\n```\n\n'+working, **options))
+        self.assertEqual([], reply.check(working, commentary=True, require_pointer=False))
 
-    def test_topic_reminder_must_follow_actions_quotes_and_code(self):
-        body=r'\(\huge\text{🫵}\) Choose the destination.'
-        for later in [body, '> Additional quoted context', '```text\nLater example\n```']:
-            self.assertTrue(reply.check(body+'\n\n'+TOPIC+'\n\n'+later))
-        self.assertTrue(reply.check(body+'\n\n'+TOPIC+'\n\n'+TOPIC))
-        self.assertTrue(reply.check(body+'\n\n> '+TOPIC))
-        self.assertTrue(reply.check(body+'\n\n```text\n'+TOPIC+'\n```'))
-
-    def test_lavender_is_reserved_for_nonempty_topic_labels(self):
-        for invalid in [TOPIC.replace('About: ', ''), TOPIC.replace('textsf', 'textrm'),
-                        'More text '+TOPIC, r'\(\color{#b8a4d9}{\textsf{About: }}\)']:
-            self.assertTrue(reply.check(r'\(\huge\text{👉}\) Saved.'+'\n\n'+invalid))
-
-
-    def test_topic_reminder_uses_short_selectable_lavender_chunks(self):
-        overview = (r'\(\color{#b8a4d9}{\textsf{About: fixing the video export.}}\) '
-                    r'\(\color{#b8a4d9}{\textsf{Restart the app, then retry the clip.}}\)')
-        for body, options in [(r'\(\huge\text{👉}\) Restart to use the export fix.', {})]:
-            self.assertEqual([], reply.check(body+'\n\n'+overview, **options))
-            for bad in [overview+' '+overview, 'stray text '+overview,
-                        overview.replace('#b8a4d9', '#67e8f9'),
-                        overview.replace('textsf', 'textrm')]:
-                self.assertTrue(reply.check(body+'\n\n'+bad, **options), bad)
+    def test_opt_in_coverage_does_not_need_an_about_line(self):
+        draft = r'\(\huge\text{👉}\) The file is saved.'
+        coverage = 'Coverage since last final reply: 1 user message; 1/1 requests and steers addressed.'
+        self.assertEqual([], reply.check(draft+'\n'+coverage, require_question_coverage=True))
+        self.assertTrue(reply.check(draft+'\n'+coverage+'\nMore content.', require_question_coverage=True))
 
     def test_oversized_inline_prose_is_rejected_without_hiding_nested_underlines(self):
         long_warning = r'\(\color{#fb923c}{\textsf{The \underline{release is still pending}: its working copy has \underline{many outstanding changes}, needs \underline{another review before publication}, and its last recorded task run was interrupted.}}\)'

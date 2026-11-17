@@ -4,11 +4,11 @@ User-requested — 2026-11-07: “Can we try disabling? Maybe move to another fi
 
 ## Restore or disable
 
-When the user says “bring back coverage” (or equivalent), follow this reference for the requested scope immediately. For a lasting preference, change the coverage status in the core's **Closing reminder and notification** section to enabled and link here; do not reconstruct the counting rules or restore an older whole skill. Update the public explanations and affected examples through the normal maintenance workflow. An explicit per-reply request needs no persistent edit. To disable it again, set that core status back to disabled. No program, automatic repair or hook is needed.
+When the user says “bring back coverage” (or equivalent), follow this reference for the requested scope immediately. For a lasting preference, change the coverage status in the core's **Closing lines and notifications** section to enabled and link here; do not reconstruct the counting rules or restore an older whole skill. Update the public explanations and affected examples through the normal maintenance workflow. An explicit per-reply request needs no persistent edit. To disable it again, set that core status back to disabled. No program, automatic repair or hook is needed.
 
 ## Enabled behaviour
 
-Only when enabled, put one ordinary-text coverage line immediately underneath the final lavender About reminder. A required project footer retains its established position after that pair. Never print coverage in commentary, progress updates or skill announcements.
+Only when enabled, put one ordinary-text coverage line at the end of the reply body, before any required project footer. Never print coverage in commentary, progress updates or skill announcements.
 
 Use ordinary text for the coverage line: `Coverage since last final reply: N user messages; Y/X requests and steers addressed.` The window starts immediately after the previous assistant final reply, or at the start of the chat for its first final reply, and ends at this final reply. Count every human user message in that window, including interruptions, corrections and steering; exclude automatic context, system messages and tool output. Commentary and tool calls do not reset the window. Never choose an arbitrary set of older messages or reuse the accumulated task-checklist total.
 
@@ -17,4 +17,4 @@ Within that window, privately list each distinct question, requested action or s
 
 ## Optional diagnostic
 
-The existing `scripts/check-reply.py --require-question-coverage <draft.md>` requires the enabled footer and validates its form, arithmetic bounds and placement. Without that flag, a final About reminder needs no coverage line. The diagnostic cannot count real requests or guarantee model obedience; it remains optional, not a step for every reply.
+The existing `scripts/check-reply.py --require-question-coverage <draft.md>` requires the enabled footer and validates its form, arithmetic bounds and placement. Without that flag, replies need no coverage line. The diagnostic cannot count real requests or guarantee model obedience; it remains optional, not a step for every reply.
