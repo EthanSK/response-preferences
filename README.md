@@ -120,13 +120,15 @@ Projects can list additional user-approved emoji meanings in their existing inst
 
 ## Underlines for scanning
 
+Underlining is required in substantive replies, including commentary and short explanations. Before sending, inspect the actual explanatory body; if it has no useful underlined cues, revise it. Bold, colour, rainbow questions, links, headings and footer cues do not substitute for underlining the answer. Choose the cues by meaning, preserve conditions and uncertainty, and retain explicit exact-output exceptions.
+
 When important words are bold, underline those same words too: bold alone is not a scanning cue. This applies to opening answers, conclusions, list lead-ins and test-result totals. In findings, check bold outcomes and attempt/retry counts separately from structural block labels; underline those outcomes or leave them plain. Use a plain short underline if bold adds nothing. Check the actual explanatory body for important details that lost useful underline cues; labels or a footer alone do not make the explanation skimmable. This is a judgment-based draft check, not a quota or mandatory checker run. Exact quotations, code, paths and link labels keep their original formatting.
 
 ```latex
 \(\underline{\textsf{\textbf{Neither automatically wins}}}\)
 ```
 
-Assume the reader will skip text without underlining. Put useful cues throughout substantial explanations and lists, not only in an opening or heading. Focus them on the answer, results, differences between options, caveats and next actions. Read only the cues in order before sending: they should explain what matters throughout the reply. The agent chooses words and density, with no fixed quota per sentence or paragraph; retain useful subjects, verbs, negatives and conditions. For example, “audit covers every enabled API’s visible quotas” conveys a claim with its subject and action. Underlines and self-contained colour highlights both support this reading goal. Exact quotations, code, paths and link labels stay intact.
+Assume the reader will skip text without underlining. Put useful cues throughout substantial explanations and lists, not only in an opening or heading. Focus them on the answer, results, differences between options, caveats and next actions. Read only the cues in order before sending: they should explain what matters throughout the reply. The agent chooses words and density, with no fixed quota per sentence or paragraph; retain useful subjects, verbs, negatives and conditions. For example, “audit covers every enabled API’s visible quotas” conveys a claim with its subject and action. Self-contained colour highlights can supplement the underlines. Exact quotations, code, paths and link labels stay intact.
 
 Write the surrounding sentence as ordinary Markdown. For example: `The backup is \(\underline{\textsf{not uploaded}}\).` or `The \(\underline{\textsf{review needs a project}}\) written in` `C#`. Colour highlights use a separate short expression; keep both forms short and fully closed. The website displays underlined cues; never paste raw `<u>` tags into an assistant reply.
 
