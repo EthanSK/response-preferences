@@ -199,3 +199,7 @@ A stored Claude reply repeated the same five rainbow questions and their answers
 ## Use the full native vivid destination range — 2026-11-15
 
 The first procedural prototype used 144 destination ticks. In a fixed sample of 10,000 consecutive 12-word colour profiles, that repeated 259 profiles. Using all 828 native vivid shades as possible destinations (TURN 247, nudge 0–70) repeated none in that same sample, without changing saturation or adding a table. Short-pattern diversity needs measuring separately from the full stream period; neither a large counter nor a huge period proves unique short quotes. Public example colours are now regenerated automatically from the same helper by scripts/build-demos.py. The older 144-tick constants above are historical prototype measurements, not the current defaults.
+
+## Recognize reply LaTeX before Markdown escape parsing
+
+A live original-reply preview showed five literal underline commands even though the saved reply had ten valid math spans. Markdown-it handled the backslash delimiters as Markdown escapes, and the existing KaTeX validator only checked authoring syntax. The preview now recognizes explicit math before the escape rule, shares the validator’s KaTeX renderer, embeds WOFF2 fonts, and preserves code, prices, and the saved original. The same original rendered all ten spans in the installed viewer on Chrome. This does not establish how Codex renders its chat transcript.

@@ -13,7 +13,15 @@ const result=await build({entryPoints:[path.join(root,'src/editor.js')],bundle:t
 const script=result.outputFiles[0].text.replace(/<\/script/gi,'<\\/script');
 const font=fs.readFileSync(path.join(root,'assets/InterVariable.woff2')).toString('base64');
 const fontLicense=fs.readFileSync(path.join(root,'assets/Inter-LICENSE.txt'),'utf8');
-const style=`/* ${fontLicense} */\n@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,${font}) format('woff2')}\n`+fs.readFileSync(path.join(root,'src/viewer.css'),'utf8');
+const katexDistribution = path.join(root, 'node_modules/katex/dist');
+// Inline WOFF2 fonts so the live viewer and standalone export both work under the existing offline policy.
+const latexStyle = fs.readFileSync(path.join(katexDistribution, 'katex.min.css'), 'utf8')
+  .replace(/url\(fonts\/([^)]+\.woff2)\)[^;}]+/g, (_, name) => {
+    const fontData = fs.readFileSync(path.join(katexDistribution, 'fonts', name)).toString('base64');
+    return `url(data:font/woff2;base64,${fontData}) format("woff2")`;
+  });
+if (latexStyle.includes('url(fonts/')) throw Error('KaTeX still references external font files');
+const style=`/* ${fontLicense} */\n@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,${font}) format('woff2')}\n`+latexStyle+'\n'+fs.readFileSync(path.join(root,'src/viewer.css'),'utf8');
 // A replacement function keeps library strings such as $& and $` literal.
 const template=fs.readFileSync(path.join(root,'src/viewer.html'),'utf8').replace('__FAVICON__',()=>viewerIcon('document.txt')).replace('__STYLE__',()=>style).replace('__SCRIPT__',()=>script);
 fs.mkdirSync(path.join(root,'assets'),{recursive:true});

@@ -1,10 +1,12 @@
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js/lib/common';
+import {enableLatex} from './latex.js';
 
 export function renderMarkdown(source, {images = {}, links = {}, live = false} = {}) {
   const md = new MarkdownIt({html: false, linkify: false, typographer: false, highlight(code, language) {
     return language && hljs.getLanguage(language) ? hljs.highlight(code, {language}).value : '';
   }});
+  enableLatex(md);
   md.block.ruler.before('hr','front_matter',(state,start,end,silent)=>{
     if(start!==0 || state.src.slice(state.bMarks[0],state.eMarks[0]).trim()!=='---')return false;
     let stop=1;while(stop<end && state.src.slice(state.bMarks[stop],state.eMarks[stop]).trim()!=='---')stop++;

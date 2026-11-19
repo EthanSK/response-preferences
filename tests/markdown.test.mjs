@@ -3,6 +3,48 @@ import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
 import {renderMarkdown,selectPassage} from '../src/markdown.js';
 
+test('reply LaTeX renders in the preview and keeps Markdown source-line selection', () => {
+  const source = [
+    '> \\(\\textsf{\\color{#67e8f9}Question}\\)',
+    '',
+    '- Progress is \\(\\underline{\\textsf{10\\% complete}}\\).',
+    '',
+    '\\[',
+    'E = mc^2',
+    '\\]',
+    '',
+    '$$x_i$$',
+  ].join('\n');
+  const doc = new JSDOM(renderMarkdown(source)).window.document;
+  assert.equal(doc.querySelectorAll('.katex').length, 4);
+  assert.equal(doc.querySelectorAll('.katex-display').length, 2);
+  assert.match(doc.querySelector('blockquote .katex').textContent, /Question/);
+  assert.match(selectPassage(doc, 3).querySelector('.katex-html').textContent, /10%\scomplete/);
+  assert.equal(selectPassage(doc, 6).dataset.start, '5');
+});
+
+test('literal, malformed, and untrusted LaTeX stays inert', () => {
+  const source = [
+    'Prices stay $5 and $10.',
+    '',
+    '\\\\(escaped\\\\)',
+    '',
+    '`\\(inline code\\)`',
+    '',
+    '```text', '\\(fenced code\\)', '```',
+    '',
+    '\\(\\unknowncommand{x}\\)',
+    '',
+    '\\(\\href{https://example.com/}{external}\\)',
+  ].join('\n');
+  const doc = new JSDOM(renderMarkdown(source)).window.document;
+  assert.equal(doc.querySelector('.katex,a,img,script'), null);
+  assert.match(doc.body.textContent, /Prices stay \$5 and \$10/);
+  assert.match(doc.body.textContent, /\\unknowncommand/);
+  assert.ok(doc.querySelector('code').textContent.includes('\\(inline code\\)'));
+  assert.ok(doc.querySelector('pre code').textContent.includes('\\(fenced code\\)'));
+});
+
 test('live resources require explicit registration and never enable arbitrary relative fetches',()=>{
   const capability='a'.repeat(43);
   const source='[Reference](notes.md)\n\n![Local](image.png)\n\n![Unregistered](other.png)';

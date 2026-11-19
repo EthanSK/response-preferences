@@ -66,6 +66,8 @@ Use $response-preferences for all replies.
 
 You can also invoke `$response-preferences` explicitly. Start a fresh task if an already-running task retains earlier instructions. The formatting defaults follow Ethan's choices; edit `SKILL.md` to change them for yourself. LaTeX appearance and file links depend on the chat client's renderer. Agents keep an explicit reply count through waits and reread the rules before message eleven, or whenever the count is uncertain. The core consolidates repeated checks; dated reasons are retained in [rule history](references/rule-history.md), which agents read when auditing or revising those rules. The cleanup preserves the existing read schedule and formatting behavior.
 
+The answering-model line includes reasoning effort and service tier when the exact turn records them. The shared Markdown viewer renders explicit LaTeX in Preview using bundled KaTeX. Edit and Download keep the original text.
+
 When maintaining Ethan’s skill, check the website and README after every response-style change, update affected examples, validate, commit and push to the public repository. Other users should use their own authorised fork. Publishing is part of the same task, without a separate sync request. Compare the installed rules and public checkout before finishing, reconcile shared changes using the latest preferences, and verify the new remote commit and deployment. This is an agent workflow, not a background auto-publisher; private local integrations stay local.
 
 For updates, use `git pull --ff-only` only after reviewing your local edits. Keep personal overrides on your own branch or fork. Do not discard customised preferences to update.

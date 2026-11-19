@@ -19,7 +19,7 @@ For a code block, pass `--line 65 --end-line 85`. The returned `#L65-L85` link h
 
 The original Markdown/code file is the sole editable document. Clean views check for external changes every 1.5 seconds while visible, and when focused. Unsaved edits remain intact if the disk changes. Save writes the original, preserving BOM/newlines/permissions, and rejects stale revisions. Reload file explicitly discards a draft only after confirmation; Download copy preserves a separate user-requested export.
 
-Preview/Edit/Split, syntax colours, line jumps, search/replace, undo, table resizing and saved Codex appearance reuse existing components. Local referenced text/image files present during registration receive scoped links; new references need another helper invocation. This does not recursively grant a document tree.
+Preview/Edit/Split, syntax colours, line jumps, search/replace, undo, table resizing and saved Codex appearance reuse existing components. Markdown Preview renders the explicit LaTeX delimiters `\(...\)`, `\[...\]` and `$$...$$` with bundled KaTeX and offline fonts. Edit and Download preserve the source syntax, and LaTeX inside code remains literal. Local referenced text/image files present during registration receive scoped links; new references need another helper invocation. This does not recursively grant a document tree. Local referenced text/image files present during registration receive scoped links; new references need another helper invocation. This does not recursively grant a document tree.
 
 ## Local file service
 
