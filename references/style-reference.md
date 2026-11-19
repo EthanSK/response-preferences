@@ -154,6 +154,7 @@ For a coverage statement, write `The expanded \(\underline{\textsf{audit covers 
 
 ## Closing lines
 
+- Follow the [answering-model footer rule](../SKILL.md#closing-lines-and-notifications) on every answer.
 - Do not append an automatic `About:` closing line to replies. User-requested — 2026-11-17.
 - Visible coverage counts remain disabled by default. Continue the private completeness check; [the optional coverage footer](coverage-footer.md) preserves its separate opt-in rules. Required project footers retain their established placement.
 

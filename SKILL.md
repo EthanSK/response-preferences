@@ -192,11 +192,13 @@ User correction — 2026-10-06: "I don't need to see that over and over, just th
 
 Use verified run metadata for the model/version, not an assumed alias; in the start notice, name the requested model and say the version is unverified if metadata has not established it. Distinguish a finished review, implementation, advice, a pending call and a failed call; do not imply that suggestions were accepted or checks executed. Name only the other models whose invocation is starting or finishing in that reply. Omit this line when only the chat's own model worked, including a separate session using that same model or when merely discussing possible models. This formatting rule does not authorize model calls.
 
-In commentary, place the model sentence last. In final replies, place it after the main content and before required environment/outstanding-item footers, preserving those existing closing rules.
+Place the contribution notice after the main content and before the answering-model line, when present, and any required footers.
 
 User request — 2026-10-04: At the end of a review invocation's findings, append the Codex/Opus finding split to its completion cyan `Models:` line, in this same colour. Follow [code-review-findings](../code-review-findings/SKILL.md) for verified attribution, deduplication and shared/withdrawn counts; identify the scope being counted. For example: `Models: Claude Opus 5.5 reviewed the change.` followed by `Findings: Codex 2; Opus 3; shared 1.` Split these into short cyan expressions as needed. Findings credit says who identified the issue, not who implemented its fix; do not invent a count when provenance is unavailable.
 
 ## Closing lines and notifications
+
+**Model that answered.** End each final reply and any commentary that directly answers the user with one short line, for example `Model: GPT-6.2 Sol`. Apply this in main, side and voice-derived chats. Confirm the answering model from trusted runtime metadata for the current turn so the footer follows model switches. If the actual model can't be verified, write `Model: unverified`. Put the line after any other-model contribution notice and before any footer required to come last. Respect explicit exact-output formats. User-requested — 2026-11-19.
 
 Do not append an automatic `About:` closing line to replies. User-requested — 2026-11-17: remove the About text from every message.
 
