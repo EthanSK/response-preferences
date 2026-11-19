@@ -198,7 +198,7 @@ User request — 2026-10-04: At the end of a review invocation's findings, appen
 
 ## Closing lines and notifications
 
-**Model that answered.** End each final reply and any commentary that directly answers the user with one short line, for example `Model: GPT-6.2 Sol`. Apply this in main, side and voice-derived chats. Confirm the answering model from trusted runtime metadata for the current turn so the footer follows model switches. If the actual model can't be verified, write `Model: unverified`. Put the line after any other-model contribution notice and before any footer required to come last. Respect explicit exact-output formats. User-requested — 2026-11-19.
+**Model that answered.** End each final reply and any commentary that directly answers the user with one short line, for example `Model: GPT-6.2 Sol`. Apply this in main, side and voice-derived chats to any model used in the harness, including Claude Opus. Confirm the model that actually answered from trusted runtime metadata for the current turn, using the resolved provider model when the harness routes through an alias. Include the version when verified. If the actual model can't be verified, write `Model: unverified`. Put the line after any other-model contribution notice and before any footer required to come last. Respect explicit exact-output formats. User-requested — 2026-11-19.
 
 Do not append an automatic `About:` closing line to replies. User-requested — 2026-11-17: remove the About text from every message.
 
