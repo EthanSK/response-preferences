@@ -63,7 +63,7 @@ In the last example, the colour blends from sky blue to green over six words, th
 | A saved/merged/deployed result | Green on the short confirmed outcome; ordinary details follow. |
 | Useful explanation of how it works | Cyan on a complete short clause; do not turn it green merely because the task is finished. |
 | Automated test result | 🧪 and ordinary text, with an explicit passed/failed/unverified status. |
-| Needs the user's next action / mainly a takeaway | Favour 🫵 near the end / 👉 with the summary at the top respectively, normally once and only in the final reply. |
+| Needs the user's next action / mainly a takeaway | Favour 🫵 beside the next action / 👉 beside the takeaway near the end respectively, normally once and only in the final reply. |
 | One statement / several blocks | Inline marker / standalone marker plus the existing raised chevron. Keep ⮑ beside its answer in either case. |
 | Literal symbols in prose | Keep numbers and symbols visible. Short styled text uses the core symbol lookup: `10\%`, `\$500`, `C\#`, `sample\_tool`. Ordinary Markdown needs no TeX escape. Code, paths and exact quotes retain their own formatting. The quote helper escapes its short literals. |
 | Returning after hours | Put a concrete subject in the opening summary; omit automatic About closing lines. |

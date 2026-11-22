@@ -227,7 +227,7 @@ The agent checks the configured public source on first skill use when a week has
 
 ## A pointer in the final reply
 
-Only the final reply includes an attention finger: normally one, leaning towards 🫵 when something is needed from you or it is your turn next, and towards 👉 when it is mainly “here is the main information”. These are preferences to guide the choice, not absolute rules. Put the brief, self-contained 👉 takeaway summary at the top, before screenshots, question references and detailed answers; retain essential caveats. Keep 🫵 beside an actual next action near the end of the main content. Two may help for distinct important items. Working commentary and progress updates have no attention fingers, so they do not steal your focus. Keep each finger beside its useful content. Other status markers keep their meanings.
+Only the final reply includes an attention finger: normally one, leaning towards 🫵 when something is needed from you or it is your turn next, and towards 👉 when it is mainly “here is the main information”. These are preferences to guide the choice, not absolute rules. Keep the brief, self-contained 👉 takeaway or 🫵 next action near the end of the main content, rather than beside the opening answer; retain essential caveats. Two may help for distinct important items. Working commentary and progress updates have no attention fingers, so they do not steal your focus. Keep each finger beside its useful content. Other status markers keep their meanings.
 
 Replies have no automatic About closing line. Visible coverage counts remain disabled by default; the [optional coverage footer](references/coverage-footer.md) preserves that separate feature. Keep the private completeness check active and retain required project footers.
 

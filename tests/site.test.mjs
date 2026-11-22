@@ -353,7 +353,7 @@ test('the formatting attachment opens its actual public context document',()=>{
 });
 
 // Check the rendered demo structure, including old walkthroughs, not just the newest examples.
-test('takeaway summaries lead replies while user actions close the main content',()=>{
+test('takeaway summaries and user actions close the main content',()=>{
  const dom=demo(),d=dom.window.document;
  let summaries=0,actions=0;
  for(const answer of d.querySelectorAll('.conversation [data-kind="answer"]')){
@@ -368,7 +368,9 @@ test('takeaway summaries lead replies while user actions close the main content'
     summaries++;
     assert.equal(section.tagName,'P');
     assert(children[0].classList.contains('who'));
-    assert.equal(children[1],section,'Summary precedes screenshots, question references and details');
+    for(const answer of msg.querySelectorAll('[data-kind="answer"]'))assert(children.indexOf(section)>children.indexOf(answer),'Takeaway follows the detailed answers');
+    const following=children.slice(children.indexOf(section)+1);
+    assert(!following.some(x=>x.matches('[data-kind],.sec,table,.quote')&&!x.textContent.startsWith('Models:')),'Takeaway closes the main content');
    }else{
     actions++;
     for(const answer of msg.querySelectorAll('[data-kind="answer"]'))assert(children.indexOf(section)>children.indexOf(answer),'User action follows the detailed answers');

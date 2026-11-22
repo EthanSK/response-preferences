@@ -6,7 +6,7 @@ Can you make this easier to follow?
 
 This is the fictional message used to introduce the website. The response below it demonstrates the skill's own formatting.
 
-Put the brief, self-contained 👉 takeaway summary at the top of a final reply, before screenshots, question references and detailed answers. Include essential caveats. Keep 🫵 beside an actual next action near the end; visible coverage counts are disabled by default.
+Put the brief, self-contained 👉 takeaway or 🫵 next action near the end of the main content, rather than beside the opening answer. Include essential caveats; visible coverage counts are disabled by default.
 
 Important bold wording also gets an underline on the same words. For example: \(\underline{\textsf{\textbf{Neither automatically wins}}}\). Bold alone is not a scanning cue; keep expressions short so the surrounding sentence wraps.
 
