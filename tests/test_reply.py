@@ -272,6 +272,17 @@ class ReplyChecks(unittest.TestCase):
         for draft in ['<!-- codex-notification {} -->','[↗](/tmp/SKILL.md)','[open](/tmp/skill.html)']:
             self.assertTrue(check_fragment(draft,False))
 
+    def test_workspace_markdown_source_needs_a_preceding_reader(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / 'report.md'
+            source.write_text('Report')
+            reader = '[Report](http://127.0.0.1:59343/index.html?doc=example#L1-L3)'
+            workspace = f'[Workspace file]({source}:1)'
+            self.assertEqual([], check_fragment(reader + ' · ' + workspace))
+            for invalid in [workspace, workspace + ' · ' + reader, reader + f' · [Report]({source})', '[Report](https://example.com/) · ' + workspace]:
+                with self.subTest(invalid=invalid):
+                    self.assertTrue(any('Generate an HTML viewer' in error for error in check_fragment(invalid)))
+
     def test_html_underline_tags_are_rejected_outside_literal_contexts(self):
         for draft in ['<u>Broken underline</u>', '<U class="cue">Broken underline</U>']:
             self.assertTrue(any('HTML <u> tags' in error for error in check_fragment(draft)))

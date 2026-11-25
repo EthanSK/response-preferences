@@ -4,7 +4,7 @@
 
 A personal Codex skill for **how replies are written**. Fixed emoji meanings, coloured highlights, underlined scanning cues, original-message context, and a local Markdown/code editor.
 
-The full response preferences apply equally to main chats, side chats and voice-derived chats, including brief explanations. Every reply receives the same formatting check; read-only conversations use non-mutating helpers.
+The full response preferences apply equally to main chats, side chats and voice-derived chats, including brief explanations. Every reply receives the same formatting check; read-only conversations use non-mutating helpers. A reported formatting slip triggers a check of the actual previous reply and the first corrected reply, including brief follow-ups.
 
 **[Try the website](https://ethansk.github.io/response-preferences/)** · **[Try the editor](https://ethansk.github.io/response-preferences/viewer.html)** · **[Read the skill](SKILL.md)**
 
@@ -145,9 +145,9 @@ python3 ~/.codex/skills/response-preferences/scripts/create-viewer.py /absolute/
 
 The command prints a stable local URL. One shared viewer reads the original file, refreshes clean views after external edits, and saves edits back to that file. Unsaved work survives an external change; stale saves are rejected. The real path appears in the header. Skill metadata starts expanded. Whole-file links have no yellow selection; explicit line jumps highlight the requested passage. Code links can highlight an inclusive range with `--line` and `--end-line`, including every selected line's gutter. No document-specific HTML is created.
 
-When the agent points out specific text to inspect, the link highlights that passage in the original Markdown or code, including progress replies and read-only audits. Code, comments, specs and skills all use the reader’s highlighted line or range link. Underlining the reply or supplying an ordinary file-and-line link does not replace this source highlighting.
+When the agent points out specific text to inspect, the named link opens the shared reader, scrolls to the passage and highlights it in yellow. This applies to Markdown, code, comments, specs and skills, including progress replies and read-only audits. A project can also require a separately labelled workspace file link for editing.
 
-The loopback-only service starts automatically. On macOS it is a user LaunchAgent, so links continue working after login. Only files registered by the local helper are accessible; there is no arbitrary-path web endpoint. No document data goes to an external service. [File access, installation and export details](references/viewer.md).
+The loopback-only service starts automatically. On macOS it is a user LaunchAgent, so links continue working after login. Ordinary documents require registration by the local helper; Agent Flow prompt links resolve only exact archive names in its prompt directory. There is no arbitrary-path web endpoint. No document data goes to an external service. [File access, installation and export details](references/viewer.md).
 
 Before sharing any custom-viewer link, the agent checks that its exact destination works now. If that viewer's server is stopped, the agent starts it using its established launcher, verifies the intended document, model or media and keeps the server running for the handoff. Existing source files and an earlier working link are not proof that the service is available. [Custom-viewer startup checks](references/viewer.md#check-custom-viewers-before-linking).
 

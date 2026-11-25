@@ -1,4 +1,5 @@
 // Run the shared live and exported document viewer, including editing, previews and file-type icons.
+import {renderPromptTimeline} from './prompt-timeline.js';
 import {basicSetup} from 'codemirror';
 import {EditorState, StateField, StateEffect, Compartment, RangeSet} from '@codemirror/state';
 import {EditorView, Decoration, GutterMarker, gutterLineClass, keymap, scrollPastEnd} from '@codemirror/view';
@@ -69,7 +70,11 @@ function modeFor(name) {
   return modes[ext]?.() || [];
 }
 let name = data.name || 'document.md', baseline = data.source, rawBaseline = data.source, fileHandle = null, busy = false;
-let live = data.live ? new URLSearchParams(location.search).get('doc') : null;
+const viewerQuery = new URLSearchParams(location.search);
+const isPromptLink = data.live && viewerQuery.has('prompt');
+let live = data.live ? viewerQuery.get(isPromptLink ? 'prompt' : 'doc') : null;
+let promptTimeline = null;
+const liveQuery = () => new URLSearchParams({[isPromptLink ? 'prompt' : 'doc']: live}).toString();
 let liveRevision = null, externalChange = false, polling = false;
 let images = data.images || {}, links = data.links || {}, currentMode = /\.(md|markdown)$/i.test(name) ? 'preview' : 'edit';
 let targetLine = Number(data.line) || 1, targetEndLine = Number(data.endLine || data.line) || 1, renderTimer, sourceEol = data.source.includes('\r\n') ? '\r\n' : '\n', sourceBom = data.source.startsWith('\ufeff');
@@ -85,13 +90,17 @@ function say(message) {$('status').textContent = message;}
 function updateViewerIcon() {$('viewer-icon').href = viewerIcon(name);}
 function isDirty() {return editor.state.doc.toString() !== baseline;}
 function updateDirty() {
-  const writable = fileHandle || (live && liveRevision);
+  const writable = fileHandle || (live && liveRevision && !promptTimeline);
   const dirty = isDirty(); $('dirty').textContent = dirty ? 'Unsaved changes' : live ? 'Live file' : fileHandle ? 'File opened' : 'Snapshot';
   $('dirty').classList.toggle('unsaved', dirty); $('save').disabled = !writable || busy || !dirty;
   $('save').title = !writable ? 'Open a file with browser saving support first' : busy ? 'Saving…' : dirty ? 'Save changes to the opened file' : 'No unsaved changes';
+  $('reveal').hidden = !(live && liveRevision);
+  $('save').hidden = Boolean(promptTimeline);
+  document.querySelector('button[data-mode="edit"]').textContent = promptTimeline ? 'Source' : 'Edit';
 }
 const extensions = () => [
-  basicSetup, keymap.of([indentWithTab, {key:'Mod-s', run:() => {(fileHandle || live) ? saveFile() : downloadFile(); return true;}}]),
+  basicSetup, EditorState.readOnly.of(Boolean(promptTimeline)),
+  keymap.of([indentWithTab, {key:'Mod-s', run:() => {(fileHandle || live) ? saveFile() : downloadFile(); return true;}}]),
   language.of(modeFor(name)), syntaxHighlighting(colours), selectedLine, scrollPastEnd(),
   wordWrap.of(wordWrapEnabled ? EditorView.lineWrapping : []),
   EditorView.contentAttributes.of({'aria-label':'Document source'}),
@@ -116,7 +125,8 @@ function positionPassageRail() {
 function render() {
   passageObserver?.disconnect();
   cleanupTableResize();
-  if (/\.(md|markdown)$/i.test(name)) $('preview').innerHTML = renderMarkdown(editor.state.doc.toString(), {images,links,live:!!live});
+  if (promptTimeline) $('preview').replaceChildren(renderPromptTimeline(promptTimeline, liveQuery()));
+  else if (/\.(md|markdown)$/i.test(name)) $('preview').innerHTML = renderMarkdown(editor.state.doc.toString(), {images,links,live:!!live});
   else {const pre=document.createElement('pre');pre.textContent=editor.state.doc.toString();$('preview').replaceChildren(pre);}
   cleanupTableResize = resizeTables($('preview'), tableWidths);
   $('line').max=editor.state.doc.lines;
@@ -148,7 +158,7 @@ async function loadFile(file, handle=null) {
   if(file.size>5*1024*1024) throw Error('This file is larger than 5 MB. Open a smaller text file.');
   const text=decodeText(await file.arrayBuffer());
   name=file.name;updateViewerIcon();rawBaseline=text;baseline=normalise(text);sourceEol=text.includes('\r\n')?'\r\n':'\n';sourceBom=text.startsWith('\ufeff');
-  live=null;hasTarget=false;fileHandle=handle;images={};links={};tableWidths.clear();$('reload').hidden=true;
+  live=null;promptTimeline=null;hasTarget=false;fileHandle=handle;images={};links={};tableWidths.clear();$('reload').hidden=true;
   editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
   $('filename').textContent=name;$('filename').title=name;$('file-note').textContent='Opened from disk · does not update automatically';
   $('snapshot-note').textContent=handle?'Save writes to the file you picked. Download copy creates a separate file.':'Download copy to keep your edits. The file you opened is unchanged.';
@@ -162,7 +172,7 @@ async function openFile() {
 }
 function outputText() {return (sourceBom?'\ufeff':'') + editor.state.doc.toString().replace(/\n/g,sourceEol);}
 async function saveFile() {
-  if((!fileHandle && !live) || busy || !isDirty()) return;
+  if((!fileHandle && !live) || promptTimeline || busy || !isDirty()) return;
   busy=true;updateDirty();say('Saving...');
   try {
     // Capture the revision being saved: edits made during the write stay marked unsaved.
@@ -180,7 +190,7 @@ async function refreshLive(force=false) {
   if(!live || polling || busy)return;
   polling=true;
   try {
-    const response=await fetch('/api/document?doc='+encodeURIComponent(live),{headers:!force && liveRevision?{'If-None-Match':'"'+liveRevision+'"'}:{},cache:'no-store'});
+    const response=await fetch('/api/document?'+liveQuery(),{headers:!force && liveRevision?{'If-None-Match':'"'+liveRevision+'"'}:{},cache:'no-store'});
     if(response.status===304)return;
     const next=await response.json();if(!response.ok)throw Error(next.error || 'Could not open this file.');
     if(busy)return;
@@ -190,11 +200,13 @@ async function refreshLive(force=false) {
     const first=liveRevision===null;
     if(first){const target=location.hash.match(lineHashPattern);targetLine=Number(target?.[1] || data.line) || 1;targetEndLine=Number(target?.[2] || data.endLine) || targetLine;}
     name=next.name;rawBaseline=next.source;baseline=normalise(next.source);liveRevision=next.revision;externalChange=false;
+    promptTimeline=next.prompt || null;
     sourceEol=next.source.includes('\r\n')?'\r\n':'\n';sourceBom=next.source.startsWith('\ufeff');images=next.images;links=next.links;
     editor.setState(EditorState.create({doc:baseline,extensions:extensions()}));
-    $('filename').textContent=name;$('filename').title=next.path;$('file-note').textContent=next.path;
-    $('snapshot-note').textContent='Live file · Save writes to the original file.';
-    document.title=name+' · Live file viewer';
+    const title = promptTimeline ? 'Agent Flow prompt' : name;
+    $('filename').textContent=title;$('filename').title=next.path;$('file-note').textContent=next.path;
+    $('snapshot-note').textContent=promptTimeline ? 'Saved prompt' : 'Live file · Save writes to the original file.';
+    document.title=title+' · Live file viewer';
     updateViewerIcon();
     if(first && next.appearance)installAppearance(document.documentElement,$('theme'),next.appearance);
     if(first)currentMode=/\.(md|markdown)$/i.test(name)?'preview':'edit';
@@ -220,6 +232,13 @@ $('word-wrap').onclick = () => {
 $('jump-form').onsubmit=event=>{event.preventDefault();jump($('line').value);};
 $('search').onclick=()=>{if(currentMode==='preview')setMode('edit');openSearchPanel(editor);editor.focus();};
 $('open').onclick=openFile;$('save').onclick=saveFile;$('download').onclick=downloadFile;
+$('reveal').onclick=async()=>{
+  if (!live || !liveRevision) return;
+  try {
+    const response=await fetch('/api/reveal?'+liveQuery(), {method:'POST',headers:{'X-Viewer-Document':live}});
+    if (!response.ok) throw Error();
+  } catch { say('Could not reveal the file in Finder.'); }
+};
 $('reload').hidden=!live;
 $('reload').onclick=()=>{if(!isDirty() || confirm('Reload file and discard your unsaved changes?'))refreshLive(true);};
 $('file-input').onchange=async()=>{const file=$('file-input').files[0];if(file)try{await loadFile(file);}catch(error){say('Could not open this file. '+error.message);}finally{$('file-input').value='';}};

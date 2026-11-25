@@ -1,8 +1,16 @@
 # Verified project lessons
 
+## Preserve the Agent Flow prompt disclosures — 2026-11-18
+
+Use a compact inline Details disclosure for capture metadata. Display archived interpretation guidance and response preferences in their own fold-outs below the timeline, from the same Markdown archive that Source and the agent read. A guide's sample XML belongs to the guide body. Verified both controls by opening them in the live Chrome viewer.
+
 ## Wrap long viewer lines by default — 2026-11-13
 
 Plain-text files open in Edit, which uses CodeMirror. Preview renders the same source in a preformatted block. Enable CodeMirror line wrapping and use `pre-wrap` with `overflow-wrap: anywhere` for preview blocks. Both preserve the original newlines and indentation, including when a long path must break within a word. User-requested default.
+
+## Bound the read, not only the preceding file-size check — Self-improved — 2026-11-06
+
+A file can grow between stat and read_bytes. Checking its size first and rejecting oversized bytes afterward still allows an unbounded allocation. Both live and snapshot viewer reads now share read_bounded, which requests at most the permitted bytes plus one before rejecting oversize content. Snapshot image accounting also checks actual bytes against the remaining total image budget. A simulated growing file verifies the read size without allocating a large fixture. This fixes a separate viewer weakness; it does not establish that the viewer caused the Mac's geometry-review memory exhaustion.
 
 ## LaTeX selection and wrapping limits
 

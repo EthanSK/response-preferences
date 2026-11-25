@@ -61,6 +61,29 @@ class LiveViewerTests(unittest.TestCase):
         self.assertNotEqual(first['revision'], second['revision'])
         self.assertEqual(live.register(self.file, self.state), self.key)
 
+    def test_prompt_preview_uses_the_current_archive_and_reveals_exact_file(self):
+        self.file.write_text(
+            '<!-- Agent Flow rainbow start: 6 -->\n<!-- Agent Flow: reminder -->\n\n'
+            '<speech>Ask &amp; answer</speech>\n\n'
+            '<app_selection><text>&lt;script&gt;</text></app_selection>\n\n'
+            '## Agent Flow interpretation guidance for this prompt\n\n<speech>Appendix only</speech>\n'
+        )
+        name = 'prompt-00000000-0000-0000-0000-000000000000-11111111-1111-1111-1111-111111111111.md'
+        route = '?prompt=' + name
+        with patch.object(live.agent_flow_prompt, 'archive_path', return_value=self.file):
+            status, body = self.request('/api/document' + route)
+            self.assertEqual(status, 200)
+            response = json.loads(body)
+            self.assertEqual(response['source'], self.file.read_text())
+            self.assertEqual(response['prompt']['rainbow'], 6)
+            self.assertEqual([e['text'] for e in response['prompt']['events']], ['Ask & answer', '<script>'])
+            headers = {'X-Viewer-Document': name}
+            self.assertEqual(self.request('/api/document' + route, {}, headers)[0], 404)
+            self.assertEqual(self.request('/api/reveal' + route, {}, {'Origin': 'https://example.org', **headers})[0], 403)
+            with patch.object(live.sys, 'platform', 'darwin'), patch.object(live.subprocess, 'run') as run:
+                self.assertEqual(self.request('/api/reveal' + route, {}, headers)[0], 200)
+                run.assert_called_once_with(['/usr/bin/open', '-R', str(self.file)], check=True, timeout=5)
+
     def test_save_original_and_reject_stale_save_without_destroying_external_work(self):
         original = json.loads(self.request()[1])
         self.assertEqual(self.request(body={'revision': original['revision'], 'source': '# Saved\n'})[0], 200)
@@ -68,6 +91,27 @@ class LiveViewerTests(unittest.TestCase):
         self.file.write_text('# External\n')
         self.assertEqual(self.request(body={'revision': original['revision'], 'source': '# Stale draft\n'})[0], 409)
         self.assertEqual(self.file.read_text(), '# External\n')
+
+    def test_prompt_preview_lists_guidance_below_the_timeline(self):
+        text = (
+            '<typed_text>My question</typed_text>\n\n'
+            '## Response preferences for this reply\n\n'
+            'Use the full skill.\n\n<speech>Example inside the skill</speech>\n'
+        )
+        preview = live.agent_flow_prompt.timeline(text)
+        self.assertEqual([event['text'] for event in preview['events']], ['My question'])
+        self.assertEqual(preview['guidance'], [{
+            'label': 'Response Preferences',
+            'text': 'Use the full skill.\n\n<speech>Example inside the skill</speech>',
+        }])
+        both = text.replace('## Response preferences', (
+            '## Agent Flow interpretation guidance for this prompt\n\n'
+            'Keep my selection in context.\n\n## Response preferences'
+        ))
+        preview = live.agent_flow_prompt.timeline(both)
+        self.assertEqual([item['label'] for item in preview['guidance']],
+                         ['Agent Flow interpretation', 'Response Preferences'])
+        self.assertEqual(preview['guidance'][0]['text'], 'Keep my selection in context.')
 
     def test_denies_unregistered_paths_cross_origin_writes_and_symlink_replacement(self):
         self.assertEqual(self.request('/api/document?doc=unknown&path=' + str(self.file))[0], 403)

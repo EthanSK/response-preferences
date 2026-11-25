@@ -401,7 +401,8 @@ def check(text, check_paths=True, approved_project_markers=(), require_pointer=T
                 fail('Use ↗, not an opening-word label.')
             path = re.sub(r':\d+$', '', target)
             if path.startswith('/'):
-                if path.lower().endswith('.md'):
+                paired_workspace_source = label == 'Workspace file' and re.search(r'\]\(http://(?:127\.0\.0\.1|localhost):\d+/index\.html\?doc=[^\s)]+\)', line[:match.start()])  # The required workspace source accompanies its preceding reader; it does not replace that reader.
+                if path.lower().endswith('.md') and not paired_workspace_source:
                     fail('Generate an HTML viewer for a Markdown reference.')
                 if check_paths and not (label == '↗' and target in hover_contexts) and not Path(path).exists():
                     fail('The local link destination does not exist: ' + path)

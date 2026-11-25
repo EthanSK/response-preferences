@@ -27,6 +27,9 @@ LABEL = 'com.ethansk.codex-live-viewer'
 spec = importlib.util.spec_from_file_location('snapshot_export', ROOT / 'scripts/create-viewer.py')
 export = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(export)
+prompt_spec = importlib.util.spec_from_file_location('agent_flow_prompt', ROOT / 'scripts/agent_flow_prompt.py')
+agent_flow_prompt = importlib.util.module_from_spec(prompt_spec)
+prompt_spec.loader.exec_module(agent_flow_prompt)
 
 
 def revision(raw):
@@ -34,10 +37,8 @@ def revision(raw):
 
 
 def read_text(path):
-    if path.stat().st_size > LIMIT:
-        raise ValueError('This file is larger than 5 MB.')
-    raw = path.read_bytes()
-    if len(raw) > LIMIT or b'\0' in raw:
+    raw = export.read_bounded(path, LIMIT, 'This file is larger than 5 MB.')
+    if b'\0' in raw:
         raise ValueError('Only UTF-8 text files up to 5 MB are supported.')
     return raw, raw.decode('utf-8')
 
@@ -127,12 +128,17 @@ class Handler(BaseHTTPRequestHandler):
             raise PermissionError('Invalid origin.')
         parsed = urlparse(self.path)
         query = parse_qs(parsed.query)
-        key = query.get('doc', [''])[0]
+        prompts = query.get('prompt', [])
+        if prompts and (len(prompts) != 1 or 'doc' in query):
+            raise PermissionError('Invalid prompt request.')
+        key = prompts[0] if prompts else query.get('doc', [''])[0]
         if write and self.headers.get('X-Viewer-Document') != key:
-            raise PermissionError('Invalid save request.')
+            raise PermissionError('Invalid viewer request.')
         return parsed.path, query, key
 
-    def document(self, key):
+    def document(self, key, prompt=False):
+        if prompt:
+            return {'links': {}}, agent_flow_prompt.archive_path(key)
         doc = registry(self.server.state).get(key)
         if not doc: raise PermissionError('File access is not registered.')
         path = Path(doc['path'])
@@ -152,7 +158,8 @@ class Handler(BaseHTTPRequestHandler):
                 page = (ROOT / 'assets/viewer.html').read_text().replace('__TITLE__', 'Live file viewer').replace('__NONCE__', nonce).replace('__DOCUMENT__', json.dumps({'source': '', 'live': True}))
                 page = page.replace("connect-src 'none'", "connect-src 'self'").replace('img-src data:', "img-src data: 'self'")
                 return self.send(200, page.encode(), 'text/html; charset=utf-8')
-            doc, path = self.document(key)
+            is_prompt = 'prompt' in query
+            doc, path = self.document(key, is_prompt)
             if route == '/api/document':
                 raw, text = read_text(path)
                 tag = revision(raw)
@@ -167,10 +174,24 @@ class Handler(BaseHTTPRequestHandler):
                     else:
                         fragment = urlparse(href).fragment
                         links[href] = '/index.html?' + urlencode({'doc': linked_key}) + ('#' + fragment if fragment else '')
-                return self.send(200, {'name': path.name, 'path': str(path), 'source': text, 'revision': tag, 'images': images, 'links': links, 'appearance': export.codex_appearance()})
+                result = {'name': path.name, 'path': str(path), 'source': text, 'revision': tag,
+                          'images': images, 'links': links, 'appearance': export.codex_appearance()}
+                if is_prompt:
+                    result['prompt'] = agent_flow_prompt.timeline(text)
+                return self.send(200, result)
+            if route == '/api/prompt-image' and is_prompt:
+                events = agent_flow_prompt.timeline(read_text(path)[1])['events']
+                index = int(query.get('event', ['-1'])[0])
+                if not 0 <= index < len(events) or events[index]['kind'] not in agent_flow_prompt.IMAGES:
+                    return self.send(404, {'error': 'Screenshot unavailable.'})
+                image = Path(events[index]['attributes'].get('path', ''))
+                mime = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg'}.get(image.suffix.lower())
+                if not mime or not image.is_absolute() or image.is_symlink() or not image.is_file():
+                    return self.send(404, {'error': 'Screenshot unavailable.'})
+                raw = export.read_bounded(image, 20 * 1024 * 1024, 'Screenshot is too large.')
+                return self.send(200, raw, mime)
             if route == '/api/resource' and path.suffix.lower() in export.MIMES:
-                if path.stat().st_size > 20 * 1024 * 1024: raise ValueError('Image is too large.')
-                return self.send(200, path.read_bytes(), export.MIMES[path.suffix.lower()])
+                return self.send(200, export.read_bounded(path, 20 * 1024 * 1024, 'Image is too large.'), export.MIMES[path.suffix.lower()])
             self.send(404, {'error': 'Not found.'})
         except PermissionError as error: self.send(403, {'error': str(error)})
         except (OSError, UnicodeError, ValueError) as error: self.send(400, {'error': str(error)})
@@ -178,7 +199,14 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             route, query, key = self.context(write=True)
-            if route != '/api/document': return self.send(404, {'error': 'Not found.'})
+            is_prompt = 'prompt' in query
+            if route == '/api/reveal':
+                _, path = self.document(key, is_prompt)
+                if sys.platform != 'darwin':
+                    return self.send(501, {'error': 'Finder is available on macOS.'})
+                subprocess.run(['/usr/bin/open', '-R', str(path)], check=True, timeout=5)
+                return self.send(200, {})
+            if route != '/api/document' or is_prompt: return self.send(404, {'error': 'Not found.'})
             _, path = self.document(key)
             length = int(self.headers.get('Content-Length', '0'))
             if not 0 < length <= LIMIT * 6 + 1024: raise ValueError('Invalid save size.')
@@ -207,6 +235,8 @@ class Handler(BaseHTTPRequestHandler):
                     if os.path.exists(tmp): os.unlink(tmp)
             self.send(200, {'revision': revision(raw)})
         except PermissionError as error: self.send(403, {'error': str(error)})
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            self.send(500, {'error': 'Could not reveal the file in Finder.'})
         except (OSError, UnicodeError, ValueError, KeyError, TypeError) as error: self.send(400, {'error': str(error)})
 
 
